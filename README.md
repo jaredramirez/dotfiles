@@ -12,4 +12,4 @@ There are a few things to install before getting started:
 
 Once these are installed & working, you can copy the `nvim` directory to `~/.config/nvim`. Then just run `nvim +PlugInstall` and you should be good to go (almost).
 
-For the haskell language server, navigate [haskell/haskell-ide-engine](https://github.com/haskell/haskell-ide-engine), and go through their installation process. It's not availabe on NPM, and must be built from source so it could not be included in the post-install hook of LanguageClient-Neovim.
+For the haskell language server, navigate [haskell/haskell-ide-engine](https://github.com/haskell/haskell-ide-engine), and go through their installation process. It's not availabe on NPM, and must be built from source so it could not be included in the post-install hook of LanguageClient-Neovim like the other language servers.
