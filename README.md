@@ -6,7 +6,7 @@ This is the configuration I use for neovim, soon to add my tmux configuration.
 
 There are a few things to install before getting started:
 
-* ['neovim'](https://neovim.io/) (Of course)
+* [`neovim`](https://neovim.io/) (Of course)
 * [`yarn`](https://yarnpkg.com/en/)
 * [`vim-plug`](https://github.com/junegunn/vim-plug)
 
