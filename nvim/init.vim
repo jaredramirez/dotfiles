@@ -12,14 +12,15 @@ Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue']
 \ }
-Plug 'alx741/vim-hindent', {
-  \ 'for': ['haskell']
-\ }
 
-" Linting & Analysis
+" Linting AND code formatting
+" For Reason formatting -> https://github.com/reasonml/reason-cli
+" For Elm formatting -> https://github.com/avh4/elm-format
+" For Rust formatting -> https://github.com/rust-lang-nursery/rustfmt
+" For Haskell formatting -> https://www.google.com/search?q=hfmt&ie=utf-8&oe=utf-8&client=firefox-b-1-ab
 Plug 'w0rp/ale'
 
-" Completion
+" Completion - Not used a ton, I mostly rely on language severs + ncm for completion
 Plug 'roxma/nvim-completion-manager'
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
@@ -32,13 +33,17 @@ Plug 'roxma/nvim-cm-tern', {'do': 'npm install'}
 
 " Language Client (Ties into NCM)
 " For Haskell langauge server -> https://github.com/haskell/haskell-ide-engine
+" For Rust langauge server -> https://github.com/rust-lang-nursery/rls
+" For Ocamel/Reason language server -> https://github.com/freebroccolo/ocaml-language-server<Paste>
+" For Flow(JS) language server -> https://github.com/flowtype/flow-language-server
+" For Typescript language server -> https://github.com/sourcegraph/javascript-typescript-langserver
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
-    \ 'do': 'bash install.sh && yarn global add ocaml-language-server flow-language-server',
+    \ 'do': 'bash install.sh',
     \ }
 Plug 'junegunn/fzf'
 
-" Other plugins (not supported by polyglot)
+" Other syntax files - for the (few) languages not supported by polyglot
 Plug 'reasonml-editor/vim-reason-plus', {
   \ 'for': ['reason']
 \ }
@@ -57,17 +62,6 @@ Plug 'sheerun/vim-polyglot'
 
 call plug#end()
 
-" --- HELPER FUNCTIONS ---
-
-function CheckIfFileExists(filename)
-  if filereadable(a:filename)
-    return 1
-  endif
-
-  return 0
-endfunction
-
-
 " --- GENERAL CONFIG ---
 
 " Disable compatabliltiy with vi
@@ -76,10 +70,10 @@ set nocompatible
 " Hide buffer (file) instead of abandoning when switching
 set hidden
 
-" set max line length
-set colorcolumn=80
+" Set max line length for JS/TS
+autocmd BufRead,BufNewFile *.js,*jsx,*.ts,*.tsx setlocal colorcolumn=80
 
-" show invisibles
+" Show invisibles
 set list listchars=tab:··,trail:·,nbsp:·,eol:¬
 
 " Enable syntax highlighting
@@ -105,19 +99,20 @@ set noerrorbells
 set tabstop=2
 set shiftwidth=2
 set ts=2 sw=2 et
-autocmd FileType elm,haskell,java setlocal tabstop=4 shiftwidth=4
+autocmd FileType elm,java setlocal tabstop=4 shiftwidth=4
 
 " Color/Theme
 set background=dark
 
 " Configure vim-colorschemes -- MUST COME BEFORE 'highlighting LineNr'
 colorscheme blackboard
+" Make line numbers readable with this theme
+highlight LineNr ctermfg=grey 
 
 " Set view attributes
 set number
 set ruler
 set cursorline
-highlight LineNr ctermfg=grey
 
 " Make <Shift><K> inverse of <Shift><J>
 nnoremap K i<CR><Esc>
@@ -127,12 +122,16 @@ let mapleader="\<SPACE>"
 
 " --- PLUGIN CONFIG ---
 
+" Configure Ctrl-P
+
 " Open Ctrl-P
 nnoremap <Leader>o :CtrlP<CR>
-" Open Ctrl-P buffer{
+" Open Ctrl-P buffer
 nnoremap <Leader>b :CtrlPBuffer<CR>
 " Ctrl-P ignores
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/deps/*,*/_build/*,*/dist/*,*/build/*,*/legacy/*
+
+" Configure Prettier
 
 " Make Prettier async
 let g:prettier#exec_cmd_async = 1
@@ -142,16 +141,12 @@ let g:prettier#quickfix_enabled = 0
 let g:prettier#autoformat = 0
 " Make Prettier run on filesave, textchange & leave insert
 autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
+
 " Prettier options
 let g:prettier#config#single_quote = 'true'
 let g:prettier#config#bracket_spacing = 'false'
 let g:prettier#config#trailing_comma = 'all'
 
-" Configure vim-haskell & vim-hindent options
-let g:haskell_indent_disable = 1
-let g:hindent_on_save = 1
-let g:hindent_indent_size = 4
-let g:hindent_line_length = 100 
 
 " Configure NERD Commenter
 let g:NERDSpaceDelims = 1
@@ -164,52 +159,60 @@ let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 set t_Co=256
 
-" Configure reason-vim
-" let g:vimreason_extra_args_expr_reason = '"--print-width 90"'
-autocmd BufWritePre *.re,*.rei,*.ml,*.mli ReasonPrettyPrint
+" Configure Ale
+let g:ale_fix_on_save = 1
 
-" Configure elm-vim
-" let g:elm_format_autosave = 1
-" let g:elm_setup_keybindings = 0
-
-" Configure neosnippet (flow autocomplete)
-let g:neosnippet#enable_completed_snippet = 1
-
-" Enable completion where available.
-let g:ale_completion_enabled = 1
-" Force Ale gutter to be always open
+" Configure auto-formatters
+" Must install formatters separately
+let g:ale_fixers = {
+\   'reason': ['refmt'],
+\   'elm': ['elm-format'],
+\   'rust': ['rustfmt'],
+\   'haskell': ['hfmt']
+\}
 let g:ale_sign_column_always = 1
-" Show Ale errors in status line
 let g:airline#extensions#ale#enabled = 1
-" Disable GHC linter if in a Haskell Stack project
-if (CheckIfFileExists("./stack.yaml") == 1)
-  let g:ale_linters = {
-  \   'haskell': ['stack-build', 'hlint'],
-  \}
-endif
+
+" Disable Ale linters for language that there is a language server for
+" Langauge servers provide a much better experience, and while Ale + LS can be
+" used together, I prefer to disable Ale
+let g:ale_linters = {
+\   'reason': [],
+\   'ocaml': [],
+\   'haskell': [],
+\   'rust': [],
+\   'typescript': [],
+\   'javascript': [],
+\}
 
 " Configure indent lines
 let g:indentLine_char = '|'
 
 " Configure language client
-" set hidden - set above
 
+" This is required for langauge client, but is already set above
+" set hidden
+
+" Configure each filetype & language server to go with it
 let g:LanguageClient_serverCommands = {
     \ 'reason': ['ocaml-language-server', '--stdio'],
     \ 'ocaml': ['ocaml-language-server', '--stdio'],
     \ 'javascript': ['flow-language-server', '--stdio'],
     \ 'javascript.jsx': ['flow-language-server', '--stdio'],
     \ 'haskell': ['hie', '--lsp'],
+    \ 'rust': ['rls'],
+    \ 'typescript': ['javascript-typescript-stdio'],
+    \ 'typescript.jsx': ['javascript-typescript-stdio'],
     \ }
 
-" Adding js/ts language server does work with flow
+" javascript-typescript-stdio language server does work with flow
 " https://github.com/sourcegraph/javascript-typescript-langserver/issues/390
-" \ 'javascript': ['javascript-typescript-stdio'],
-" \ 'javascript.jsx': ['javascript-typescript-stdio'],
 
-nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+" Mappings for interacting with langauge server
+nnoremap <silent> gh :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+nnoremap <silent> gf :call LanguageClient_textDocument_formatting()<cr>
+nnoremap <silent> gr :call LanguageClient_textDocument_rename()<CR>
 
 " Configure NCM
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
