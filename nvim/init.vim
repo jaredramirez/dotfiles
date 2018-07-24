@@ -25,9 +25,13 @@ Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2-tmux'
 Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-syntax'
-Plug 'ncm2/ncm2-vim'
 Plug 'ncm2/ncm2-bufword'
+
+Plug 'ncm2/ncm2-syntax'
+Plug 'Shougo/neco-syntax'
+
+Plug 'ncm2/ncm2-vim'
+Plug 'Shougo/neco-vim'
 
 " LanguageClient (Ties into ncm2)
 " For Haskell langauge server -> https://github.com/haskell/haskell-ide-engine
@@ -60,8 +64,9 @@ Plug 'milch/vim-fastlane'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'Yggdroot/indentLine'
+Plug 'edkolev/tmuxline.vim'
+Plug 'bling/vim-bufferline'
 
-" Misc with 3rd party tools
 " For Dash -> https://kapeli.com/dash
 Plug 'rizzatti/dash.vim'
 " For Wakatime -> https://kapeli.com/dash
@@ -178,7 +183,10 @@ let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#ale#enabled = 1
-set t_Co=256
+let g:airline_theme='minimalist'
+
+" Configure tmuxline
+let g:tmuxline_theme = 'airline'
 
 " Configure Ale
 let g:ale_fix_on_save = 1
@@ -252,6 +260,9 @@ let g:LanguageClient_serverCommands = {
 nnoremap <silent> <Leader>h :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> <Leader>d :call LanguageClient_textDocument_definition()<CR>
 nnoremap <silent> <Leader>r :call LanguageClient_textDocument_rename()<CR>
+
+" Configure vim-poloygot
+let g:javascript_plugin_flow = 1
 
 " Configure Dash
 nmap <silent> <leader>s <Plug>DashSearch
