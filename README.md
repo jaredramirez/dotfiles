@@ -47,7 +47,8 @@ There are a few things to install before getting started:
 
 * `tmux` (Of course)
 * [`tmux-plugin-manager`](https://github.com/tmux-plugins/tpm)
+* `python3`
 
-After that, copy `tmux/.tmux.conf` to `~`. Then run `prefix`(C-A) + `I` to install the plugins.
+After that, copy `tmux/.tmux.conf` to `~`. You'll need to update `tmux/.tmux.conf` on line 34 with the path to your python3 installation. Then run `prefix`(C-A) + `I` to install the plugins.
 
 You're done with Tmux config!
