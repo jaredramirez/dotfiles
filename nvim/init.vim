@@ -1,12 +1,17 @@
 " ------ PLUGINS ------
 
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source ~/.config/nvim/init.vim
+endif
+
 call plug#begin('~/.config/nvim/bundle')
 
 " Navigation
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'sjbach/lusty'
-" See README for tmux setup
-Plug 'christoomey/vim-tmux-navigator' 
+Plug 'christoomey/vim-tmux-navigator' " See README for tmux setup
 
 " Code formatting
 " For Prettier -> https://github.com/prettier/prettier
@@ -53,6 +58,8 @@ Plug 'airblade/vim-gitgutter'
 " Syntax highlighting
 Plug 'sheerun/vim-polyglot'
 Plug 'luochen1990/rainbow'
+Plug 'Khaledgarbaya/night-owl-vim-theme'
+Plug 'lambdatoast/elm.vim'
 
 " Other syntax highlighting - for the (few) languages not supported by polyglot
 Plug 'reasonml-editor/vim-reason-plus', {
@@ -65,7 +72,6 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'Yggdroot/indentLine'
 Plug 'edkolev/tmuxline.vim'
-Plug 'bling/vim-bufferline'
 
 " For Dash -> https://kapeli.com/dash
 Plug 'rizzatti/dash.vim'
@@ -123,8 +129,7 @@ autocmd FileType elm,java setlocal tabstop=4 shiftwidth=4
 
 " Color/Theme
 set background=dark
-hi Pmenu ctermfg=NONE ctermbg=236 cterm=NONE guifg=NONE guibg=#2C3043 gui=NONE
-hi PmenuSel ctermfg=NONE ctermbg=24 cterm=NONE guifg=NONE guibg=#5F7E97 gui=NONE
+colorscheme night-owl
 
 " Set view attributes
 set number
@@ -152,7 +157,7 @@ nnoremap <Leader>b :CtrlPBuffer<CR>
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/deps/*,*/_build/*,*/dist/*,*/build/*,*/legacy/*,*/elm-stuff/*
 
 " Configure vim-polygot
-let g:polyglot_disabled = ['reason']
+let g:polyglot_disabled = ['reason', 'elm']
 
 " Configure rainbow
 let g:rainbow_active = 1
@@ -178,12 +183,12 @@ let g:prettier#config#parser = 'babylon'
 let g:NERDSpaceDelims = 1
 
 " Configure airline status bar
+source ~/.config/nvim/night_owl.vim
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#ale#enabled = 1
-let g:airline_theme='minimalist'
+" let g:airline_theme='night_owl'
 
 " Configure tmuxline
 let g:tmuxline_theme = 'airline'

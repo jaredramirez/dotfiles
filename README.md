@@ -4,17 +4,19 @@ This is the configuration I use for neovim and tmux
 
 ## Usage
 
-### Neovim
+### Neovim (Text Editor)
 
 There are a few things to install before getting started:
 
-* [`neovim`](https://neovim.io/) (Of course)
-* [`vim-plug`](https://github.com/junegunn/vim-plug)
-* `yarn` (This is necessary for [`vim-prettier`](https://github.com/prettier/vim-prettier), if you don't want to install yarn then just remove that plugin from `nvim/init.vim`)
+* [`neovim`](https://neovim.io/)
+* [`vim-plug`](https://github.com/junegunn/vim-plug) (This will install automatically the first time you launch neovim with the `init.vim` provided in this repo)
+* [`yarn`](https://yarnpkg.com/lang/en/) (This is necessary for [`vim-prettier`](https://github.com/prettier/vim-prettier), if you don't want to install yarn then just remove that plugin from `nvim/init.vim`)
 
-Once these are installed & working, you can copy the `nvim` directory to `~/.config/nvim`. Then run `nvim +PlugInstall +UpdateRemotePlugins +qa`.
+After that, symlink `nvim/init.vim` to `~/.config/nvim/init.vim`.
 
-I prefer to use langauge servers, rather than linters, for each language that I work in. I've included links to each one I use here:
+Once these prereqs installed & `init.vim` is symlinked, run `nvim +PlugInstall +UpdateRemotePlugins +qa` to install the vim plugins used.
+
+I prefer to use langauge servers, rather than linters, for each language that I work in. I've included links to each one I use here. You'll need to install each language server for each lanuage that you want.
 
 ```
 " For Haskell langauge server -> https://github.com/haskell/haskell-ide-engine
@@ -26,7 +28,7 @@ I prefer to use langauge servers, rather than linters, for each language that I 
 
 These links can also be found in `nvim/init.vim`.
 
-I also like to use code formatters. The list of the ones that I use is here:
+I also like to use code formatters. You'll need to install each formatter for each lanuage that you want. The list of the ones that I use is here:
 
 ```
 " For ReasonML formatting -> https://github.com/reasonml/reason-cli
@@ -39,16 +41,26 @@ These can also be found in `nvim/init.vim`.
 
 You're done with Neovim config!
 
-### Tmux
+### Tmux (Terminal Multiplexer)
 
 My usage of Tmux is much simpler than my usage of Neovim. Here's how to get setup.
 
 There are a few things to install before getting started:
 
-* `tmux` (Of course)
-* [`tmux-plugin-manager`](https://github.com/tmux-plugins/tpm)
+* [`tmux`](https://github.com/tmux/tmux/wiki)
+* [[`tmux-plugin-manager`](https://github.com/tmux-plugins/tpm)](https://github.com/tmux-plugins/tpm)
 * `python3`
 
-After that, copy `tmux/.tmux.conf` to `~`. You'll need to update `tmux/.tmux.conf` on line 34 with the path to your python3 installation. Then run `prefix`(C-A) + `I` to install the plugins.
+After that, symlink `tmux/.tmux.conf` to `~/.tmux.conf`. You'll need to update `tmux/.tmux.conf` on line 34 with the path to your python3 installation. Then run `prefix`(C-A) + `I` to install the plugins.
 
 You're done with Tmux config!
+
+### Kitty (Teminal Emulator)
+
+There are a few things to install before getting started:
+
+* [`kitty`](https://sw.kovidgoyal.net/kitty/)
+
+After that, symlink `kitty/kitty.conf` to `~/.config/kitty/kitty.conf`.
+
+You're done with Kitty config!
