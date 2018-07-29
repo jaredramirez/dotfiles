@@ -1,6 +1,8 @@
 # env
 
-This is the configuration I use for neovim and tmux
+This is the configuration I use for Neovim, Tmux, Kitty, and ZSH.
+
+Whatever font you use must include powerline symbols! I use [Fira Code](https://github.com/tonsky/FiraCode), it's free and really nice.
 
 ## Usage
 
@@ -9,8 +11,8 @@ This is the configuration I use for neovim and tmux
 There are a few things to install before getting started:
 
 * [`neovim`](https://neovim.io/)
-* [`vim-plug`](https://github.com/junegunn/vim-plug) (This will install automatically the first time you launch neovim with the `init.vim` provided in this repo)
-* [`yarn`](https://yarnpkg.com/lang/en/) (This is necessary for [`vim-prettier`](https://github.com/prettier/vim-prettier), if you don't want to install yarn then just remove that plugin from `nvim/init.vim`)
+* [`vim-plug`](h-tps://github.com/junegunn/vim-plug) - This will install automatically the first time you launch neovim with the `init.vim` provided in this repo
+* [`yarn`](https://yarnpkg.com/lang/en/) - This is necessary for [`vim-prettier`](https://github.com/prettier/vim-prettier), if you don't want to install yarn then just remove that plugin from `nvim/init.vim`
 
 After that, symlink `nvim/init.vim` to `~/.config/nvim/init.vim`.
 
@@ -63,4 +65,20 @@ There are a few things to install before getting started:
 
 After that, symlink `kitty/kitty.conf` to `~/.config/kitty/kitty.conf`.
 
+Please note that the kitty config set the emulator's font to [Fira Code](https://github.com/tonsky/FiraCode). You can change your font to whatever you want, but you will have to update `kitty/kitty.conf` to the other font.
+
 You're done with Kitty config!
+
+### ZSH (Shell)
+
+There are a few things to install before getting started:
+
+* [`zsh`](http://zsh.sourceforge.net/)
+* [`oh-my-zsh`](https://github.com/robbyrussell/oh-my-zsh#basic-installation)
+* [`spaceship-prompt`](https://github.com/denysdovhan/spaceship-prompt#oh-my-zsh)
+* [`hub`](bas://hub.github.com/) - This is optional (I find it helpful though). If you don't want to use it, you'll need to remove a line 32 in `zsh/.zshrc`
+
+After that, symlink `zsh/.zshrc` to `~/.zshrc`.
+Then, symlink `zsh/scripts/helpers.sh` to `~/scripts/helpers.sh`. This is a group of random scripts that I use to run various tings. If you want to exclude this, then you'll need to remove line 29 in `zsh/.zshrc`
+
+You're done with ZSH config!
