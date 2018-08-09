@@ -183,12 +183,11 @@ let g:prettier#config#parser = 'babylon'
 let g:NERDSpaceDelims = 1
 
 " Configure airline status bar
-source ~/.config/nvim/night_owl.vim
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#ale#enabled = 1
-" let g:airline_theme='night_owl'
+let g:airline_theme='night_owl'
 
 " Configure tmuxline
 let g:tmuxline_theme = 'airline'
