@@ -1,0 +1,54 @@
+# Path to your oh-my-zsh installation.
+export ZSH="${HOME}/.oh-my-zsh"
+
+# Theme & theme related attributes
+ZSH_THEME="spaceship"
+SPACESHIP_GOLANG_SHOW=false
+SPACESHIP_CHAR_SYMBOL="λ "
+SPACESHIP_TIME_SHOW=true
+SPACESHIP_USER_SHOW=true
+SPACESHIP_PACKAGE_SHOW=false
+
+# Plugins, use wisely as to many will slow down shell startup
+plugins=(vi-mode history-substring-search)
+
+# Reload for plugins & theme
+source $ZSH/oh-my-zsh.sh
+
+# Kitty
+alias replenysh-session='${KITTY_SESSIONS}/replenysh-session.sh'
+alias elm-language-server-session='${KITTY_SESSIONS}/elm-language-server-session.sh'
+
+# NVM
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+# Path to custom helpers
+source ~/scripts/helpers.sh
+
+# Alias git to hub
+eval "$(hub alias -s)"
+
+# Search History
+bindkey "^[[A" history-substring-search-up
+bindkey "^[[B" history-substring-search-down
+bindkey "^P" history-beginning-search-backward
+bindkey "^N" history-beginning-search-forward
+
+# Set language
+export LANG=en_US.UTF-8
+
+# Set Editor
+export EDITOR=nvim
+
+# Set TERM colors
+export TERM=xterm-256color
+
+# Aliases
+alias icloud='~/Library/Mobile\ Documents/com~apple~CloudDocs'
+alias trash="rmtrash"
+
+# Fuzzy Finder
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# OPAM configuration -- Probably should remove
+. /Users/jaredramirez/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true

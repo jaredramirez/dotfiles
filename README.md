@@ -1,6 +1,6 @@
 # env
 
-This is the configuration I use for Neovim, Tmux, Kitty, and ZSH.
+This is the configuration I use for Neovim, Kitty, and ZSH.
 
 Whatever font you use must include powerline symbols! I use [Fira Code](https://github.com/tonsky/FiraCode), it's free and really nice.
 
@@ -43,35 +43,6 @@ These can also be found in `nvim/init.vim`.
 
 You're done with Neovim config!
 
-### Tmux (Terminal Multiplexer)
-
-My usage of Tmux is much simpler than my usage of Neovim. Here's how to get setup.
-
-There are a few things to install before getting started:
-
-* [`tmux`](https://github.com/tmux/tmux/wiki)
-* [[`tmux-plugin-manager`](https://github.com/tmux-plugins/tpm)](https://github.com/tmux-plugins/tpm)
-* `python3`
-
-After that, symlink `tmux/.tmux.conf` to `~/.tmux.conf`.
-After that, symlink `tmux/.tmux.snapshot` to `~/.tmux.snapshot`.
-You'll need to update `tmux/.tmux.conf` on line 34 and 37 with the path to your python3 installation and snapshot file symlink.
-Then run `prefix`(C-A) + `I` to install the plugins.
-
-You're done with Tmux config!
-
-### Kitty (Teminal Emulator)
-
-There are a few things to install before getting started:
-
-* [`kitty`](https://sw.kovidgoyal.net/kitty/)
-
-After that, symlink `kitty/kitty.conf` to `~/.config/kitty/kitty.conf`.
-
-Please note that the kitty config set the emulator's font to [Fira Code](https://github.com/tonsky/FiraCode). You can change your font to whatever you want, but you will have to update `kitty/kitty.conf` to the other font.
-
-You're done with Kitty config!
-
 ### ZSH (Shell)
 
 There are a few things to install before getting started:
@@ -81,7 +52,27 @@ There are a few things to install before getting started:
 * [`spaceship-prompt`](https://github.com/denysdovhan/spaceship-prompt#oh-my-zsh)
 * [`hub`](bas://hub.github.com/) - This is optional (I find it helpful though). If you don't want to use it, you'll need to remove a line 32 in `zsh/.zshrc`
 
-After that, symlink `zsh/.zshrc` to `~/.zshrc`.
-Then, symlink `zsh/scripts/helpers.sh` to `~/scripts/helpers.sh`. This is a group of random scripts that I use to run various tings. If you want to exclude this, then you'll need to remove line 29 in `zsh/.zshrc`
+After that, symlink `zsh/zshenv` to `~/.zshenv`.
+After that, symlink `zsh/zshrc` to `~/.zshrc`.
+Then, symlink `zsh/scripts/helpers.sh` to `~/scripts/helpers.sh`. This is a group of random scripts that I use to run various tings. If you want to exclude this, then you'll need to remove line 26 in `zsh/.zshrc`
 
 You're done with ZSH config!
+
+### Kitty (Teminal Emulator)
+
+There are a few things to install before getting started:
+
+* [`kitty`](https://sw.kovidgoyal.net/kitty/)
+
+After that, symlink `kitty/kitty.conf` to `~/.config/kitty/kitty.conf`.
+After that, update line 43 in `zsh/zshenv` to point to `./kitty` (wherever you cloned this project)
+
+Please note that the kitty config set the emulator's font to [Fira Code](https://github.com/tonsky/FiraCode). You can change your font to whatever you want, but you will have to update `kitty/kitty.conf` to the other font.
+
+I have my Kitty keybindings setup to mirror tmux's keybindings (since I used that before kitty). The
+prefix I use is `ctrl+a>KEY`, so if you don't like that then you'll have to change that. For the full list of
+keybindings take a look at `kitty/kitty.conf`
+
+If you use OSX, and want Kitty to open automatically in full screen mode, follow the directions [here](https://stackoverflow.com/a/32405815/8838731), to expose your `$PATH` to gui applications. If you don't want this, then feel free to ignore this.
+
+You're done with Kitty config!

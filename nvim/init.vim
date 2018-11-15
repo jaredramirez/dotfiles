@@ -11,7 +11,6 @@ call plug#begin('~/.config/nvim/bundle')
 " Navigation
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'sjbach/lusty'
-Plug 'christoomey/vim-tmux-navigator' " See README for tmux setup
 
 " Code formatting
 " For Prettier -> https://github.com/prettier/prettier
@@ -28,7 +27,6 @@ Plug 'w0rp/ale'
 " Completion - I mostly rely on language severs + ncm2 for completion
 Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2-tmux'
 Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-bufword'
 
@@ -71,7 +69,6 @@ Plug 'milch/vim-fastlane'
 Plug 'itchyny/lightline.vim'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'Yggdroot/indentLine'
-Plug 'edkolev/tmuxline.vim'
 Plug 'ap/vim-buftabline'
 
 " For Dash -> https://kapeli.com/dash
@@ -88,6 +85,12 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'easymotion/vim-easymotion'
+
+if exists('$TMUX')
+  Plug 'christoomey/vim-tmux-navigator' " See README for tmux setup
+  Plug 'edkolev/tmuxline.vim'
+  Plug 'ncm2/ncm2-tmux'
+endif
 
 call plug#end()
 
@@ -145,6 +148,8 @@ set background=dark
 colorscheme night-owl
 highlight PMenuSel guibg=#54738C ctermbg=66 gui=NONE cterm=NONE
 highlight Comment cterm=italic
+highlight CursorLine guifg=NONE ctermfg=NONE guibg=#01121F ctermbg=16
+highlight CursorLineNR guifg=#C5E4FD ctermfg=179
 highlight clear Error
 
 " Set view attributes
@@ -222,9 +227,11 @@ highlight BufTabLineCurrent guibg=#4E4E43 ctermbg=59
 highlight BufTabLineHidden guibg=#30302C ctermbg=58
 
 " Configure tmuxline
-autocmd VimEnter * Tmuxline
-let g:tmuxline_preset = 'powerline'
-let g:tmuxline_theme = 'lightline'
+if exists('$TMUX')
+  autocmd VimEnter * Tmuxline
+  let g:tmuxline_preset = 'powerline'
+  let g:tmuxline_theme = 'lightline'
+endif
 
 " Configure Ale
 let g:ale_fix_on_save = 1
@@ -287,6 +294,7 @@ set signcolumn=yes
 " For Ocamel/Reason language server -> https://github.com/freebroccolo/ocaml-language-server<Paste>
 " For Flow(JS) language server -> https://github.com/flowtype/flow-language-server
 " For Typescript language server -> https://github.com/sourcegraph/javascript-typescript-langserver
+" \ 'elm': ['elm-language-server-exe'],
 let g:LanguageClient_serverCommands = {
     \ 'elm': ['elm-language-server-exe'],
     \ 'reason': ['ocaml-language-server', '--stdio'],

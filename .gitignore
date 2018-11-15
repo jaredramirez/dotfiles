@@ -1,3 +1,6 @@
 nvim/autoload
 nvim/bundle
 nvim/.netrwhist
+
+lc.log
+**/lc.log
