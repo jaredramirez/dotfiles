@@ -75,4 +75,6 @@ keybindings take a look at `kitty/kitty.conf`
 
 If you use OSX, and want Kitty to open automatically in full screen mode, follow the directions [here](https://stackoverflow.com/a/32405815/8838731), to expose your `$PATH` to gui applications. If you don't want this, then feel free to ignore this.
 
+Also, you can setup custom window layouts with kitty. Take a look at `kitty/session` for the layout/window config. And I alais the setup in `zsh/zshrc`
+
 You're done with Kitty config!
