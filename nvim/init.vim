@@ -60,14 +60,10 @@ Plug 'haishanh/night-owl.vim'
 Plug 'lambdatoast/elm.vim'
 
 " Other syntax highlighting - for the (few) languages not supported by polyglot
-Plug 'reasonml-editor/vim-reason-plus', {
-  \ 'for': ['reason']
-\ }
+Plug 'reasonml-editor/vim-reason-plus'
 Plug 'milch/vim-fastlane'
 
 " Status Bar
-Plug 'itchyny/lightline.vim'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'Yggdroot/indentLine'
 Plug 'ap/vim-buftabline'
 
@@ -85,12 +81,6 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'easymotion/vim-easymotion'
-
-if exists('$TMUX')
-  Plug 'christoomey/vim-tmux-navigator' " See README for tmux setup
-  Plug 'edkolev/tmuxline.vim'
-  Plug 'ncm2/ncm2-tmux'
-endif
 
 call plug#end()
 
@@ -169,6 +159,8 @@ inoremap <C-c> <Nop>
 " Keep cursor in the center of the screen
 set scrolloff=999
 
+" Disable cursor flash
+set guicursor=a:blinkon0
 
 " ------ PLUGIN CONFIG ------
 
@@ -211,27 +203,61 @@ let g:prettier#config#parser = 'babylon'
 " Configure NERD Commenter
 let g:NERDSpaceDelims = 1
 
-" Configure lightline
-set noshowmode
-let g:lightline = {
-  \ 'colorscheme': 'seoul256',
-  \ 'separator': { 'left': '', 'right': '' },
-  \ 'subseparator': { 'left': '', 'right': '' },
-  \ }
+" Vim status line
+let g:currentmode={
+    \ 'n'      : 'Normal ',
+    \ 'no'     : 'N·Operator Pending ',
+    \ 'v'      : 'Visual ',
+    \ 'V'      : 'V·Line ',
+    \ '\<C-V>' : 'V·Block ',
+    \ 's'      : 'Select ',
+    \ 'S'      : 'S·Line ',
+    \ '\<C-S>' : 'S·Block ',
+    \ 'i'      : 'Insert ',
+    \ 'R'      : 'Replace ',
+    \ 'Rv'     : 'V·Replace ',
+    \ 'c'      : 'Command ',
+    \ 'cv'     : 'Vim Ex ',
+    \ 'ce'     : 'Ex ',
+    \ 'r'      : 'Prompt ',
+    \ 'rm'     : 'More ',
+    \ 'r?'     : 'Confirm ',
+    \ '!'      : 'Shell ',
+    \ 't'      : 'Terminal '
+    \}
+
+function! GitBranch()
+  return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
+endfunction
+
+function! StatuslineGit()
+  let l:branchname = GitBranch()
+  return strlen(l:branchname) > 0?'  '.l:branchname.' ':''
+endfunction
+
+set laststatus=2
+set statusline=
+set statusline+=%0*\ %{toupper(g:currentmode[mode()])}
+set statusline+=\ ››
+set statusline+=\ %{StatuslineGit()}
+set statusline+=\ ››
+set statusline+=\ %*
+set statusline+=\ %f\ %*
+set statusline+=%=
+set statusline+=\ ‹‹
+set statusline+=\ %y
+set statusline+=\ /|
+set statusline+=\ %l:%c
+set statusline+=\ ››
+
+hi StatusLine guifg=#0B2942 guibg=#D2DEE7
+hi StatusLineTermNC guifg=#010E1A guibg=#5F7E97
 
 " Configure buftabline
 let g:buftabline_indicators = 1
-highlight BufTabLineFill guifg=#30302C ctermfg=58 guibg=#30302C ctermbg=58
-highlight BufTabLineHidden guifg=NONE ctermfg=NONE guibg=NONE ctermbg=NONE
-highlight BufTabLineCurrent guibg=#4E4E43 ctermbg=59
-highlight BufTabLineHidden guibg=#30302C ctermbg=58
-
-" Configure tmuxline
-if exists('$TMUX')
-  autocmd VimEnter * Tmuxline
-  let g:tmuxline_preset = 'powerline'
-  let g:tmuxline_theme = 'lightline'
-endif
+highlight BufTabLineFill guifg=#5F7E9 guibg=#010E1A
+highlight BufTabLineCurrent guifg=#D2DEE7 guibg=#0B2942
+highlight BufTabLineHidden guifg=#5F7E97 guibg=#010E1A
 
 " Configure Ale
 let g:ale_fix_on_save = 1
@@ -298,11 +324,11 @@ set signcolumn=yes
 let g:LanguageClient_serverCommands = {
     \ 'elm': ['elm-language-server-exe'],
     \ 'reason': ['ocaml-language-server', '--stdio'],
-    \ 'ocaml': ['ocaml-language-server', '--stdio'],
-    \ 'javascript': ['flow-language-server', '--stdio'],
-    \ 'javascript.jsx': ['flow-language-server', '--stdio'],
     \ 'haskell': ['hie-wrapper'],
     \ 'rust': ['rls'],
+    \ 'ocaml': ['reason-language-server.exe'],
+    \ 'javascript': ['flow-language-server', '--stdio'],
+    \ 'javascript.jsx': ['flow-language-server', '--stdio'],
     \ 'typescript': ['javascript-typescript-stdio'],
     \ 'typescript.jsx': ['javascript-typescript-stdio'],
     \ }
@@ -314,9 +340,6 @@ let g:LanguageClient_rootMarkers = {
     \ 'haskell': ['stack.yaml'],
     \ 'rust': ['Cargo.toml'],
     \ }
-
-let g:LanguageClient_loggingFile = './lc.log'
-let g:LanguageClient_loggingLevel = 'DEBUG'
 
 " javascript-typescript-stdio language server does work with flow
 " https://github.com/sourcegraph/javascript-typescript-langserver/issues/390
