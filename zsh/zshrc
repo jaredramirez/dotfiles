@@ -4,7 +4,7 @@ export ZSH="${HOME}/.oh-my-zsh"
 # Theme & theme related attributes
 ZSH_THEME="spaceship"
 SPACESHIP_GOLANG_SHOW=false
-SPACESHIP_CHAR_SYMBOL="λ "
+SPACESHIP_CHAR_SYMBOL="|> "
 SPACESHIP_TIME_SHOW=true
 SPACESHIP_USER_SHOW=true
 SPACESHIP_PACKAGE_SHOW=false
@@ -24,7 +24,7 @@ alias bs-elm-session='${KITTY_SESSIONS}/bs-elm-session.sh'
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 # Path to custom helpers
-source ~/scripts/helpers.sh
+source $HOME/scripts/helpers.sh
 
 # Alias git to hub
 eval "$(hub alias -s)"
@@ -47,7 +47,7 @@ export TERM=xterm-256color
 # Aliases
 alias icloud='~/Library/Mobile\ Documents/com~apple~CloudDocs'
 alias trash="rmtrash"
-alias zshreload="source ~/.zshrc"
+alias zshreload="source ~/.zshenv && source ~/.zshrc"
 
 # Fuzzy Finder
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

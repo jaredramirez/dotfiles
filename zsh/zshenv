@@ -3,23 +3,24 @@ export PATH="${HOME}/bin:/usr/local/bin:${PATH}"
 export PATH="/opt/local/bin:/opt/local/sbin:${PATH}"
 export PATH="/usr/local/sbin:${PATH}"
 export PATH="${HOME}/.local/bin:${PATH}"
+export PATH="${HOME}/bin:${PATH}"
 
 # Python
 export PATH="${HOME}/Library/Python/2.7/bin:${PATH}"
 
+# Ruby
+export PATH="${HOME}/.gem/ruby/2.3.0/bin:${PATH}"
+
 # Yarn
 export PATH="${HOME}/.config/yarn/global/node_modules/.bin:${PATH}"
-
-# Fastlane
-export PATH="${HOME}/.fastlane/bin:${PATH}"
 
 # Node
 export PATH="/usr/local/opt/node@8/bin:${PATH}"
 
-#Haskell
+# Haskell
 export PATH="${HOME}/Library/Haskell/bin:${PATH}"
 
-# Other
+# Java
 export JAVA_HOME="$(/usr/libexec/java_home)"
 
 # Go
@@ -39,6 +40,9 @@ export PATH="${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:${PATH}"
 # NVM
 export NVM_DIR="${HOME}/.nvm"
 
+# Env
+export ENV="${HOME}/dev/github.com/jaredramirez/env"
+
 # Kitty
-export KITTY="${HOME}/dev/src/github.com/jaredramirez/env/kitty"
+export KITTY="${ENV}/kitty"
 export KITTY_SESSIONS="${KITTY}/sessions"

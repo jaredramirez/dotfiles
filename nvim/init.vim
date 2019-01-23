@@ -137,7 +137,7 @@ endif
 set background=dark
 colorscheme night-owl
 highlight PMenuSel guibg=#54738C ctermbg=66 gui=NONE cterm=NONE
-highlight Comment cterm=italic
+highlight Comment gui=italic cterm=italic
 highlight CursorLine guifg=NONE ctermfg=NONE guibg=#01121F ctermbg=16
 highlight CursorLineNR guifg=#C5E4FD ctermfg=179
 highlight clear Error
@@ -175,12 +175,19 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/deps/*,*/_build/*,*/
 
 " Configure vim-polygot
 let g:polyglot_disabled = ['reason', 'elm']
+let g:javascript_plugin_flow = 1
+
 
 " Configure rainbow
 let g:rainbow_active = 1
 let g:rainbow_conf = {
   \ 'guifgs': ['#5FD7FF', '#FFFFAF', '#AFFFFF', '#FFD7FF'],
   \ 'ctermfgs': ['51', '229', '159', '225'],
+  \ 'parentheses': [
+    \ 'start=/(/ end=/)/ fold',
+    \ 'start=/\[/ end=/\]/ fold',
+    \ 'start=/{\(-|\)\@!/ end=/\(-\)\@<!}/ fold'
+  \],
 \}
 
 " Configure vim-prettier
@@ -353,9 +360,6 @@ map <Leader>llf :call LanguageClient#textDocument_formatting()<CR>
 map <Leader>llb :call LanguageClient#textDocument_references()<CR>
 map <Leader>lla :call LanguageClient#textDocument_codeAction()<CR>
 map <Leader>lls :call LanguageClient#textDocument_documentSymbol()<CR>
-
-" Configure vim-poloygot
-let g:javascript_plugin_flow = 1
 
 " Configure Dash
 nmap <silent> <leader>s <Plug>DashSearch
