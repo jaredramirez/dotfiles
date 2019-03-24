@@ -21,7 +21,7 @@ export PATH="/usr/local/opt/node@8/bin:${PATH}"
 export PATH="${HOME}/Library/Haskell/bin:${PATH}"
 
 # Java
-export JAVA_HOME="$(/usr/libexec/java_home)"
+export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"
 
 # Go
 export GO_HOME=/usr/local/go/bin

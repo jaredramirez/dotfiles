@@ -53,18 +53,19 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 " Git
 Plug 'airblade/vim-gitgutter'
 
-" Syntax highlighting
+" Syntax highlighting / themes
 Plug 'sheerun/vim-polyglot'
 Plug 'luochen1990/rainbow'
+Plug 'Yggdroot/indentLine'
 Plug 'haishanh/night-owl.vim'
-Plug 'lambdatoast/elm.vim'
 
 " Other syntax highlighting - for the (few) languages not supported by polyglot
+" or for polygot packages that I dislike
 Plug 'reasonml-editor/vim-reason-plus'
+Plug 'lambdatoast/elm.vim'
 Plug 'milch/vim-fastlane'
 
 " Status Bar
-Plug 'Yggdroot/indentLine'
 Plug 'ap/vim-buftabline'
 
 " For Dash -> https://kapeli.com/dash
@@ -95,9 +96,6 @@ set hidden
 " Set max line length for JS/TS
 autocmd BufRead,BufNewFile *.js,*jsx,*.ts,*.tsx setlocal colorcolumn=80
 
-" Turn off spellcheck
-set nospell
-
 " Show invisibles
 set list listchars=tab:··,trail:·,nbsp:·,eol:¬
 
@@ -123,7 +121,7 @@ set smartcase
 set visualbell
 set noerrorbells
 
-" Set tabs
+" Set tabs in general and for specific file types
 set tabstop=2
 set shiftwidth=2
 set expandtab
@@ -162,6 +160,19 @@ set scrolloff=999
 " Disable cursor flash
 set guicursor=a:blinkon0
 
+" Set persistant undo
+set undofile
+set undodir=~/.config/nvim/undodir
+
+" Set file plum
+" If not running neovim 0.4.x, comment out this section
+set wildoptions=pum
+set pumblend=10
+
+" Autoreload files after they change on disk
+autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
+autocmd FileChangedShellPost * echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
+
 " ------ PLUGIN CONFIG ------
 
 " Configure Ctrl-P
@@ -173,12 +184,11 @@ nnoremap <Leader>b :CtrlPBuffer<CR>
 " Ctrl-P ignores
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/deps/*,*/_build/*,*/dist/*,*/build/*,*/legacy/*,*/elm-stuff/*
 
-" Configure vim-polygot
+" Configure syntax both vim-polygot & others
 let g:polyglot_disabled = ['reason', 'elm']
 let g:javascript_plugin_flow = 1
 
-
-" Configure rainbow
+" Configure rainbow parentheses
 let g:rainbow_active = 1
 let g:rainbow_conf = {
   \ 'guifgs': ['#5FD7FF', '#FFFFAF', '#AFFFFF', '#FFD7FF'],
@@ -197,9 +207,9 @@ let g:prettier#exec_cmd_async = 1
 " Disable quickfix
 let g:prettier#quickfix_enabled = 0
 " Make Prettier run on filesave
-autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
+autocmd BufWritePre *.js,*.jsx,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
 
-" Set prettier back to defaults (vim-prettier has differnt defaults)
+" Set prettier back to defaults (vim-prettier has different defaults)
 let g:prettier#config#single_quote = 'false'
 let g:prettier#config#bracket_spacing = 'true'
 let g:prettier#config#jsx_bracket_same_line = 'false'
@@ -211,45 +221,20 @@ let g:prettier#config#parser = 'babylon'
 let g:NERDSpaceDelims = 1
 
 " Vim status line
-let g:currentmode={
-    \ 'n'      : 'Normal ',
-    \ 'no'     : 'N·Operator Pending ',
-    \ 'v'      : 'Visual ',
-    \ 'V'      : 'V·Line ',
-    \ '\<C-V>' : 'V·Block ',
-    \ 's'      : 'Select ',
-    \ 'S'      : 'S·Line ',
-    \ '\<C-S>' : 'S·Block ',
-    \ 'i'      : 'Insert ',
-    \ 'R'      : 'Replace ',
-    \ 'Rv'     : 'V·Replace ',
-    \ 'c'      : 'Command ',
-    \ 'cv'     : 'Vim Ex ',
-    \ 'ce'     : 'Ex ',
-    \ 'r'      : 'Prompt ',
-    \ 'rm'     : 'More ',
-    \ 'r?'     : 'Confirm ',
-    \ '!'      : 'Shell ',
-    \ 't'      : 'Terminal '
-    \}
-
 function! GitBranch()
   return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
 endfunction
 
 function! StatuslineGit()
   let l:branchname = GitBranch()
-  return strlen(l:branchname) > 0?'  '.l:branchname.' ':''
+  return strlen(l:branchname) > 0 ? '  '.l:branchname.' ' : ' '
 endfunction
 
 set laststatus=2
 set statusline=
-set statusline+=%0*\ %{toupper(g:currentmode[mode()])}
-set statusline+=\ ››
-set statusline+=\ %{StatuslineGit()}
-set statusline+=\ ››
-set statusline+=\ %*
-set statusline+=\ %f\ %*
+set statusline+=\%{StatuslineGit()}
+set statusline+=\››
+set statusline+=\ %t
 set statusline+=%=
 set statusline+=\ ‹‹
 set statusline+=\ %y
@@ -287,7 +272,6 @@ let g:ale_fixers = {
 \   'rust': ['rustfmt'],
 \}
 
-
 " Disable Ale linters for language that there is a language server for
 " Langauge servers provide a much better experience, and while Ale + LS can be
 " used together, I prefer to disable Ale
@@ -302,7 +286,7 @@ let g:ale_linters = {
 \}
 
 " Configure indentLine
-let g:indentLine_char = '|'
+let g:indentLine_char = '▏'
 
 " Configure ncm2
 autocmd BufEnter * call ncm2#enable_for_buffer()
@@ -327,39 +311,28 @@ set signcolumn=yes
 " For Ocamel/Reason language server -> https://github.com/freebroccolo/ocaml-language-server<Paste>
 " For Flow(JS) language server -> https://github.com/flowtype/flow-language-server
 " For Typescript language server -> https://github.com/sourcegraph/javascript-typescript-langserver
-" \ 'elm': ['elm-language-server-exe'],
 let g:LanguageClient_serverCommands = {
     \ 'elm': ['elm-language-server-exe'],
     \ 'reason': ['ocaml-language-server', '--stdio'],
     \ 'haskell': ['hie-wrapper'],
     \ 'rust': ['rls'],
     \ 'ocaml': ['reason-language-server.exe'],
-    \ 'javascript': ['flow-language-server', '--stdio'],
-    \ 'javascript.jsx': ['flow-language-server', '--stdio'],
-    \ 'typescript': ['javascript-typescript-stdio'],
-    \ 'typescript.jsx': ['javascript-typescript-stdio'],
     \ }
 let g:LanguageClient_rootMarkers = {
     \ 'elm': ['elm.json'],
     \ 'javascript': ['package.json'],
     \ 'reason': ['bs.config'],
-    \ 'ocaml': ['*.opam'],
-    \ 'haskell': ['stack.yaml'],
+    \ 'haskell': ['stack.yaml', '*.cabal'],
     \ 'rust': ['Cargo.toml'],
     \ }
 
-" javascript-typescript-stdio language server does work with flow
-" https://github.com/sourcegraph/javascript-typescript-langserver/issues/390
-
 " Mappings for interacting with langauge server
-nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-map <Leader>llh :call LanguageClient#textDocument_hover()<CR>
-map <Leader>llg :call LanguageClient#textDocument_definition()<CR>
-map <Leader>llr :call LanguageClient#textDocument_rename()<CR>
-map <Leader>llf :call LanguageClient#textDocument_formatting()<CR>
-map <Leader>llb :call LanguageClient#textDocument_references()<CR>
-map <Leader>lla :call LanguageClient#textDocument_codeAction()<CR>
-map <Leader>lls :call LanguageClient#textDocument_documentSymbol()<CR>
+map <silent> <Leader>ls :call LanguageClient_contextMenu()<CR>
 
 " Configure Dash
 nmap <silent> <leader>s <Plug>DashSearch
+
+" Configure Git Gutter
+highlight GitGutterAdd ctermfg=149 ctermbg=NONE guifg=#addb67 guibg=NONE
+highlight GitGutterChange ctermfg=116 ctermbg=NONE guifg=#011627 guibg=NONE
+highlight GitGutterDelete ctermfg=204 ctermbg=NONE guifg=#ff5874 guibg=NONE
