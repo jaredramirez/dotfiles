@@ -24,19 +24,10 @@ Plug 'prettier/vim-prettier', {
 " For Haskell formatting -> http://hackage.haskell.org/package/hfmt
 Plug 'w0rp/ale'
 
-" Completion - I mostly rely on language severs + ncm2 for completion
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-bufword'
+" Completion - This automatically integrates language client
+Plug 'lifepillar/vim-mucomplete'
 
-Plug 'ncm2/ncm2-syntax'
-Plug 'Shougo/neco-syntax'
-
-Plug 'ncm2/ncm2-vim'
-Plug 'Shougo/neco-vim'
-
-" LanguageClient (Ties into ncm2)
+" LanguageClient
 " For Haskell langauge server -> https://github.com/haskell/haskell-ide-engine
 " For Rust langauge server -> https://github.com/rust-lang-nursery/rls
 " For Ocaml/Reason language server -> https://github.com/freebroccolo/ocaml-language-server
@@ -96,6 +87,9 @@ set hidden
 " Set max line length for JS/TS
 autocmd BufRead,BufNewFile *.js,*jsx,*.ts,*.tsx setlocal colorcolumn=80
 
+" Set spelling
+set spell spelllang=en_us
+
 " Show invisibles
 set list listchars=tab:··,trail:·,nbsp:·,eol:¬
 
@@ -127,17 +121,19 @@ set shiftwidth=2
 set expandtab
 autocmd FileType elm,java setlocal tabstop=4 shiftwidth=4
 
-" Color/Theme
+" Color/Theme with custom overrides
 if (has("termguicolors"))
  set termguicolors
 endif
 
 set background=dark
 colorscheme night-owl
+highlight PMenu guibg=#0B2942 ctermbg=16 gui=NONE cterm=NONE
 highlight PMenuSel guibg=#54738C ctermbg=66 gui=NONE cterm=NONE
 highlight Comment gui=italic cterm=italic
 highlight CursorLine guifg=NONE ctermfg=NONE guibg=#01121F ctermbg=16
 highlight CursorLineNR guifg=#C5E4FD ctermfg=179
+highlight Visual guifg=NONE ctermfg=NONE guibg=#0B2942 ctermbg=16 gui=NONE cterm=NONE
 highlight clear Error
 
 " Set view attributes
@@ -242,8 +238,8 @@ set statusline+=\ /|
 set statusline+=\ %l:%c
 set statusline+=\ ››
 
-hi StatusLine guifg=#0B2942 guibg=#D2DEE7
-hi StatusLineTermNC guifg=#010E1A guibg=#5F7E97
+highlight StatusLine guifg=#0B2942 guibg=#D2DEE7
+highlight StatusLineTermNC guifg=#010E1A guibg=#5F7E97
 
 " Configure buftabline
 let g:buftabline_indicators = 1
@@ -273,7 +269,7 @@ let g:ale_fixers = {
 \}
 
 " Disable Ale linters for language that there is a language server for
-" Langauge servers provide a much better experience, and while Ale + LS can be
+" Language servers provide a much better experience, and while Ale + LS can be
 " used together, I prefer to disable Ale
 let g:ale_linters = {
 \   'reason': [],
@@ -288,14 +284,9 @@ let g:ale_linters = {
 " Configure indentLine
 let g:indentLine_char = '▏'
 
-" Configure ncm2
-autocmd BufEnter * call ncm2#enable_for_buffer()
+" Configure MUComplete
 set completeopt=noinsert,menuone,noselect
-
-set shortmess+=c
-inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+let g:mucomplete#enable_auto_at_startup = 1
 
 " Configure LanguageClient
 
