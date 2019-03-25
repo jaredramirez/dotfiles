@@ -13,26 +13,15 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'sjbach/lusty'
 
 " Code formatting
-" For Prettier -> https://github.com/prettier/prettier
-Plug 'prettier/vim-prettier', {
-  \ 'do': 'yarn install',
-  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue']
-\ }
-" For ReasonML formatting -> https://github.com/reasonml/reason-cli
-" For Elm formatting -> https://github.com/avh4/elm-format
-" For Rust formatting -> https://github.com/rust-lang-nursery/rustfmt
-" For Haskell formatting -> http://hackage.haskell.org/package/hfmt
+" Ale can be used for more that just formatting, but because I
+" use language servers, I use it pretty much exclusively for automatically
+" formatting
 Plug 'w0rp/ale'
 
 " Completion - This automatically integrates language client
 Plug 'lifepillar/vim-mucomplete'
 
 " LanguageClient
-" For Haskell langauge server -> https://github.com/haskell/haskell-ide-engine
-" For Rust langauge server -> https://github.com/rust-lang-nursery/rls
-" For Ocaml/Reason language server -> https://github.com/freebroccolo/ocaml-language-server
-" For Flow(JS) language server -> https://github.com/flowtype/flow-language-server
-" For Typescript language server -> https://github.com/sourcegraph/javascript-typescript-langserver
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
@@ -73,6 +62,7 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'easymotion/vim-easymotion'
+Plug 'embear/vim-localvimrc'
 
 call plug#end()
 
@@ -134,14 +124,15 @@ highlight Comment gui=italic cterm=italic
 highlight CursorLine guifg=NONE ctermfg=NONE guibg=#01121F ctermbg=16
 highlight CursorLineNR guifg=#C5E4FD ctermfg=179
 highlight Visual guifg=NONE ctermfg=NONE guibg=#0B2942 ctermbg=16 gui=NONE cterm=NONE
-highlight clear Error
+highlight Todo ctermfg=222 guifg=#ecc48d guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+highlight Error guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
 
 " Set view attributes
 set number
 set ruler
 set cursorline
 
-" Make <Shift><K> inverse of <Shift><J>
+" Make <Shift><K> insert a new line at the cursor
 nnoremap K i<CR><Esc>
 
 " Set Leader
@@ -168,6 +159,37 @@ set pumblend=10
 " Autoreload files after they change on disk
 autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
 autocmd FileChangedShellPost * echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
+
+" Open preview window at the bottom of the screen
+set splitbelow
+
+" Vim status line
+function! GitBranch()
+  return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
+endfunction
+
+function! StatuslineGit()
+  let l:branchname = GitBranch()
+  return strlen(l:branchname) > 0 ? '  '.l:branchname.' ' : ' '
+endfunction
+
+set laststatus=2
+set statusline=
+set statusline+=%#PMenuSel#
+set statusline+=\%{StatuslineGit()}
+set statusline+=%#StatusLine#
+set statusline+=\
+set statusline+=%#PMenu#
+set statusline+=\ %t
+set statusline+=%=
+set statusline+=%#StatusLine#
+set statusline+=\ 
+set statusline+=%#PMenuSel#
+set statusline+=\ %y
+set statusline+=\ /|
+set statusline+=\ %l:%c
+
+highlight StatusLine guifg=#54738C guibg=#0B2942 gui=NONE cterm=NONE
 
 " ------ PLUGIN CONFIG ------
 
@@ -196,50 +218,8 @@ let g:rainbow_conf = {
   \],
 \}
 
-" Configure vim-prettier
-
-" Make Prettier async
-let g:prettier#exec_cmd_async = 1
-" Disable quickfix
-let g:prettier#quickfix_enabled = 0
-" Make Prettier run on filesave
-autocmd BufWritePre *.js,*.jsx,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
-
-" Set prettier back to defaults (vim-prettier has different defaults)
-let g:prettier#config#single_quote = 'false'
-let g:prettier#config#bracket_spacing = 'true'
-let g:prettier#config#jsx_bracket_same_line = 'false'
-let g:prettier#config#arrow_parens = 'avoid'
-let g:prettier#config#trailing_comma = 'none'
-let g:prettier#config#parser = 'babylon'
-
 " Configure NERD Commenter
 let g:NERDSpaceDelims = 1
-
-" Vim status line
-function! GitBranch()
-  return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
-endfunction
-
-function! StatuslineGit()
-  let l:branchname = GitBranch()
-  return strlen(l:branchname) > 0 ? '  '.l:branchname.' ' : ' '
-endfunction
-
-set laststatus=2
-set statusline=
-set statusline+=\%{StatuslineGit()}
-set statusline+=\››
-set statusline+=\ %t
-set statusline+=%=
-set statusline+=\ ‹‹
-set statusline+=\ %y
-set statusline+=\ /|
-set statusline+=\ %l:%c
-set statusline+=\ ››
-
-highlight StatusLine guifg=#0B2942 guibg=#D2DEE7
-highlight StatusLineTermNC guifg=#010E1A guibg=#5F7E97
 
 " Configure buftabline
 let g:buftabline_indicators = 1
@@ -249,43 +229,34 @@ highlight BufTabLineHidden guifg=#5F7E97 guibg=#010E1A
 
 " Configure Ale
 let g:ale_fix_on_save = 1
+let g:ale_linters_explicit = 1
+
+" Configure auto-formatters
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'reason': ['refmt'],
+\   'elm': ['elm-format'],
+\   'javascript': ['prettier'],
+\   'javascript.jsx': ['prettier'],
+\   'css': ['prettier'],
+\   'sass': ['prettier']
+\}
 
 " Error Display
 highlight ALEError guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
 highlight ALEErrorSign guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
 highlight ALEWarning guifg=ffd17c ctermfg=222 guibg=NONE ctermbg=NONE
 highlight ALEWarningSign guifg=#ffd17c ctermfg=222 guibg=NONE ctermbg=NONE
-let g:ale_sign_error = '✖'
-let g:ale_sign_warning = '⚠'
+let g:ale_sign_error = '●'
+let g:ale_sign_warning = '●'
 let g:ale_sign_column_always = 1
-
-" Configure auto-formatters
-" \   'haskell': ['hfmt']
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'reason': ['refmt'],
-\   'elm': ['elm-format'],
-\   'rust': ['rustfmt'],
-\}
-
-" Disable Ale linters for language that there is a language server for
-" Language servers provide a much better experience, and while Ale + LS can be
-" used together, I prefer to disable Ale
-let g:ale_linters = {
-\   'reason': [],
-\   'ocaml': [],
-\   'haskell': [],
-\   'rust': [],
-\   'javascript': [],
-\   'typescript': [],
-\   'elm': []
-\}
 
 " Configure indentLine
 let g:indentLine_char = '▏'
 
 " Configure MUComplete
 set completeopt=noinsert,menuone,noselect
+set shortmess-=c
 let g:mucomplete#enable_auto_at_startup = 1
 
 " Configure LanguageClient
@@ -297,24 +268,19 @@ let g:mucomplete#enable_auto_at_startup = 1
 set signcolumn=yes
 
 " Configure each filetype & language server to go with it
-" For Haskell langauge server -> https://github.com/haskell/haskell-ide-engine
-" For Rust langauge server -> https://github.com/rust-lang-nursery/rls
-" For Ocamel/Reason language server -> https://github.com/freebroccolo/ocaml-language-server<Paste>
-" For Flow(JS) language server -> https://github.com/flowtype/flow-language-server
-" For Typescript language server -> https://github.com/sourcegraph/javascript-typescript-langserver
 let g:LanguageClient_serverCommands = {
     \ 'elm': ['elm-language-server-exe'],
+    \ 'javascript': ['flow', 'lsp'],
+    \ 'javascript.jsx': ['flow', 'lsp'],
     \ 'reason': ['ocaml-language-server', '--stdio'],
     \ 'haskell': ['hie-wrapper'],
-    \ 'rust': ['rls'],
-    \ 'ocaml': ['reason-language-server.exe'],
     \ }
 let g:LanguageClient_rootMarkers = {
     \ 'elm': ['elm.json'],
     \ 'javascript': ['package.json'],
+    \ 'javascript.jsx': ['package.json'],
     \ 'reason': ['bs.config'],
     \ 'haskell': ['stack.yaml', '*.cabal'],
-    \ 'rust': ['Cargo.toml'],
     \ }
 
 " Mappings for interacting with langauge server
