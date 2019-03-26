@@ -19,7 +19,19 @@ Plug 'sjbach/lusty'
 Plug 'w0rp/ale'
 
 " Completion - This automatically integrates language client
-Plug 'lifepillar/vim-mucomplete'
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+
+" Completion sources
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-syntax'
+Plug 'Shougo/neco-syntax'
+Plug 'fgrsnau/ncm2-otherbuf', {'branch': 'ncm2'}
+Plug 'filipekiss/ncm2-look.vim'
+Plug 'ncm2/ncm2-tern',  {'do': 'npm install'}
+Plug 'ncm2/ncm2-cssomni'
+Plug 'ncm2/ncm2-highprio-pop'
 
 " LanguageClient
 Plug 'autozimu/LanguageClient-neovim', {
@@ -254,10 +266,16 @@ let g:ale_sign_column_always = 1
 " Configure indentLine
 let g:indentLine_char = '▏'
 
-" Configure MUComplete
+" Configure ncm2
+autocmd BufEnter * call ncm2#enable_for_buffer()
 set completeopt=noinsert,menuone,noselect
 set shortmess-=c
-let g:mucomplete#enable_auto_at_startup = 1
+
+let g:ncm2#matcher = 'substrfuzzy'
+let g:ncm2_look_enabled = 1
+
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " Configure LanguageClient
 
