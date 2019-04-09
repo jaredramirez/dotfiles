@@ -12,7 +12,7 @@ There are a few things to install before getting started:
 
 * [`neovim`](https://neovim.io/)
 * [`vim-plug`](h-tps://github.com/junegunn/vim-plug) - This will install automatically the first time you launch neovim with the `init.vim` provided in this repo
-* [`yarn`](https://yarnpkg.com/lang/en/) - This is necessary for [`vim-prettier`](https://github.com/prettier/vim-prettier), if you don't want to install yarn then just remove that plugin from `nvim/init.vim`
+* [`yarn`](https://yarnpkg.com/lang/en/)
 
 After that, symlink `nvim/init.vim` to `~/.config/nvim/init.vim`.
 After that, symlink `nvim/coc-settings.json` to `~/.config/nvim/coc-settings.json`.
@@ -30,7 +30,7 @@ The language server that I use is [Coc](https://github.com/neoclide/coc.nvim) , 
 To install the extensions that I use, run the following inside neovim. You can look at a whole list of
 coc extensions [here](https://www.npmjs.com/search?q=keywords%3Acoc.nvim)
 ```run
-:CocInstall coc-pairs coc-ultisnips coc-java coc-json coc-html coc-syntax coc-css
+:CocInstall coc-pairs coc-snippets coc-java coc-json coc-html coc-syntax coc-css
 ```
 
 I also like to use code formatters. You'll need to install each formatter for each language that you want.

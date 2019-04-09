@@ -22,8 +22,7 @@ Plug 'w0rp/ale'
 " Coc (Full LSP support)
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install() }}
 
-" Snipits
-Plug 'SirVer/ultisnips'
+" Snips
 Plug 'honza/vim-snippets'
 
 " Fuzzy finder - also used in the language server complemention menu
@@ -271,6 +270,7 @@ inoremap <silent><expr> <cr>
 
 let g:coc_snippet_next = '<Tab>'
 let g:coc_snippet_prev = '<S-Tab>'
+imap <C-j> <Plug>(coc-snippets-expand-jump)
 
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
@@ -292,11 +292,6 @@ function! s:show_documentation()
     call CocAction('doHover')
   endif
 endfunction
-
-" Configure Utilsnips
-let g:UltiSnipsExpandTrigger="<c-x>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 " Configure Git Gutter
 highlight GitGutterAdd ctermfg=149 ctermbg=NONE guifg=#addb67 guibg=NONE
