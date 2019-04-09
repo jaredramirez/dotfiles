@@ -18,25 +18,13 @@ Plug 'sjbach/lusty'
 " formatting
 Plug 'w0rp/ale'
 
-" Completion - This automatically integrates language client
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
 
-" Completion sources
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-syntax'
-Plug 'Shougo/neco-syntax'
-Plug 'fgrsnau/ncm2-otherbuf', {'branch': 'ncm2'}
-Plug 'ncm2/ncm2-tern',  {'do': 'npm install'}
-Plug 'ncm2/ncm2-cssomni'
-Plug 'ncm2/ncm2-highprio-pop'
+" Coc (Full LSP support)
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install() }}
 
-" LanguageClient
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+" Snipits
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 
 " Fuzzy finder - also used in the language server complemention menu
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -59,8 +47,6 @@ Plug 'milch/vim-fastlane'
 " Status Bar
 Plug 'ap/vim-buftabline'
 
-" For Dash -> https://kapeli.com/dash
-Plug 'rizzatti/dash.vim'
 " For Wakatime -> https://kapeli.com/dash
 Plug 'wakatime/vim-wakatime'
 " For Ack -> https://beyondgrep.com/
@@ -70,11 +56,8 @@ Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdcommenter'
 
 " Defaults
-Plug 'cohama/lexima.vim'
 Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-surround'
 Plug 'easymotion/vim-easymotion'
-Plug 'embear/vim-localvimrc'
 
 call plug#end()
 
@@ -139,6 +122,7 @@ highlight Visual guifg=NONE ctermfg=NONE guibg=#0B2942 ctermbg=16 gui=NONE cterm
 highlight Todo ctermfg=222 guifg=#ecc48d guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
 highlight Error guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
 
+
 " Set view attributes
 set number
 set ruler
@@ -194,6 +178,7 @@ set statusline+=\
 set statusline+=%#PMenu#
 set statusline+=\ %t
 set statusline+=%=
+set statusline+=\%{coc#status()}
 set statusline+=%#StatusLine#
 set statusline+=\ 
 set statusline+=%#PMenuSel#
@@ -268,45 +253,50 @@ let g:ale_sign_column_always = 1
 " Configure indentLine
 let g:indentLine_char = '▏'
 
-" Configure ncm2
-autocmd BufEnter * call ncm2#enable_for_buffer()
+" Configure Coc
+
+set updatetime=300
+set shortmess+=c
+set signcolumn=yes
 set completeopt=noinsert,menuone,noselect
-set shortmess-=c
 
-let g:ncm2#matcher = 'substrfuzzy'
-
+" Setup autocomplete/snippets menu
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-" Configure LanguageClient
+inoremap <silent><expr> <cr>
+    \ pumvisible() ? coc#_select_confirm() :
+    \ coc#expandableOrJumpable() ? coc#rpc#request('doKeymap', ['snippets-expand-jump','']) :
+    \  "\<C-g>u\<CR>"
 
-" This is required for LanguageClient, but is already set above
-" set hidden
+let g:coc_snippet_next = '<Tab>'
+let g:coc_snippet_prev = '<S-Tab>'
 
-" Always show sign column
-set signcolumn=yes
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" Configure each filetype & language server to go with it
-let g:LanguageClient_serverCommands = {
-    \ 'elm': ['elm-language-server-exe'],
-    \ 'javascript': ['flow', 'lsp'],
-    \ 'javascript.jsx': ['flow', 'lsp'],
-    \ 'reason': ['ocaml-language-server', '--stdio'],
-    \ 'haskell': ['hie-wrapper'],
-    \ }
-let g:LanguageClient_rootMarkers = {
-    \ 'elm': ['elm.json'],
-    \ 'javascript': ['package.json'],
-    \ 'javascript.jsx': ['package.json'],
-    \ 'reason': ['bs.config'],
-    \ 'haskell': ['stack.yaml', '*.cabal'],
-    \ }
+" Highlights in general
+highlight CocErrorFloat guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
+highlight CocUnderline guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
+highlight CocErrorSign guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
+highlight CocHighlightText guifg=NONE ctermfg=NONE guibg=#3a4168 ctermbg=NONE
 
-" Mappings for interacting with langauge server
-map <silent> <Leader>ls :call LanguageClient_contextMenu()<CR>
+" Mapings
+nnoremap <Leader><Leader>h :call <SID>show_documentation()<CR>
+nnoremap <Leader><Leader>r <Plug>(coc-rename)
 
-" Configure Dash
-nmap <silent> <leader>s <Plug>DashSearch
+function! s:show_documentation()
+  if &filetype == 'vim'
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Configure Utilsnips
+let g:UltiSnipsExpandTrigger="<c-x>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 " Configure Git Gutter
 highlight GitGutterAdd ctermfg=149 ctermbg=NONE guifg=#addb67 guibg=NONE
