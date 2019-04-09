@@ -28,7 +28,6 @@ Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-syntax'
 Plug 'Shougo/neco-syntax'
 Plug 'fgrsnau/ncm2-otherbuf', {'branch': 'ncm2'}
-Plug 'filipekiss/ncm2-look.vim'
 Plug 'ncm2/ncm2-tern',  {'do': 'npm install'}
 Plug 'ncm2/ncm2-cssomni'
 Plug 'ncm2/ncm2-highprio-pop'
@@ -71,6 +70,7 @@ Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdcommenter'
 
 " Defaults
+Plug 'cohama/lexima.vim'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'easymotion/vim-easymotion'
@@ -213,6 +213,8 @@ nnoremap <Leader>o :CtrlP<CR>
 nnoremap <Leader>b :CtrlPBuffer<CR>
 " Ctrl-P ignores
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/deps/*,*/_build/*,*/dist/*,*/build/*,*/legacy/*,*/elm-stuff/*
+" Disable ctrl-p cache so it can easily detect new files
+let g:ctrlp_use_caching = 0
 
 " Configure syntax both vim-polygot & others
 let g:polyglot_disabled = ['reason', 'elm']
@@ -272,7 +274,6 @@ set completeopt=noinsert,menuone,noselect
 set shortmess-=c
 
 let g:ncm2#matcher = 'substrfuzzy'
-let g:ncm2_look_enabled = 1
 
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"

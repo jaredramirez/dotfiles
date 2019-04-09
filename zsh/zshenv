@@ -46,3 +46,6 @@ export ENV="${HOME}/dev/github.com/jaredramirez/env"
 # Kitty
 export KITTY="${ENV}/kitty"
 export KITTY_SESSIONS="${KITTY}/sessions"
+
+# Fastlane
+export PATH="$HOME/.fastlane/bin:$PATH"
