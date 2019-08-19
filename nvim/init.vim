@@ -29,7 +29,11 @@ Plug 'honza/vim-snippets'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
 " Git
+Plug 'itchyny/vim-gitbranch'
 Plug 'airblade/vim-gitgutter'
+
+" Status line
+Plug 'itchyny/lightline.vim'
 
 " Syntax highlighting / themes
 Plug 'sheerun/vim-polyglot'
@@ -42,9 +46,8 @@ Plug 'haishanh/night-owl.vim'
 Plug 'reasonml-editor/vim-reason-plus'
 Plug 'lambdatoast/elm.vim'
 Plug 'milch/vim-fastlane'
-
-" Status Bar
-Plug 'ap/vim-buftabline'
+Plug 'jparise/vim-graphql'
+Plug 'Quramy/vim-js-pretty-template'
 
 " For Wakatime -> https://kapeli.com/dash
 Plug 'wakatime/vim-wakatime'
@@ -57,6 +60,7 @@ Plug 'scrooloose/nerdcommenter'
 " Defaults
 Plug 'tpope/vim-sensible'
 Plug 'easymotion/vim-easymotion'
+Plug 'ap/vim-css-color'
 
 call plug#end()
 
@@ -71,8 +75,6 @@ set hidden
 " Set max line length for JS/TS
 autocmd BufRead,BufNewFile *.js,*jsx,*.ts,*.tsx setlocal colorcolumn=80
 
-" Set spelling
-set spell spelllang=en_us
 
 " Show invisibles
 set list listchars=tab:··,trail:·,nbsp:·,eol:¬
@@ -105,6 +107,16 @@ set shiftwidth=2
 set expandtab
 autocmd FileType elm,java setlocal tabstop=4 shiftwidth=4
 
+" Set theme colors
+let s:red = '#d3423a'
+let s:yellow = '#ffcb8b'
+let s:green = '#addb67'
+let s:cyan = '#7fdbca'
+let s:blue = '#82aaff'
+let s:magenta = '#c792ea'
+let s:background = '#0e293f'
+let s:foreground = '#d6deeb'
+
 " Color/Theme with custom overrides
 if (has("termguicolors"))
  set termguicolors
@@ -112,14 +124,14 @@ endif
 
 set background=dark
 colorscheme night-owl
-highlight PMenu guibg=#0B2942 ctermbg=16 gui=NONE cterm=NONE
-highlight PMenuSel guibg=#54738C ctermbg=66 gui=NONE cterm=NONE
+highlight PMenu guibg=#2C3043 ctermbg=16 gui=NONE cterm=NONE
+highlight PMenuSel guibg=#5F7E97 ctermbg=66 gui=NONE cterm=NONE
 highlight Comment gui=italic cterm=italic
 highlight CursorLine guifg=NONE ctermfg=NONE guibg=#01121F ctermbg=16
 highlight CursorLineNR guifg=#C5E4FD ctermfg=179
 highlight Visual guifg=NONE ctermfg=NONE guibg=#0B2942 ctermbg=16 gui=NONE cterm=NONE
-highlight Todo ctermfg=222 guifg=#ecc48d guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
-highlight Error guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
+highlight Todo ctermfg=222 guifg=s:yellow guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+highlight Error guifg=s:red ctermfg=204 guibg=NONE ctermbg=NONE
 
 
 " Set view attributes
@@ -158,34 +170,48 @@ autocmd FileChangedShellPost * echohl WarningMsg | echo "File changed on disk. B
 " Open preview window at the bottom of the screen
 set splitbelow
 
-" Vim status line
-function! GitBranch()
-  return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
-endfunction
+" Configure light line
+let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
 
-function! StatuslineGit()
-  let l:branchname = GitBranch()
-  return strlen(l:branchname) > 0 ? '  '.l:branchname.' ' : ' '
-endfunction
+let s:p.normal.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
+let s:p.normal.left = [ [ s:background, s:blue ], [ s:foreground, s:background ], ]
+let s:p.normal.right = [ [ s:background, s:blue ], [ s:foreground, s:background ], [ s:foreground, s:background ], ]
+let s:p.insert.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
+let s:p.insert.left = [ [ s:background, s:green ], [ s:foreground, s:background ], ]
+let s:p.insert.right = [ [ s:background, s:green ], [ s:foreground, s:background ], [ s:foreground, s:background ], ]
+let s:p.visual.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
+let s:p.visual.left = [ [ s:background, s:yellow ], [ s:foreground, s:background ], ]
+let s:p.visual.right = [ [ s:background, s:yellow ], [ s:foreground, s:background ], [ s:foreground, s:background ], ]
+let s:p.replace.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
+let s:p.replace.left = [ [ s:background, s:red ], [ s:foreground, s:background ], ]
+let s:p.replace.right = [ [ s:background, s:red ], [ s:foreground, s:background ], [ s:foreground, s:background ], ]
+let s:p.inactive.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
+let s:p.inactive.left = [ [ s:background, s:magenta ], [ s:foreground, s:background ], ]
+let s:p.inactive.right = [ [ s:background, s:magenta ], [ s:foreground, s:background ], [ s:foreground, s:background ], ]
+let s:p.tabline.middle = s:p.normal.middle
+let g:lightline#colorscheme#nightOwl#palette = lightline#colorscheme#fill(s:p)
 
-set laststatus=2
-set statusline=
-set statusline+=%#PMenuSel#
-set statusline+=\%{StatuslineGit()}
-set statusline+=%#StatusLine#
-set statusline+=\
-set statusline+=%#PMenu#
-set statusline+=\ %t
-set statusline+=%=
-set statusline+=\%{coc#status()}
-set statusline+=%#StatusLine#
-set statusline+=\ 
-set statusline+=%#PMenuSel#
-set statusline+=\ %y
-set statusline+=\ /|
-set statusline+=\ %l:%c
+let g:lightline = {
+  \ 'colorscheme': 'nightOwl',
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ],
+  \             [ 'gitbranch', 'readonly', 'fileAndParentDir', 'modified' ] ],
+  \   'right': [ [ 'lineinfo' ],
+  \              [ 'percent' ],
+  \              [ 'cocstatus', 'fileencoding', 'filetype' ]
+  \            ]
+  \ },
+  \ 'component': {
+  \   'fileAndParentDir': ' ' . expand('%:p:h:t') . '/' . expand('%:t')
+  \ },
+  \ 'component_function': {
+  \   'gitbranch': 'gitbranch#name',
+  \   'cocstatus': 'coc#status',
+  \ },
+  \ 'separator': { 'left': '', 'right': '' },
+  \ 'subseparator': { 'left': '', 'right': '' },
+  \ }
 
-highlight StatusLine guifg=#54738C guibg=#0B2942 gui=NONE cterm=NONE
 
 " ------ PLUGIN CONFIG ------
 
@@ -204,6 +230,13 @@ let g:ctrlp_use_caching = 0
 let g:polyglot_disabled = ['reason', 'elm']
 let g:javascript_plugin_flow = 1
 
+autocmd FileType javascript syn clear javascriptTemplate
+autocmd FileType javascript.jsx syn clear javascriptTemplate
+call jspretmpl#register_tag('gql', 'graphql')
+autocmd FileType javascript JsPreTmpl
+autocmd FileType javascript.jsx JsPreTmpl
+
+
 " Configure rainbow parentheses
 let g:rainbow_active = 1
 let g:rainbow_conf = {
@@ -218,12 +251,6 @@ let g:rainbow_conf = {
 
 " Configure NERD Commenter
 let g:NERDSpaceDelims = 1
-
-" Configure buftabline
-let g:buftabline_indicators = 1
-highlight BufTabLineFill guifg=#5F7E9 guibg=#010E1A
-highlight BufTabLineCurrent guifg=#D2DEE7 guibg=#0B2942
-highlight BufTabLineHidden guifg=#5F7E97 guibg=#010E1A
 
 " Configure Ale
 let g:ale_fix_on_save = 1
@@ -252,7 +279,6 @@ let g:ale_sign_column_always = 1
 " Configure indentLine
 let g:indentLine_char = '▏'
 
-" Configure Coc
 
 set updatetime=300
 set shortmess+=c
@@ -280,10 +306,11 @@ highlight CocErrorFloat guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
 highlight CocUnderline guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
 highlight CocErrorSign guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
 highlight CocHighlightText guifg=NONE ctermfg=NONE guibg=#3a4168 ctermbg=NONE
+highlight link CocWarningHighlight CocInfoSign
 
 " Mapings
-nnoremap <Leader><Leader>h :call <SID>show_documentation()<CR>
-nnoremap <Leader><Leader>r <Plug>(coc-rename)
+nnoremap gh :call <SID>show_documentation()<CR>
+nnoremap gr <Plug>(coc-rename)
 
 function! s:show_documentation()
   if &filetype == 'vim'

@@ -15,6 +15,43 @@
       "rootPatterns": [".stack.yaml", "cabal.config", "package.yaml"],
       "filetypes": ["hs", "lhs", "haskell"],
       "initializationOptions": {}
-    }
-  }
+    },
+    "elmLS": {
+      "command": "elm-language-server",
+      "args": ["--stdio"],
+      "filetypes": ["elm"],
+      "rootPatterns": ["elm.json"],
+      "initializationOptions": {
+        "runtime": "node",
+        "elmPath": "elm",
+        "elmFormatPath": "elm-format",
+        "elmTestPath": "elm-test"
+      }
+    },
+    "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cpp", "objc", "objcpp"],
+      "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+      "initializationOptions": {
+         "cache": {
+           "directory": "/tmp/ccls"
+         }
+       }
+    },
+    "reason": {
+      "command": "reason-language-server",
+      "filetypes": ["reason"],
+      "rootPatterns": ["bsconfig.json"],
+    },
+    "rust": {
+      "command": "rls",
+      "args": [],
+      "filetypes": ["rust"],
+      "initializationOptions": {},
+      "requireRootPattern": false,
+      "settings": {},
+      "rootPatterns": ["cargo.toml"]
+    },
+},
+"java.errors.incompleteClasspath.severity": "ignore"
 }

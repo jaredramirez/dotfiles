@@ -5,6 +5,9 @@ export PATH="/usr/local/sbin:${PATH}"
 export PATH="${HOME}/.local/bin:${PATH}"
 export PATH="${HOME}/bin:${PATH}"
 
+# Rust
+export PATH="$HOME/.cargo/bin:$PATH"
+
 # Python
 export PATH="${HOME}/Library/Python/2.7/bin:${PATH}"
 

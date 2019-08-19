@@ -26,4 +26,12 @@ kitty @ goto-layout -m title:mobile tall
 kitty @ new-window \
   --cwd ~/dev/github.com/replenysh/replenysh-captain-app
 
+kitty @ new-window \
+  --new-tab \
+  --tab-title external \
+  --cwd ~/dev/github.com/replenysh/replenysh-external
+kitty @ goto-layout -m title:external tall
+kitty @ new-window \
+  --cwd ~/dev/github.com/replenysh/replenysh-external
+
 kitty @ close-tab -m title:last
