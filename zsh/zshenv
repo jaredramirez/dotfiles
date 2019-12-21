@@ -26,6 +26,10 @@ export PATH="${HOME}/Library/Haskell/bin:${PATH}"
 # Java
 export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"
 
+# Ruby
+export GEM_HOME="$HOME/.gem"
+export PATH="$GEM_HOME/bin:$PATH"
+
 # Go
 export GO_HOME=/usr/local/go/bin
 export GOPATH="${HOME}/dev"
@@ -44,7 +48,7 @@ export PATH="${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:${PATH}"
 export NVM_DIR="${HOME}/.nvm"
 
 # Env
-export ENV="${HOME}/dev/github.com/jaredramirez/env"
+export ENV="${HOME}/dev/github.com/jaredramirez/dotfiles"
 
 # Kitty
 export KITTY="${ENV}/kitty"

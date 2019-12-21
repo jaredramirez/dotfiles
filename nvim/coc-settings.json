@@ -14,16 +14,17 @@
       "command": "hie-wrapper",
       "rootPatterns": [".stack.yaml", "cabal.config", "package.yaml"],
       "filetypes": ["hs", "lhs", "haskell"],
-      "initializationOptions": {}
+      "initializationOptions": {
+        "languageServerHaskell": {
+        }
+      }
     },
-    "elmLS": {
+    "elm": {
       "command": "elm-language-server",
-      "args": ["--stdio"],
       "filetypes": ["elm"],
       "rootPatterns": ["elm.json"],
       "initializationOptions": {
-        "runtime": "node",
-        "elmPath": "elm",
+        "elmAnalyseTrigger": "change",
         "elmFormatPath": "elm-format",
         "elmTestPath": "elm-test"
       }
@@ -53,5 +54,6 @@
       "rootPatterns": ["cargo.toml"]
     },
 },
-"java.errors.incompleteClasspath.severity": "ignore"
+"java.errors.incompleteClasspath.severity": "ignore",
+"codeLens.enable": true
 }

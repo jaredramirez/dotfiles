@@ -13,11 +13,11 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'sjbach/lusty'
 
 " Code formatting
-" Ale can be used for more that just formatting, but because I
-" use language servers, I use it pretty much exclusively for automatically
-" formatting
-Plug 'w0rp/ale'
+Plug 'sbdchd/neoformat'
 
+" Tmux
+Plug 'edkolev/tmuxline.vim'
+Plug 'christoomey/vim-tmux-navigator'
 
 " Coc (Full LSP support)
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install() }}
@@ -32,6 +32,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'itchyny/vim-gitbranch'
 Plug 'airblade/vim-gitgutter'
 
+
 " Status line
 Plug 'itchyny/lightline.vim'
 
@@ -39,12 +40,12 @@ Plug 'itchyny/lightline.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'luochen1990/rainbow'
 Plug 'Yggdroot/indentLine'
-Plug 'haishanh/night-owl.vim'
+Plug 'itchyny/landscape.vim'
 
 " Other syntax highlighting - for the (few) languages not supported by polyglot
 " or for polygot packages that I dislike
 Plug 'reasonml-editor/vim-reason-plus'
-Plug 'lambdatoast/elm.vim'
+Plug 'andys8/vim-elm-syntax'
 Plug 'milch/vim-fastlane'
 Plug 'jparise/vim-graphql'
 Plug 'Quramy/vim-js-pretty-template'
@@ -82,6 +83,7 @@ set list listchars=tab:··,trail:·,nbsp:·,eol:¬
 " Enable syntax highlighting
 syntax enable
 
+
 " Enable file specific behavior like syntax highlighting and indentation
 filetype on
 filetype plugin on
@@ -100,6 +102,9 @@ set smartcase
 " No sounds
 set visualbell
 set noerrorbells
+
+" Clear searches
+nnoremap <Leader><space> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 
 " Set tabs in general and for specific file types
 set tabstop=2
@@ -123,13 +128,8 @@ if (has("termguicolors"))
 endif
 
 set background=dark
-colorscheme night-owl
-highlight PMenu guibg=#2C3043 ctermbg=16 gui=NONE cterm=NONE
-highlight PMenuSel guibg=#5F7E97 ctermbg=66 gui=NONE cterm=NONE
+colorscheme landscape
 highlight Comment gui=italic cterm=italic
-highlight CursorLine guifg=NONE ctermfg=NONE guibg=#01121F ctermbg=16
-highlight CursorLineNR guifg=#C5E4FD ctermfg=179
-highlight Visual guifg=NONE ctermfg=NONE guibg=#0B2942 ctermbg=16 gui=NONE cterm=NONE
 highlight Todo ctermfg=222 guifg=s:yellow guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
 highlight Error guifg=s:red ctermfg=204 guibg=NONE ctermbg=NONE
 
@@ -171,28 +171,13 @@ autocmd FileChangedShellPost * echohl WarningMsg | echo "File changed on disk. B
 set splitbelow
 
 " Configure light line
-let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
 
-let s:p.normal.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
-let s:p.normal.left = [ [ s:background, s:blue ], [ s:foreground, s:background ], ]
-let s:p.normal.right = [ [ s:background, s:blue ], [ s:foreground, s:background ], [ s:foreground, s:background ], ]
-let s:p.insert.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
-let s:p.insert.left = [ [ s:background, s:green ], [ s:foreground, s:background ], ]
-let s:p.insert.right = [ [ s:background, s:green ], [ s:foreground, s:background ], [ s:foreground, s:background ], ]
-let s:p.visual.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
-let s:p.visual.left = [ [ s:background, s:yellow ], [ s:foreground, s:background ], ]
-let s:p.visual.right = [ [ s:background, s:yellow ], [ s:foreground, s:background ], [ s:foreground, s:background ], ]
-let s:p.replace.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
-let s:p.replace.left = [ [ s:background, s:red ], [ s:foreground, s:background ], ]
-let s:p.replace.right = [ [ s:background, s:red ], [ s:foreground, s:background ], [ s:foreground, s:background ], ]
-let s:p.inactive.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
-let s:p.inactive.left = [ [ s:background, s:magenta ], [ s:foreground, s:background ], ]
-let s:p.inactive.right = [ [ s:background, s:magenta ], [ s:foreground, s:background ], [ s:foreground, s:background ], ]
-let s:p.tabline.middle = s:p.normal.middle
-let g:lightline#colorscheme#nightOwl#palette = lightline#colorscheme#fill(s:p)
+function! FilenameAndParentDir()
+  return expand('%:p:h:t') . '/' . expand('%:t')
+endfunction
 
 let g:lightline = {
-  \ 'colorscheme': 'nightOwl',
+  \ 'colorscheme': 'landscape',
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ],
   \             [ 'gitbranch', 'readonly', 'fileAndParentDir', 'modified' ] ],
@@ -201,12 +186,10 @@ let g:lightline = {
   \              [ 'cocstatus', 'fileencoding', 'filetype' ]
   \            ]
   \ },
-  \ 'component': {
-  \   'fileAndParentDir': ' ' . expand('%:p:h:t') . '/' . expand('%:t')
-  \ },
   \ 'component_function': {
   \   'gitbranch': 'gitbranch#name',
   \   'cocstatus': 'coc#status',
+  \   'fileAndParentDir': 'FilenameAndParentDir'
   \ },
   \ 'separator': { 'left': '', 'right': '' },
   \ 'subseparator': { 'left': '', 'right': '' },
@@ -252,33 +235,24 @@ let g:rainbow_conf = {
 " Configure NERD Commenter
 let g:NERDSpaceDelims = 1
 
-" Configure Ale
-let g:ale_fix_on_save = 1
-let g:ale_linters_explicit = 1
+" Configure Neoformat
+augroup fmt
+  autocmd!
+  autocmd BufWritePre * undojoin | Neoformat
+augroup END
 
 " Configure auto-formatters
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'reason': ['refmt'],
-\   'elm': ['elm-format'],
-\   'javascript': ['prettier'],
-\   'javascript.jsx': ['prettier'],
-\   'css': ['prettier'],
-\   'sass': ['prettier']
-\}
-
-" Error Display
-highlight ALEError guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
-highlight ALEErrorSign guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
-highlight ALEWarning guifg=ffd17c ctermfg=222 guibg=NONE ctermbg=NONE
-highlight ALEWarningSign guifg=#ffd17c ctermfg=222 guibg=NONE ctermbg=NONE
-let g:ale_sign_error = '●'
-let g:ale_sign_warning = '●'
-let g:ale_sign_column_always = 1
+let g:neoformat_enabled_javascript = ['prettier']
+let g:neoformat_enabled_haskell = ['ormolu']
+let g:neoformat_enabled_elm = ['elmformat']
+let g:neoformat_enabled_reason = ['refmt']
+let g:neoformat_try_formatprg = 1
+let g:neoformat_run_all_formatters = 1
+let g:neoformat_basic_format_retab = 1
+let g:neoformat_basic_format_trim = 1
 
 " Configure indentLine
 let g:indentLine_char = '▏'
-
 
 set updatetime=300
 set shortmess+=c
@@ -302,11 +276,14 @@ imap <C-j> <Plug>(coc-snippets-expand-jump)
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Highlights in general
-highlight CocErrorFloat guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
 highlight CocUnderline guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
-highlight CocErrorSign guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
-highlight CocHighlightText guifg=NONE ctermfg=NONE guibg=#3a4168 ctermbg=NONE
+highlight CocErrorSign guifg=#000000 ctermfg=0 guibg=NONE ctermbg=NONE
+highlight CocHighlightText guifg=NONE ctermfg=NONE guibg=NONE ctermbg=NONE
 highlight link CocWarningHighlight CocInfoSign
+highlight link CocHintHighlight CocHintSign
+highlight link CocWarningFloat CocErrorFloat
+highlight link CocInfoFloat CocErrorFloat
+highlight link CocHintFloat CocErrorFloat
 
 " Mapings
 nnoremap gh :call <SID>show_documentation()<CR>
