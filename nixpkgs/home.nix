@@ -63,9 +63,6 @@
     fish = {
       enable = true;
       functions = {
-        nvim_update = ''
-          nvim +PlugInstall +UpdateRemotePlugins +qa
-        '';
         prefetch_git = ''
           nix-prefetch-git argv[1] --rev argv[2]
         '';
@@ -120,12 +117,10 @@
 
         # Load NVM
         load_nvm
-
-        # Update nvm
-        nvim_update
       '';
       shellAbbrs = {
         work = "source $DOTFILES/kitty/sessions/work-sessions.fish";
+        nvim_update = "nvim +PlugInstall +UpdateRemotePlugins +qa";
       };
       plugins = [
         {
@@ -559,7 +554,7 @@
         solarizedDark //
           {
             font_size = 20;
-            enabled_layouts = "stack, horizontal, splits";
+            enabled_layouts = "stack, horizontal";
             tab_bar_style = "powerline";
             cursor_blink_interval = 0;
             macos_quit_when_last_window_closed = true;

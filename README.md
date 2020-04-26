@@ -51,3 +51,7 @@ Eighth, make fish the default shell:
 cp -r /usr/local/bin/fish $HOME/.nix-profile/bin/fish
 chsh -s /usr/local/bin/fish
 ```
+
+Ninth, install Neovim plugins with `update_nvim`
+
+That's it, you should be good to go!
