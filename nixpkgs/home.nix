@@ -406,29 +406,6 @@
         inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
         inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-        " Coc
-        let g:coc_global_extensions = [
-          \ 'coc-syntax',
-          \ 'coc-css',
-          \ 'coc-flow',
-          \ 'coc-html',
-          \ 'coc-reason',
-          \ 'coc-rls',
-          \ 'coc-snippets'
-        \ ]
-
-        inoremap <silent><expr> <cr>
-            \ pumvisible() ? coc#_select_confirm() :
-            \ coc#expandableOrJumpable() ? coc#rpc#request('doKeymap', ['snippets-expand-jump',' ']) :
-            \  "\<C-g>u\<CR>"
-
-        let g:coc_snippet_next = '<Tab>'
-        let g:coc_snippet_prev = '<S-Tab>'
-        imap <C-j> <Plug>(coc-snippets-expand-jump)
-
-        " Highlight symbol under cursor on CursorHold
-        autocmd CursorHold * silent call CocActionAsync('highlight')
-
         " Highlights in general
         highlight CocUnderline guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
         highlight CocErrorSign guifg=#000000 ctermfg=0 guibg=NONE ctermbg=NONE
@@ -455,6 +432,58 @@
         highlight GitGutterAdd ctermfg=149 ctermbg=NONE guifg=#addb67 guibg=NONE
         highlight GitGutterChange ctermfg=116 ctermbg=NONE guifg=#011627 guibg=NONE
         highlight GitGutterDelete ctermfg=204 ctermbg=NONE guifg=#ff5874 guibg=NONE
+
+        " Coc
+        let g:coc_global_extensions = [
+          \ 'coc-syntax',
+          \ 'coc-css',
+          \ 'coc-flow',
+          \ 'coc-html',
+          \ 'coc-reason',
+          \ 'coc-rls',
+          \ 'coc-snippets'
+        \ ]
+
+        inoremap <silent><expr> <cr>
+            \ pumvisible() ? coc#_select_confirm() :
+            \ coc#expandableOrJumpable() ? coc#rpc#request('doKeymap', ['snippets-expand-jump',' ']) :
+            \  "\<C-g>u\<CR>"
+
+        let g:coc_snippet_next = '<Tab>'
+        let g:coc_snippet_prev = '<S-Tab>'
+        imap <C-j> <Plug>(coc-snippets-expand-jump)
+
+        " Highlight symbol under cursor on CursorHold
+        autocmd CursorHold * silent call CocActionAsync('highlight')
+
+        let s:LSP_CONFIG = {
+        \  "haskell": {
+        \    "command": "ghcide",
+        \    "args": ["--lsp"],
+        \    "rootPatterns": [".stack.yaml", "package.yaml"],
+        \    "filetypes": ["hs", "lhs", "haskell"]
+        \  },
+        \  "elm": {
+        \    "command": "elm-language-server",
+        \    "filetypes": ["elm"],
+        \    "rootPatterns": ["elm.json"],
+        \    "initializationOptions": {
+        \      "elmAnalyseTrigger": "change",
+        \      "elmFormatPath": "elm-format",
+        \      "elmTestPath": "elm-test"
+        \    }
+        \  }
+        \}
+
+        let s:languageservers = {}
+        for [lsp, config] in items(s:LSP_CONFIG)
+          let s:not_empty_cmd = !empty(get(config, 'command'))
+          if s:not_empty_cmd | let s:languageservers[lsp] = config | endif
+        endfor
+
+        if !empty(s:languageservers)
+          call coc#config('languageserver', s:languageservers)
+          endif
       '';
     };
 

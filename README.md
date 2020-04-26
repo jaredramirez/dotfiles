@@ -30,12 +30,9 @@ export DOTFILES=wherever/you/cloned/this/repo
 cp -r $HOME/.config/nixpkgs $HOME/.config/nixpkgs_backup
 ln -s $DOTFILES/nixpkgs $HOME/.config/nixpkgs
 rm -r $HOME/.config/nixpkgs $HOME/.config/nixpkgs_backup
-
-mkdir $HOME/.config/nvim
-ln -s $DOTFILES/nvim/coc-settings.json $HOME/.config/nvim/coc-settings.json
 ```
 
-Fifth, update `DOTFILES` in `programs.fish.shellInit` in `$DOTFILES/nixpkgs/home.nix` `"whereve/you/cloned/this/repo"`.
+Fifth, update `DOTFILES` in `programs.fish.shellInit` in `$DOTFILES/nixpkgs/home.nix` to `"wherever/you/cloned/this/repo"`.
 
 Sixth, create a new home manager generation:
 
