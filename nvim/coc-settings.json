@@ -1,23 +1,11 @@
 {
   "suggest.noselect": false,
   "languageserver": {
-    "flow": {
-      "command": "flow",
-      "args": ["lsp"],
-      "filetypes": ["javascript", "javascriptreact"],
-      "initializationOptions": {},
-      "requireRootPattern": true,
-      "settings": {},
-      "rootPatterns": [".flowconfig"]
-    },
     "haskell": {
-      "command": "hie-wrapper",
-      "rootPatterns": [".stack.yaml", "cabal.config", "package.yaml"],
-      "filetypes": ["hs", "lhs", "haskell"],
-      "initializationOptions": {
-        "languageServerHaskell": {
-        }
-      }
+      "command": "ghcide",
+      "args": ["--lsp"],
+      "rootPatterns": [".stack.yaml", "package.yaml"],
+      "filetypes": ["hs", "lhs", "haskell"]
     },
     "elm": {
       "command": "elm-language-server",
@@ -29,21 +17,6 @@
         "elmTestPath": "elm-test"
       }
     },
-    "ccls": {
-      "command": "ccls",
-      "filetypes": ["c", "cpp", "objc", "objcpp"],
-      "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
-      "initializationOptions": {
-         "cache": {
-           "directory": "/tmp/ccls"
-         }
-       }
-    },
-    "reason": {
-      "command": "reason-language-server",
-      "filetypes": ["reason"],
-      "rootPatterns": ["bsconfig.json"],
-    },
     "rust": {
       "command": "rls",
       "args": [],
@@ -52,8 +25,8 @@
       "requireRootPattern": false,
       "settings": {},
       "rootPatterns": ["cargo.toml"]
-    },
-},
-"java.errors.incompleteClasspath.severity": "ignore",
-"codeLens.enable": true
+    }
+  },
+  "java.errors.incompleteClasspath.severity": "ignore",
+  "codeLens.enable": true
 }
