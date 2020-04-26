@@ -35,13 +35,15 @@ mkdir $HOME/.config/nvim
 ln -s $DOTFILES/nvim/coc-settings.json $HOME/.config/nvim/coc-settings.json
 ```
 
-Fifth, create a new home manager generation:
+Fifth, update `DOTFILES` in `programs.fish.shellInit` in `$DOTFILES/nixpkgs/home.nix` `"whereve/you/cloned/this/repo"`.
+
+Sixth, create a new home manager generation:
 
 ```
 home-manager switch
 ```
 
-Sixth, make fish the default shell:
+Seventh, make fish the default shell:
 
 ```
 cp -r /usr/local/bin/fish $HOME/.nix-profile/bin/fish
