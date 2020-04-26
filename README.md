@@ -43,7 +43,9 @@ Sixth, create a new home manager generation:
 home-manager switch
 ```
 
-Seventh, make fish the default shell:
+Seventh, update `$DOTFILES/kitty/sessions/work-sessions.fish` with commands to open up your work directories and what not. Later, you can call `work` and it'll run that file. Checkout [kitty's documentation](https://sw.kovidgoyal.net/kitty/index.html#startup-sessions) for more examples.
+
+Eighth, make fish the default shell:
 
 ```
 cp -r /usr/local/bin/fish $HOME/.nix-profile/bin/fish

@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/local/bin/fish
 
 kitty @ set-tab-title last
 

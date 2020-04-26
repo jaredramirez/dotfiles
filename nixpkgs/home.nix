@@ -124,6 +124,9 @@
         # Update nvm
         nvim_update
       '';
+      shellAbbrs = {
+        work = "source $DOTFILES/kitty/sessions/work-sessions.fish";
+      };
       plugins = [
         {
           name = "bass";
