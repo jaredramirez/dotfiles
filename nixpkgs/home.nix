@@ -10,6 +10,7 @@
 
     # Helpful Tools
     pkgs.gitAndTools.gh
+    pkgs.gitAndTools.delta
     pkgs.nix-prefetch-git
     pkgs.amber
     pkgs.heroku
@@ -58,6 +59,18 @@
       enable = true;
       userName = "Jared Ramirez";
       userEmail = "jaredramirez@me.com";
+      extraConfig = {
+        core = {
+          pager = "delta";
+        };
+        interactive = {
+          diffFilter = "delta --color-only";
+        };
+      };
+    };
+
+    bat = {
+      enable = true;
     };
 
     fish = {
@@ -66,32 +79,42 @@
         prefetch_git = ''
           nix-prefetch-git argv[1] --rev argv[2]
         '';
-        nvm = ''
-          bass source ~/.nvm/nvm.sh --no-use ';' nvm $argv
-        '';
-        nvm_find_nvmrc = ''
-          bass source ~/.nvm/nvm.sh --no-use ';' nvm_find_nvmrc
-        '';
-        load_nvm = {
-          onVariable = "PWD";
-          body = ''
-            set -l default_node_version (nvm version default)
-            set -l node_version (nvm version)
-            set -l nvmrc_path (nvm_find_nvmrc)
-
-            if test -n "$nvmrc_path"
-              set -l nvmrc_node_version (nvm version (cat $nvmrc_path))
-              if test "$nvmrc_node_version" = "N/A"
-                nvm install $nvmrc_node_version
-              else if test nvmrc_node_version != node_version
-                nvm use $nvmrc_node_version
-              end
-            else if test "$node_version" != "$default_node_version"
-              echo "Reverting to default Node version"
-              nvm use default
+        symlink = ''
+          -- TODO: finish
+          if test "$argv[1]" = "--help"
+            echo "symlink usage: symlink original link"
+          else
+            if test (count argv) = 2
+              ls -s argv[1] argv[2]
+            else
+              echo "symlink usage: symlink original link"
             end
-          '';
-        };
+          end
+        '';
+        link_apps = ''
+            set -l NIX_PROFILE $HOME/.nix-profile
+            set -l APP_DIR $HOME/Applications
+
+            # Remove broken links
+            for i in $APP_DIR/*;
+                if [ -L "$f" ] && [ ! -e "$f" ];
+                    rm $f
+                end
+            end
+
+            # Link new ones
+            for f in $NIX_PROFILE/Applications/*;
+                set -l app_name (basename $f)
+                if [ ! -e $APP_DIR/$app_name ];
+                    ln -s "$f" $APP_DIR/
+                end
+            end
+        '';
+        fish_user_key_bindings = ''
+          # Vi Mode
+          set -g fish_key_bindings fish_vi_key_bindings
+          bind -M insert \cc kill-whole-line force-repaint
+        '';
       };
       shellInit = ''
         # Set global variables
@@ -103,24 +126,23 @@
         set -x ANDROID_SDK_ROOT "$HOME/Library/Android/sdk"
         set -x PATH "$ANDROID_HOME/tools/bin" $PATH
         set -x PATH "$ANDROID_HOME/platform-tools" $PATH
+        set -x PATH "$HOME/.fnm" $PATH
 
         # Load Nix
         bass source /Users/jaredramirez/.nix-profile/etc/profile.d/nix.sh
 
-        # Configure Prompt
+        # Load FNM
+        fnm env --multi --use-on-cd | source
+      '';
+      promptInit = ''
         set -x STARSHIP_CONFIG "$HOME/.config/fish/starship.toml"
         starship init fish | source
-
-        # Vi Mode
-        set -g fish_key_bindings fish_vi_key_bindings
-        bind -M insert \cc kill-whole-line force-repaint
-
-        # Load NVM
-        load_nvm
       '';
-      shellAbbrs = {
+      shellAliases = {
         work = "source $DOTFILES/kitty/sessions/work-sessions.fish";
         nvim_update = "nvim +PlugInstall +UpdateRemotePlugins +qa";
+        pg_start = "pg_ctl -D /usr/local/var/postgres start";
+        pg_stop = "pg_ctl -D /usr/local/var/postgres stop";
       };
       plugins = [
         {
@@ -133,6 +155,114 @@
           };
         }
       ];
+    };
+
+    kitty = {
+      enable = true;
+      font = {
+        package = pkgs.fira-code;
+        name = "Fira Code";
+        # Font Size set down below
+      };
+      keybindings = {
+        "ctrl+a>n" = "next_tab";
+        "ctrl+a>p" = "previous_tab";
+        "ctrl+a>c" = "new_tab";
+        "ctrl+a>r" = "set_tab_title";
+        "ctrl+a>q" = "close_tab";
+        "ctrl+a>1" = "goto_tab 1";
+        "ctrl+a>2" = "goto_tab 2";
+        "ctrl+a>3" = "goto_tab 3";
+        "ctrl+a>4" = "goto_tab 4";
+        "ctrl+a>5" = "goto_tab 5";
+        "ctrl+a>6" = "goto_tab 6";
+        "ctrl+a>7" = "goto_tab 7";
+        "ctrl+a>8" = "goto_tab 8";
+        "ctrl+a>9" = "goto_tab 9";
+        "ctrl+a>u" = "scroll_page_up";
+        "ctrl+a>d" = "scroll_page_down";
+        "ctrl+a>w" = "new_window_with_cwd";
+        "ctrl+a>x" = "close_window";
+        "ctrl+a>m" = "next_layout";
+        "ctrl+a>b" = "start_resizing_window";
+        "ctrl+a>i" = "prev_window";
+        "ctrl+a>o" = "next_window";
+        "ctrl+l" = "neighboring_window right";
+        "ctrl+h" = "neighboring_window left";
+        "ctrl+k" = "neighboring_window top";
+        "ctrl+j" = "neighboring_window bottom";
+        "cmd+c" = "copy_to_clipboard";
+        "cmd+v" = "paste_from_clipboard";
+      };
+      settings =
+        let
+          solarizedLight = {
+            background = "#fdf6e3";
+            foreground = "#52676f";
+            cursor = "#52676f";
+            color0 = "#e4e4e4";
+            color8 = "#002b36";
+            color1 = "#d70000";
+            color9 = "#d75f00";
+            color2 = "#5f8700";
+            color10 = "#585858";
+            color3 = "#af8700";
+            color11 = "#626262";
+            color4 = "#0087ff";
+            color12 = "#808080";
+            color5 = "#af005f";
+            color13 = "#5f5faf";
+            color6 = "#00afaf";
+            color14 = "#8a8a8a";
+            color7 = "#262626";
+            color15 = "#1c1c1c";
+            selection_background = "#e9e2cb";
+            selection_foreground = "#fcf4dc";
+            inactive_tab_foreground = "#fdf6e3";
+            inactive_tab_background = "#586e75";
+            active_tab_foreground  = "#fdf6e3";
+            active_tab_background  = "#839496";
+          };
+          solarizedDark = {
+            background = "#001e26";
+            foreground = "#9bc1c2";
+            cursor = "#f34a00";
+            color0 = "#002731";
+            color8 = "#006388";
+            color1 = "#d01b24";
+            color9 = "#f4153b";
+            color2 = "#6bbe6c";
+            color10 = "#50ee84";
+            color3 = "#a57705";
+            color11 = "#b17e28";
+            color4 = "#2075c7";
+            color12 = "#178dc7";
+            color5 = "#c61b6e";
+            color13 = "#e14d8e";
+            color6 = "#259185";
+            color14 = "#00b29e";
+            color7 = "#e9e2cb";
+            color15= "#fcf4dc";
+            selection_background  = "#003747";
+            selection_foreground = "#001e26";
+            inactive_tab_foreground = "#001e26";
+            inactive_tab_background = "#657b83";
+            active_tab_foreground = "#001e26";
+            active_tab_background = "#93a1a1";
+          };
+        in
+        solarizedDark //
+          {
+            font_size = 20;
+            enabled_layouts = "stack, horizontal";
+            tab_bar_style = "powerline";
+            cursor_blink_interval = 0;
+            macos_quit_when_last_window_closed = true;
+            macos_thicken_font = "0.75";
+            macos_custom_beam_cursor = true;
+            allow_remote_control = true;
+            enable_audio_bell = false;
+          };
     };
 
     neovim = {
@@ -485,117 +615,6 @@
           call coc#config('languageserver', s:languageservers)
           endif
       '';
-    };
-
-    kitty = {
-      enable = true;
-      font = {
-        package = pkgs.fira-code;
-        name = "Fira Code";
-      };
-      keybindings = {
-        "ctrl+a>n" = "next_tab";
-        "ctrl+a>p" = "previous_tab";
-        "ctrl+a>c" = "new_tab";
-        "ctrl+a>r" = "set_tab_title";
-        "ctrl+a>q" = "close_tab";
-        "ctrl+a>1" = "goto_tab 1";
-        "ctrl+a>2" = "goto_tab 2";
-        "ctrl+a>3" = "goto_tab 3";
-        "ctrl+a>4" = "goto_tab 4";
-        "ctrl+a>5" = "goto_tab 5";
-        "ctrl+a>6" = "goto_tab 6";
-        "ctrl+a>7" = "goto_tab 7";
-        "ctrl+a>8" = "goto_tab 8";
-        "ctrl+a>9" = "goto_tab 9";
-        "ctrl+a>u" = "scroll_page_up";
-        "ctrl+a>d" = "scroll_page_down";
-        "ctrl+a>w" = "new_window_with_cwd";
-        "ctrl+a>x" = "close_window";
-        "ctrl+l" = "neighboring_window right";
-        "ctrl+h" = "neighboring_window left";
-        "ctrl+k" = "neighboring_window top";
-        "ctrl+j" = "neighboring_window bottom";
-        "ctrl+a>m" = "next_layout";
-        "ctrl+a>b" = "start_resizing_window";
-        "ctrl+a>i" = "prev_window";
-        "ctrl+a>o" = "next_window";
-        "cmd+c" = "copy_to_clipboard";
-        "ctrl+v" = "paste_from_clipboard";
-      };
-      settings =
-        let
-          solarizedLight = {
-            background = "#fdf6e3";
-            foreground = "#52676f";
-            cursor = "#52676f";
-            color0 = "#e4e4e4";
-            color8 = "#002b36";
-            color1 = "#d70000";
-            color9 = "#d75f00";
-            color2 = "#5f8700";
-            color10 = "#585858";
-            color3 = "#af8700";
-            color11 = "#626262";
-            color4 = "#0087ff";
-            color12 = "#808080";
-            color5 = "#af005f";
-            color13 = "#5f5faf";
-            color6 = "#00afaf";
-            color14 = "#8a8a8a";
-            color7 = "#262626";
-            color15 = "#1c1c1c";
-            selection_background = "#e9e2cb";
-            selection_foreground = "#fcf4dc";
-            inactive_tab_foreground = "#fdf6e3";
-            inactive_tab_background = "#586e75";
-            active_tab_foreground  = "#fdf6e3";
-            active_tab_background  = "#839496";
-          };
-          solarizedDark = {
-            background = "#001e26";
-            foreground = "#9bc1c2";
-            cursor = "#f34a00";
-            color0 = "#002731";
-            color8 = "#006388";
-            color1 = "#d01b24";
-            color9 = "#f4153b";
-            color2 = "#6bbe6c";
-            color10 = "#50ee84";
-            color3 = "#a57705";
-            color11 = "#b17e28";
-            color4 = "#2075c7";
-            color12 = "#178dc7";
-            color5 = "#c61b6e";
-            color13 = "#e14d8e";
-            color6 = "#259185";
-            color14 = "#00b29e";
-            color7 = "#e9e2cb";
-            color15= "#fcf4dc";
-            selection_background  = "#003747";
-            selection_foreground = "#001e26";
-            inactive_tab_foreground = "#001e26";
-            inactive_tab_background = "#657b83";
-            active_tab_foreground = "#001e26";
-            active_tab_background = "#93a1a1";
-          };
-        in
-        solarizedDark //
-          {
-            font_size = 20;
-            enabled_layouts = "stack, horizontal";
-            tab_bar_style = "powerline";
-            cursor_blink_interval = 0;
-            macos_quit_when_last_window_closed = true;
-            macos_thicken_font = "0.75";
-            macos_custom_beam_cursor = true;
-            allow_remote_control = true;
-            enable_audio_bell = false;
-          };
-    };
-
-    bat = {
-      enable = true;
     };
 
     # TODO: Finish configuring Firefox

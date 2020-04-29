@@ -2,7 +2,7 @@
 
 This my [nix](https://nixos.org/nix/https://nixos.org/nix/) and [home manager](https://github.com/rycee/home-manager) configuration. This setup assumes you're on MacOS Catalina.
 
-## Usage
+## Setup in 10 steps
 
 First, setup the `/nix` directory by following [these instructions](https://github.com/NixOS/nix/issues/2925#issuecomment-604501661). I went with "Solution 1", and it's worked well for me so far.
 
@@ -34,21 +34,27 @@ rm -r $HOME/.config/nixpkgs $HOME/.config/nixpkgs_backup
 
 Fifth, update `DOTFILES` in `programs.fish.shellInit` in `$DOTFILES/nixpkgs/home.nix` to `"wherever/you/cloned/this/repo"`.
 
-Sixth, create a new home manager generation:
+Sixth, install [fnm](https://github.com/Schniz/fnm) with the following command (unfortunaly not available on nixpkgs):
+
+```
+curl -fsSL https://github.com/Schniz/fnm/raw/master/.ci/install.sh | bash -s --install-dir "$HOME/.fnm" --skip-shell
+```
+
+Seventh, create a new home manager generation:
 
 ```
 home-manager switch
 ```
 
-Seventh, update `$DOTFILES/kitty/sessions/work-sessions.fish` with commands to open up your work directories and what not. Later, you can call `work` and it'll run that file. Checkout [kitty's documentation](https://sw.kovidgoyal.net/kitty/index.html#startup-sessions) for more examples.
+Eighth, update `$DOTFILES/kitty/sessions/work-sessions.fish` with commands to open up your work directories and what not. Later, you can call `work` and it'll run that file. Checkout [kitty's documentation](https://sw.kovidgoyal.net/kitty/index.html#startup-sessions) for more examples.
 
-Eighth, make fish the default shell:
+Ninth, make fish the default shell:
 
 ```
 cp -r /usr/local/bin/fish $HOME/.nix-profile/bin/fish
 chsh -s /usr/local/bin/fish
 ```
 
-Ninth, install Neovim plugins with `update_nvim`
+Tenth, install Neovim plugins with `update_nvim`
 
 That's it, you should be good to go!
