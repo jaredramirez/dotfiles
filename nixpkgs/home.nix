@@ -11,9 +11,10 @@
     # Helpful Tools
     pkgs.gitAndTools.gh
     pkgs.gitAndTools.delta
+    pkgs.heroku
     pkgs.nix-prefetch-git
     pkgs.amber
-    pkgs.heroku
+    pkgs.silver-searcher
 
     # Terminal
     pkgs.starship
@@ -115,6 +116,29 @@
           set -g fish_key_bindings fish_vi_key_bindings
           bind -M insert \cc kill-whole-line force-repaint
         '';
+        ag_with_filters = ''
+          set -l filter ".jpg" ".bmp" ".png" ".jar" ".7z" ".bz"
+          set -l filter $filter ".zip" ".tar" ".gz" ".tgz" ".git"
+          if [ -f "bsconfig.json" ];
+            set filter $filter "lib" ".bs.js"
+          end
+          if [ -f "metro.config.js" ] || [ -f "react-native.config.js" ];
+            set filter $filter "build" "Pods"
+          end
+          if [ -f "Cargo.toml" ];
+            set filter $filter "target"
+          end
+          if [ -f "elm.json" ];
+            set filter $filter "elm-stuff"
+          end
+          if [ -f "package.json" ];
+            set filter $filter "node_modules" ".min.js"
+          end
+          if [ -f "package.yaml" ] || [ -f "stack.yaml" ];
+            set filter $filter ".stack-work"
+          end
+          ag --hidden --nocolor -U -l -p (printf "*%s*\n" $filter | psub) -g ""
+        '';
       };
       shellInit = ''
         # Set global variables
@@ -124,8 +148,10 @@
         set -x DOTFILES "$HOME/dev/github.com/jaredramirez/dotfiles"
         set -x ANDROID_HOME "$HOME/Library/Android/sdk"
         set -x ANDROID_SDK_ROOT "$HOME/Library/Android/sdk"
+        set -x JAVA_HOME "/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home"
         set -x PATH "$ANDROID_HOME/tools/bin" $PATH
         set -x PATH "$ANDROID_HOME/platform-tools" $PATH
+        set -x PATH "$HOME/.local/bin" $PATH
         set -x PATH "$HOME/.fnm" $PATH
 
         # Load Nix
@@ -141,8 +167,10 @@
       shellAliases = {
         work = "source $DOTFILES/kitty/sessions/work-sessions.fish";
         nvim_update = "nvim +PlugInstall +UpdateRemotePlugins +qa";
-        pg_start = "pg_ctl -D /usr/local/var/postgres start";
-        pg_stop = "pg_ctl -D /usr/local/var/postgres stop";
+        pg_start = "pg_ctl -D $HOME/.config/postgres/data start";
+        pg_stop = "pg_ctl -D $HOME/.config/postgres/data stop";
+        oni2 = "/Applications/Onivim2.app/Contents/Resources/run.sh";
+        reload = "home-manager switch && source ~/.config/fish/config.fish";
       };
       plugins = [
         {
@@ -159,11 +187,6 @@
 
     kitty = {
       enable = true;
-      font = {
-        package = pkgs.fira-code;
-        name = "Fira Code";
-        # Font Size set down below
-      };
       keybindings = {
         "ctrl+a>n" = "next_tab";
         "ctrl+a>p" = "previous_tab";
@@ -253,7 +276,14 @@
         in
         solarizedDark //
           {
+            font_family = "MonoLisa";
             font_size = 20;
+            # To avoid clashing field names
+            font_features = "MonoLisa-Regular -liga";
+            "font_features " = "MonoLisa-Bold -liga";
+            "font_features  " = "MonoLisa-BoldItalic -liga";
+            "font_features   " = "MonoLisa-RegularItalic -liga";
+            disable_ligatures = "always";
             enabled_layouts = "stack, horizontal";
             tab_bar_style = "powerline";
             cursor_blink_interval = 0;
@@ -268,6 +298,9 @@
     neovim = {
       enable = true;
       extraConfig = ''
+        " Set shell
+        set shell=fish
+
         " ------ PLUGINS ------
         if empty(glob('~/.config/nvim/autoload/plug.vim'))
           silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
@@ -319,11 +352,6 @@
         Plug 'andys8/vim-elm-syntax'
         Plug 'milch/vim-fastlane'
         Plug 'Quramy/vim-js-pretty-template'
-
-        " For Wakatime -> https://kapeli.com/dash
-        Plug 'wakatime/vim-wakatime'
-        " For Ack -> https://beyondgrep.com/
-        Plug 'mileszs/ack.vim'
 
         " Code Commenter
         Plug 'scrooloose/nerdcommenter'
@@ -442,17 +470,14 @@
         set exrc
         set secure
 
-
         " ------ PLUGIN CONFIG ------
 
         " Configure Ctrl-P
 
-        " Open Ctrl-P
-        nnoremap <Leader>o :CtrlP<CR>
         " Open Ctrl-P buffer
-        nnoremap <Leader>b :CtrlPBuffer<CR>
+        nnoremap <C-l> :CtrlPBuffer<CR>
         " Ctrl-P ignores
-        set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/deps/*,*/_build/*,*/dist/*,*/build/*,*/legacy/*,*/elm-stuff/*
+        let g:ctrlp_user_command = 'ag_with_filters %s'
         " Disable ctrl-p cache so it can easily detect new files
         let g:ctrlp_use_caching = 0
 
@@ -516,6 +541,7 @@
 
         " Configure auto-formatters
         let g:neoformat_enabled_javascript = ['prettier']
+        let g:neoformat_haskell_ormolu = { 'exe': 'ormolu', 'args': [] }
         let g:neoformat_enabled_haskell = ['ormolu']
         let g:neoformat_enabled_elm = ['elmformat']
         let g:neoformat_enabled_reason = ['refmt']
@@ -547,16 +573,10 @@
         highlight link CocHintFloat CocErrorFloat
 
         " Mapings
-        nnoremap gh :call <SID>show_documentation()<CR>
-        nnoremap gr <Plug>(coc-rename)
-
-        function! s:show_documentation()
-          if &filetype == 'vim'
-            execute 'h '.expand('<cword>')
-          else
-            call CocAction('doHover')
-          endif
-        endfunction
+        nmap <silent> gh <Plug>(coc-diagnostic-info)
+        nmap <silent> gn <Plug>(coc-rename)
+        nmap <silent> gy <Plug>(coc-type-definition)
+        nmap <silent> gi :call CocAction('format')<CR>
 
         " Configure Git Gutter
         highlight GitGutterAdd ctermfg=149 ctermbg=NONE guifg=#addb67 guibg=NONE
