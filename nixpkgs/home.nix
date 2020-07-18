@@ -116,7 +116,7 @@
           set -g fish_key_bindings fish_vi_key_bindings
           bind -M insert \cc kill-whole-line force-repaint
         '';
-        ag_with_filters = ''
+        ctrlp_search = ''
           set -l filter ".jpg" ".bmp" ".png" ".jar" ".7z" ".bz"
           set -l filter $filter ".zip" ".tar" ".gz" ".tgz" ".git"
           if [ -f "bsconfig.json" ];
@@ -156,13 +156,13 @@
 
         # Load Nix
         bass source /Users/jaredramirez/.nix-profile/etc/profile.d/nix.sh
-
-        # Load FNM
-        fnm env --multi --use-on-cd | source
       '';
       promptInit = ''
         set -x STARSHIP_CONFIG "$HOME/.config/fish/starship.toml"
         starship init fish | source
+
+        # Load FNM
+        fnm env --multi --use-on-cd | source
       '';
       shellAliases = {
         work = "source $DOTFILES/kitty/sessions/work-sessions.fish";
@@ -477,7 +477,7 @@
         " Open Ctrl-P buffer
         nnoremap <C-l> :CtrlPBuffer<CR>
         " Ctrl-P ignores
-        let g:ctrlp_user_command = 'ag_with_filters %s'
+        let g:ctrlp_user_command = 'ctrlp_search %s'
         " Disable ctrl-p cache so it can easily detect new files
         let g:ctrlp_use_caching = 0
 
