@@ -144,7 +144,7 @@
         # Set global variables
         set -x EDITOR nvim
         set -x LANG "en_US.UTF-8"
-        set -x TERM "xterm-256color"
+        set -x TERM "xterm-kitty"
         set -x DOTFILES "$HOME/dev/github.com/jaredramirez/dotfiles"
         set -x ANDROID_HOME "$HOME/Library/Android/sdk"
         set -x ANDROID_SDK_ROOT "$HOME/Library/Android/sdk"
@@ -158,11 +158,11 @@
         bass source /Users/jaredramirez/.nix-profile/etc/profile.d/nix.sh
       '';
       promptInit = ''
-        set -x STARSHIP_CONFIG "$HOME/.config/fish/starship.toml"
-        starship init fish | source
-
         # Load FNM
         fnm env --multi --use-on-cd | source
+
+        set -x STARSHIP_CONFIG "$HOME/.config/fish/starship.toml"
+        starship init fish | source
       '';
       shellAliases = {
         work = "source $DOTFILES/kitty/sessions/work-sessions.fish";
@@ -183,6 +183,59 @@
           };
         }
       ];
+    };
+
+    alacritty = {
+      enable = true;
+      settings = {
+        font = {
+          normal = {
+            family = "MonoLisa";
+          };
+          bold = {
+            family = "MonoLisa Bold";
+          };
+          italic = {
+            family = "MonoLisa Italic";
+          };
+          bold_italic = {
+            family = "MonoLisa Bold Italic";
+          };
+          size = 18;
+        };
+        colors = {
+          primary = {
+            background = "0x002b36";
+            foreground = "0x839496";
+          };
+          normal = {
+            black = "0x073642";
+            red = "0xdc322f";
+            green = "0x859900";
+            yellow = "0xb58900";
+            blue = "0x268bd2";
+            magenta ="0xd33682";
+            cyan = "0x2aa198";
+            white = "0xeee8d5";
+          };
+          bright = {
+            black = "0x002b36";
+            red = "0xcb4b16";
+            green ="0x586e75";
+            yellow = "0x657b83";
+            blue = "0x839496";
+            magenta ="0x6c71c4";
+            cyan = "0x93a1a1";
+            white = "0xfdf6e3";
+          };
+        };
+      };
+    };
+
+    tmux = {
+      enable = true;
+      keyMode = "vi";
+      shortcut = "a";
     };
 
     kitty = {
@@ -219,62 +272,38 @@
       };
       settings =
         let
-          solarizedLight = {
-            background = "#fdf6e3";
-            foreground = "#52676f";
-            cursor = "#52676f";
-            color0 = "#e4e4e4";
-            color8 = "#002b36";
-            color1 = "#d70000";
-            color9 = "#d75f00";
-            color2 = "#5f8700";
-            color10 = "#585858";
-            color3 = "#af8700";
-            color11 = "#626262";
-            color4 = "#0087ff";
-            color12 = "#808080";
-            color5 = "#af005f";
-            color13 = "#5f5faf";
-            color6 = "#00afaf";
-            color14 = "#8a8a8a";
-            color7 = "#262626";
-            color15 = "#1c1c1c";
-            selection_background = "#e9e2cb";
-            selection_foreground = "#fcf4dc";
-            inactive_tab_foreground = "#fdf6e3";
-            inactive_tab_background = "#586e75";
-            active_tab_foreground  = "#fdf6e3";
-            active_tab_background  = "#839496";
-          };
-          solarizedDark = {
-            background = "#001e26";
-            foreground = "#9bc1c2";
-            cursor = "#f34a00";
-            color0 = "#002731";
-            color8 = "#006388";
-            color1 = "#d01b24";
-            color9 = "#f4153b";
-            color2 = "#6bbe6c";
-            color10 = "#50ee84";
-            color3 = "#a57705";
-            color11 = "#b17e28";
-            color4 = "#2075c7";
-            color12 = "#178dc7";
-            color5 = "#c61b6e";
-            color13 = "#e14d8e";
-            color6 = "#259185";
-            color14 = "#00b29e";
-            color7 = "#e9e2cb";
-            color15= "#fcf4dc";
-            selection_background  = "#003747";
-            selection_foreground = "#001e26";
-            inactive_tab_foreground = "#001e26";
-            inactive_tab_background = "#657b83";
-            active_tab_foreground = "#001e26";
-            active_tab_background = "#93a1a1";
+          # From https://github.com/rsaihe/sonokai-kitty
+          color_scheme = {
+            background = "#2b2d3a";
+            foreground = "#e1e3e4";
+            cursor = "#e1e3e4";
+            selection_background  = "#3a3e4e";
+            selection_foreground = "#e1e3e4";
+            inactive_tab_font_style = "normal";
+            inactive_tab_foreground = "#e1e3e4";
+            inactive_tab_background = "#2b2d37";
+            active_tab_font_style = "bold";
+            active_tab_foreground = "#e1e3e4";
+            active_tab_background = "#3F445B";
+            color0 = "#181a1c";
+            color8 = "#7e8294";
+            color1 = "#fb617e";
+            color9 = "#fb617e";
+            color2 = "#9ed06c";
+            color10 = "#9ed06c";
+            color3 = "#f0c362";
+            color11 = "#f0c362";
+            color4 = "#6dcae8";
+            color12 = "#6dcae8";
+            color5 = "#bb97ee";
+            color13 = "#bb97ee";
+            color6 = "#f89860";
+            color14 = "#f89860";
+            color7 = "#e1e3e4";
+            color15= "#e1e3e4";
           };
         in
-        solarizedDark //
+        color_scheme //
           {
             font_family = "MonoLisa";
             font_size = 20;
@@ -339,7 +368,7 @@
         Plug 'itchyny/lightline.vim'
 
         " Syntax highlighting / themes
-        Plug 'altercation/vim-colors-solarized'
+        Plug 'sainnhe/sonokai'
         Plug 'sheerun/vim-polyglot'
         Plug 'luochen1990/rainbow'
         Plug 'Yggdroot/indentLine'
@@ -374,13 +403,11 @@
         " Set max line length for JS/TS
         autocmd BufRead,BufNewFile *.js,*jsx,*.ts,*.tsx setlocal colorcolumn=80
 
-
         " Show invisibles
         set list listchars=tab:··,trail:·,nbsp:·,eol:¬
 
         " Enable syntax highlighting
         syntax enable
-
 
         " Enable file specific behavior like syntax highlighting and indentation
         filetype on
@@ -407,28 +434,17 @@
         set expandtab
         autocmd FileType elm,java setlocal tabstop=4 shiftwidth=4
 
-        " Set theme colors
-        let s:red = '#d3423a'
-        let s:yellow = '#ffcb8b'
-        let s:green = '#addb67'
-        let s:cyan = '#7fdbca'
-        let s:blue = '#82aaff'
-        let s:magenta = '#c792ea'
-        let s:background = '#0e293f'
-        let s:foreground = '#d6deeb'
-
         " Color/Theme with custom overrides
         if (has("termguicolors"))
          set termguicolors
         endif
 
-        set background=dark
-        " set background=light
-        colorscheme solarized
-        highlight Comment gui=italic cterm=italic
-        highlight Todo ctermfg=222 guifg=s:yellow guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
-        highlight Error guifg=s:red ctermfg=204 guibg=NONE ctermbg=NONE
+        let g:sonokai_style = 'andromeda'
+        let g:sonokai_enable_italic = 1
+        let g:sonokai_disable_italic_comment = 1
 
+        set background=dark
+        colorscheme sonokai
 
         " Set view attributes
         set number
@@ -470,12 +486,15 @@
         set exrc
         set secure
 
+        " Fix display issue?
+        autocmd BufEnter * :mode
+
         " ------ PLUGIN CONFIG ------
 
         " Configure Ctrl-P
 
         " Open Ctrl-P buffer
-        nnoremap <C-l> :CtrlPBuffer<CR>
+        nnoremap <C-m> :CtrlPBuffer<CR>
         " Ctrl-P ignores
         let g:ctrlp_user_command = 'ctrlp_search %s'
         " Disable ctrl-p cache so it can easily detect new files
@@ -514,7 +533,7 @@
         endfunction
 
         let g:lightline = {
-          \ 'colorscheme': 'solarized',
+          \ 'colorscheme': 'sonokai',
           \ 'active': {
           \   'left': [ [ 'mode', 'paste' ],
           \             [ 'gitbranch', 'readonly', 'fileAndParentDir', 'modified' ] ],
@@ -563,16 +582,15 @@
         inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
         " Highlights in general
-        highlight CocUnderline guifg=#ff5874 ctermfg=204 guibg=NONE ctermbg=NONE
-        highlight CocErrorSign guifg=#000000 ctermfg=0 guibg=NONE ctermbg=NONE
-        highlight CocHighlightText guifg=NONE ctermfg=NONE guibg=NONE ctermbg=NONE
-        highlight link CocWarningHighlight CocInfoSign
-        highlight link CocHintHighlight CocHintSign
-        highlight link CocWarningFloat CocErrorFloat
-        highlight link CocInfoFloat CocErrorFloat
-        highlight link CocHintFloat CocErrorFloat
+        highlight SignColumn guibg=NONE ctermbg=NONE
+        highlight CocUnderline gui=undercurl term=undercurl
+        highlight CocErrorSign guifg=#fb617e ctermfg=0 gui=NONE term=NONE
+        highlight CocErrorHighlight guifg=#fb617e ctermfg=0 gui=undercurl term=undercurl
+        highlight CocWarningHighlight guifg=#f0c362 ctermfg=0 gui=undercurl term=undercurl
+        highlight CocHintHighlight guifg=#6dcae8 ctermfg=0 gui=undercurl term=undercurl
+        highlight CocHighlightText guifg=NONE ctermfg=NONE gui=NONE term=NONE
 
-        " Mapings
+        " Coc Mapings
         nmap <silent> gh <Plug>(coc-diagnostic-info)
         nmap <silent> gn <Plug>(coc-rename)
         nmap <silent> gy <Plug>(coc-type-definition)
