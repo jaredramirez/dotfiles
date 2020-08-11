@@ -4,7 +4,7 @@ kitty @ set-tab-title last
 
 kitty @ new-window \
     --new-tab \
-    --tab-title web-app \
+    --tab-title web \
     --cwd ~/dev/github.com/replenysh/replenysh-web-app
 kitty @ goto-layout -m title:web stack
 kitty @ new-window --cwd ~/dev/github.com/replenysh/replenysh-web-app
@@ -29,5 +29,10 @@ kitty @ new-window \
     --cwd ~/dev/github.com/replenysh/replenysh-mobile
 kitty @ goto-layout -m title:mobile stack
 kitty @ new-window --cwd ~/dev/github.com/replenysh/replenysh-mobile
+
+kitty @ new-window \
+    --new-tab \
+    --tab-title mobile-two \
+    --cwd ~/dev/github.com/replenysh/replenysh-mobile
 
 kitty @ close-tab -m title:last
