@@ -2,11 +2,14 @@
 
 {
   home.packages = [
-    # DB/Languages
+    # DB
     pkgs.postgresql
+
+    # Languages - Needed globally for NVIM
     pkgs.python
     pkgs.python3
     pkgs.ruby
+    pkgs.rustup
 
     # Helpful Tools
     pkgs.gitAndTools.gh
@@ -39,9 +42,6 @@
     pkgs.ormolu
     pkgs.ghcid
     pkgs.haskell.packages.ghc865.haskell-language-server
-
-    # Rust
-    pkgs.rustup
 
     # Extras
     pkgs.expect
