@@ -41,7 +41,10 @@
     pkgs.stack
     pkgs.ormolu
     pkgs.ghcid
-    pkgs.haskell.packages.ghc865.haskell-language-server
+    (import (builtins.fetchGit {
+      url = "https://github.com/korayal/hls-nix.git";
+      rev = "33c55f4574415c4c64a20ca3c4a715e811339cc9";
+    }) {}).hpkgs.haskell-language-server
 
     # Extras
     pkgs.expect
@@ -144,6 +147,7 @@
         # Set global variables
         set -gx EDITOR nvim
         set -gx LANG "en_US.UTF-8"
+        set -gx TERM "xterm"
         set -gx DOTFILES "$HOME/dev/github.com/jaredramirez/dotfiles"
         set -gx ANDROID_HOME "$HOME/Library/Android/sdk"
         set -gx ANDROID_SDK_ROOT "$HOME/Library/Android/sdk"
@@ -167,7 +171,8 @@
         starship init fish | source
       '';
       shellAliases = {
-        work = "source $DOTFILES/kitty/sessions/work-sessions.fish";
+        work = "source $DOTFILES/kitty/sessions/work-session.fish";
+        elm-grammar = "source $DOTFILES/kitty/sessions/elm-grammer-session.fish";
         nvim_update = "nvim +PlugInstall +UpdateRemotePlugins +qa";
         pg_start = "pg_ctl -D $HOME/.config/postgres/data start";
         pg_stop = "pg_ctl -D $HOME/.config/postgres/data stop";
@@ -334,6 +339,9 @@
         Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
         Plug 'junegunn/fzf.vim'
 
+        " Features
+        Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+
         " Code formatting
         Plug 'sbdchd/neoformat'
 
@@ -364,6 +372,7 @@
         Plug 'andys8/vim-elm-syntax'
         Plug 'milch/vim-fastlane'
         Plug 'Quramy/vim-js-pretty-template'
+        Plug 'ChrisWellsWood/roc.vim'
 
         " Code Commenter
         Plug 'scrooloose/nerdcommenter'
@@ -448,7 +457,7 @@
         inoremap <C-c> <Nop>
 
         " Clear currently search highlighting
-        nnoremap <silent> <esc> :let @/ = ""<return><esc>
+        nnoremap <silent> <esc> :noh<cr><esc>
 
         " Disable cursor flash
         set guicursor=a:blinkon0
@@ -477,16 +486,16 @@
         " set secure
 
         " Configure splits
-        nnoremap <C-J> <C-W>j
-        nnoremap <C-K> <C-W>k
-        nnoremap <C-L> <C-W>l
-        nnoremap <C-H> <C-W>h
-        set splitbelow
-        set splitright
+        " nnoremap <C-J> <C-W>j
+        " nnoremap <C-K> <C-W>k
+        " nnoremap <C-L> <C-W>l
+        " nnoremap <C-H> <C-W>h
+        " set splitbelow
+        " set splitright
 
         " ------ PLUGIN CONFIG ------
 
-        " Configure vim smoothie
+        " Configure vim moothie
         let g:smoothie_base_speed = 25
 
         " Configure syntax both vim-polygot & others
@@ -553,6 +562,7 @@
         let g:neoformat_enabled_haskell = ['ormolu']
         let g:neoformat_enabled_elm = ['elmformat']
         let g:neoformat_enabled_reason = ['refmt']
+        let g:neoformat_enabled_rust = ['rustfmt']
         let g:neoformat_try_formatprg = 1
         let g:neoformat_run_all_formatters = 1
         let g:neoformat_basic_format_retab = 1
@@ -597,7 +607,7 @@
           \ 'coc-css',
           \ 'coc-html',
           \ 'coc-reason',
-          \ 'coc-rls',
+          \ 'coc-rust-analyzer',
           \ 'coc-snippets'
         \ ]
 
@@ -631,14 +641,13 @@
         " Coc Fzf Mappings
         nnoremap <C-p> :Files .<CR>
         nnoremap <C-m> :Buffers<CR>
-        nnoremap <C-n> :<C-U>call CurrentBufferFiles()<CR>
 
         "" Custom fzf find files in directory of active buffer
         function! CurrentBufferFiles()
           execute 'FZF' expand('%:p:h')
         endfunction
 
-        " Coc LSP
+        " Coc LSP, only for COC plugins that don't handle this automatically
         let s:LSP_CONFIG = {
         \  "haskell": {
         \    "command": "haskell-language-server-wrapper",
