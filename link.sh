@@ -10,12 +10,12 @@ if [ -e "$HOME_DARWIN_CONFIG" ]
 fi
 ln -s "$PWD/nixpkgs/$DARWIN_CONFIG" "$HOME_DARWIN_CONFIG"
 
-FIREFOX="firefox.nix"
-HOME_FIREFOX="$HOME/.nixpkgs/$FIREFOX"
-if [ -e "$HOME_FIREFOX" ]
-  then mv "$HOME_FIREFOX" "$HOME_FIREFOX.backup"
+NIX_EXTRAS="extras"
+HOME_NIX_EXTRAS="$HOME/.nixpkgs/$NIX_EXTRAS"
+if [ -e "$HOME_NIX_EXTRAS" ]
+  then mv "$HOME_NIX_EXTRAS" "$HOME_NIX_EXTRAS.backup"
 fi
-ln -s "$PWD/nixpkgs/$FIREFOX" "$HOME_FIREFOX"
+ln -s "$PWD/nixpkgs/$NIX_EXTRAS" "$HOME_NIX_EXTRAS"
 
 # Link Fish
 FISH_FUNCTIONS_INIT="functions"
@@ -47,3 +47,10 @@ if [ -e "$HOME_KITTY_WORKSPACES" ]
   then mv "$HOME_KITTY_WORKSPACES" "$HOME_KITTY_WORKSPACES.backup"
 fi
 ln -s "$PWD/kitty/$KITTY_WORKSPACES" $HOME_KITTY_WORKSPACES
+
+KITTY_THEMES="themes"
+HOME_KITTY_THEMES="$HOME/.config/kitty/$KITTY_THEMES"
+if [ -e "$HOME_KITTY_THEMES" ]
+  then mv "$HOME_KITTY_THEMES" "$HOME_KITTY_THEMES.backup"
+fi
+ln -s "$PWD/kitty/$KITTY_THEMES" $HOME_KITTY_THEMES

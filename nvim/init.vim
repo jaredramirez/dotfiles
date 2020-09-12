@@ -1,6 +1,101 @@
 " Set shell
 set shell=/run/current-system/sw/bin/fish
 
+" ------ GENERAL CONFIG ------
+" Disable compatabliltiy with vi
+set nocompatible
+
+" Hide buffer instead of abandoning when switching
+set hidden
+
+" Set max line length for JS/TS
+autocmd BufRead,BufNewFile *.js,*jsx,*.ts,*.tsx setlocal colorcolumn=80
+
+" Show invisibles
+set list listchars=tab:··,trail:·,nbsp:·,eol:¬
+
+" Enable syntax highlighting
+syntax enable
+
+" Enable file specific behavior like syntax highlighting and indentation
+filetype on
+filetype plugin on
+filetype indent on
+
+" Use system clipboard
+set clipboard=unnamed
+
+" Disable toolbar
+set guioptions=F
+
+" Search options
+set ignorecase
+set smartcase
+
+" No sounds
+set visualbell
+set noerrorbells
+
+" Set tabs in general and for specific file types
+set tabstop=2
+set shiftwidth=2
+set expandtab
+autocmd FileType elm,java setlocal tabstop=4 shiftwidth=4
+
+" Color/Theme with custom overrides
+if (has("termguicolors"))
+ set termguicolors
+endif
+
+" Set view attributes
+set number
+set ruler
+set cursorline
+set nowrap
+
+" Make <Shift><K> insert a new line at the cursor
+nnoremap K i<CR><Esc>
+
+" Set Leader
+let mapleader="\<SPACE>"
+
+" Disabled Ctrl-C
+inoremap <C-c> <Nop>
+
+" Clear currently search highlighting
+nnoremap <silent> <esc> :noh<cr><esc>
+
+" Set persistant undo
+set undofile
+set undodir=~/.config/nvim/undodir
+
+" Set file plum
+" If not running neovim 0.4.x, comment out this section
+set wildoptions=pum
+set pumblend=10
+
+" Autoreload files after they change on disk
+autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
+autocmd FileChangedShellPost * echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
+
+" Open preview window at the bottom of the screen
+set splitbelow
+
+" Keep cursor vertically centered
+set scrolloff=999
+
+" Enable project level config (.nvimrc)
+" set exrc
+" set secure
+" Configure splits
+" nnoremap <C-J> <C-W>j
+" nnoremap <C-K> <C-W>k
+" nnoremap <C-L> <C-W>l
+" nnoremap <C-H> <C-W>h
+" set splitbelow
+" set splitright
+
+
 " Configure vim-polygot disables
 let g:polyglot_disabled = ['reason', 'elm']
 
@@ -37,7 +132,8 @@ Plug 'airblade/vim-gitgutter'
 Plug 'itchyny/lightline.vim'
 
 " Syntax highlighting / themes
-Plug 'sainnhe/sonokai'
+Plug 'sainnhe/sonokai' " Dark colorscheme
+Plug 'altercation/vim-colors-solarized' " Light colorscheme
 Plug 'sheerun/vim-polyglot'
 Plug 'luochen1990/rainbow'
 Plug 'Yggdroot/indentLine'
@@ -63,87 +159,23 @@ Plug 'psliwka/vim-smoothie'
 
 call plug#end()
 
-" ------ GENERAL CONFIG ------
-" Disable compatabliltiy with vi
-set nocompatible
-" Hide buffer instead of abandoning when switching
-set hidden
-" Set max line length for JS/TS
-autocmd BufRead,BufNewFile *.js,*jsx,*.ts,*.tsx setlocal colorcolumn=80
-" Show invisibles
-set list listchars=tab:··,trail:·,nbsp:·,eol:¬
-" Enable syntax highlighting
-syntax enable
-" Enable file specific behavior like syntax highlighting and indentation
-filetype on
-filetype plugin on
-filetype indent on
-" Use system clipboard
-set clipboard=unnamed
-" Disable toolbar
-set guioptions=F
-" Search options
-set ignorecase
-set smartcase
-" No sounds
-set visualbell
-set noerrorbells
-" Set tabs in general and for specific file types
-set tabstop=2
-set shiftwidth=2
-set expandtab
-autocmd FileType elm,java setlocal tabstop=4 shiftwidth=4
-" Color/Theme with custom overrides
-if (has("termguicolors"))
- set termguicolors
-endif
+" ------ PLUGIN CONFIG ------
+
+" Configure colorscheme
+
+let g:solarized_termcolors=256
 let g:sonokai_style = 'andromeda'
 let g:sonokai_enable_italic = 1
 let g:sonokai_disable_italic_comment = 1
-set background=dark
-colorscheme sonokai
-" Set view attributes
-set number
-set ruler
-set cursorline
-" Make <Shift><K> insert a new line at the cursor
-nnoremap K i<CR><Esc>
-" Set Leader
-let mapleader="\<SPACE>"
-" Disabled Ctrl-C
-inoremap <C-c> <Nop>
-" Disabled Ctrl-C
-inoremap <C-c> <Nop>
-" Clear currently search highlighting
-nnoremap <silent> <esc> :noh<cr><esc>
-" Disable cursor flash
-set guicursor=a:blinkon0
-" Set persistant undo
-set undofile
-set undodir=~/.config/nvim/undodir
-" Set file plum
-" If not running neovim 0.4.x, comment out this section
-set wildoptions=pum
-set pumblend=10
-" Autoreload files after they change on disk
-autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
-autocmd FileChangedShellPost * echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
-" Open preview window at the bottom of the screen
-set splitbelow
-" Keep cursor vertically centered
-set scrolloff=999
-" Enable project level config (.nvimrc)
-" set exrc
-" set secure
-" Configure splits
-" nnoremap <C-J> <C-W>j
-" nnoremap <C-K> <C-W>k
-" nnoremap <C-L> <C-W>l
-" nnoremap <C-H> <C-W>h
-" set splitbelow
-" set splitright
 
-" ------ PLUGIN CONFIG ------
+" Dark
+" set background=dark
+" colorscheme sonokai
+
+" Light
+set background=light
+colorscheme solarized
+
 " Configure vim moothie
 let g:smoothie_base_speed = 25
 
@@ -175,8 +207,11 @@ let g:NERDSpaceDelims = 1
 function! FilenameAndParentDir()
   return expand('%:p:h:t') . '/' . expand('%:t')
 endfunction
+
+" let g:lightline = {
+  " \ 'colorscheme': 'sonokai',
 let g:lightline = {
-  \ 'colorscheme': 'sonokai',
+  \ 'colorscheme': 'solarized',
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ],
   \             [ 'gitbranch', 'readonly', 'fileAndParentDir', 'modified' ] ],

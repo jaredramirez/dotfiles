@@ -32,20 +32,30 @@ Link this repo with your system:
 ```
 
 ### 5
+Run nix-darwin with the linked files
+```
+darwin-rebuild switch
+```
+
+### 6
 Make fish the default shell:
 ```
 echo `which fish` | sudo tee -a /etc/shells
 chsh -s `which fish` 
 ```
 
-### 6
+### 7
 Install Neovim plugins with:
 ```
 update_nvim
 ```
 
-### 7
-Install [karabiner-elements](https://karabiner-elements.pqrs.org/), then setup Caps Lock to be Esc if pressed one, or Ctrl if held by following [this guide](https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/).
+### 8
+Install [karabiner-elements](https://karabiner-elements.pqrs.org/)
+Setup Caps Lock to be Esc if pressed one, or Ctrl if held by following [this guide](https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/).
+
+### 9
+Install [Dashlane](https://www.dashlane.com/)
 
 
 ### 8

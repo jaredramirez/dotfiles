@@ -10,7 +10,8 @@ in
       pkgs.kitty
       pkgs.neovim
       pkgs.starship
-      (pkgs.callPackage ./firefox.nix { })
+      (pkgs.callPackage ./extras/firefox.nix { })
+      (pkgs.callPackage ./extras/alfred.nix { })
 
       # JS
       pkgs.nodejs-14_x
