@@ -169,12 +169,12 @@ let g:sonokai_enable_italic = 1
 let g:sonokai_disable_italic_comment = 1
 
 " Dark
-" set background=dark
-" colorscheme sonokai
+set background=dark
+colorscheme sonokai
 
 " Light
-set background=light
-colorscheme solarized
+" set background=light
+" colorscheme solarized
 
 " Configure vim moothie
 let g:smoothie_base_speed = 25
@@ -312,6 +312,7 @@ endfunction
 
 " Coc Fzf Mappings
 nnoremap <C-p> :Files .<CR>
+nnoremap <C-i> :<C-U>call CurrentBufferFiles()<CR>
 nnoremap <C-m> :Buffers<CR>
 
 " Custom fzf find files in directory of active buffer
