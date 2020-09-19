@@ -45,32 +45,28 @@ in
         set -gx TERM "xterm"
         set -gx LANG "en_US.UTF-8"
         set -gx SHELL "/run/current-system/sw/bin/fish"
-        set -gx FZF_DEFAULT_COMMAND "ag_with_ignores"
         set -gx PATH "$HOME/.local/bin" $PATH
+        set -gx FZF_DEFAULT_COMMAND "ag_with_ignores"
+        set -gx DIRENV_WARN_TIMEOUT "15s"
       '';
       promptInit = ''
         fish_vi_key_bindings
 
         set -gx STARSHIP_CONFIG "$HOME/.config/fish/starship.toml"
         starship init fish | source
+
+        direnv hook fish | source
+        direnv export fish | source
       '';
       shellAliases = {
         ws-work = "source $HOME/.config/kitty/workspaces/work.fish";
         ws-roc = "source $HOME/.config/kitty/workspaces/roc.fish";
+        nix-env = "direnv allow .";
         nix-search = "nix-env -qaP | ag";
-        nix-reload = "darwin-rebuild switch";
-        nix-fish = "nix-shell --command fish";
+        nix-switch = "darwin-rebuild switch";
         nvim-update = "nvim +PlugInstall +UpdateRemotePlugins +qa";
         git-branch-cleanup = "git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -d";
       };
-    };
-  };
-
-  services = {
-    postgresql = {
-      enable = true;
-      package = pkgs.postgresql_12;
-      dataDir = "/var/lib/postgresql/12.4";
     };
   };
 
