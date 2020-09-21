@@ -54,3 +54,11 @@ if [ -e "$HOME_KITTY_THEMES" ]
   then mv "$HOME_KITTY_THEMES" "$HOME_KITTY_THEMES.backup"
 fi
 ln -s "$PWD/kitty/$KITTY_THEMES" $HOME_KITTY_THEMES
+
+# Link Neovim
+STARSHIP_INIT="starship.toml"
+HOME_STARSHIP="$HOME/.config/$STARSHIP_INIT"
+if [ -e "$HOME_STARSHIP" ]
+  then mv "$HOME_STARSHIP" "$HOME_STARSHIP.backup"
+fi
+ln -s "$PWD/starship/$STARSHIP_INIT" $HOME_STARSHIP
