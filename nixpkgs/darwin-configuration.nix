@@ -52,7 +52,6 @@ in
       promptInit = ''
         fish_vi_key_bindings
 
-        set -gx STARSHIP_CONFIG "$HOME/.config/fish/starship.toml"
         starship init fish | source
 
         direnv hook fish | source

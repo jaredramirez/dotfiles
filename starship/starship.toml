@@ -1,8 +1,63 @@
 # https://starship.rs/config
 
+prompt_order = [
+    "username",
+    "hostname",
+    "kubernetes",
+    "directory",
+    "git_branch",
+    "git_commit",
+    "git_state",
+    "git_status",
+    "hg_branch",
+    "docker_context",
+    "package",
+    "dotnet",
+    "elixir",
+    "elm",
+    "erlang",
+    "golang",
+    "java",
+    "julia",
+    "nim",
+    "nodejs",
+    "ocaml",
+    "php",
+    "purescript",
+    "python",
+    "ruby",
+    "rust",
+    "terraform",
+    "custom.haskell",
+    "zig",
+    "nix_shell",
+    "conda",
+    "memory_usage",
+    "aws",
+    "env_var",
+    "crystal",
+    "cmd_duration",
+    "custom",
+    "line_break",
+    "jobs",
+    "battery",
+    "time",
+    "character",
+]
+
+[package]
+disabled = true
+
+[custom.haskell]
+command = "echo \"λ \"(stack ghc --no-install-ghc -- --numeric-version)"
+description = "GHC veresion via stack"
+files = ["stack.yaml", "stack.yml"]
+prefix = "via "
+style = "bold red"
+
 [nix_shell]
 disabled = false
 use_name = true
 impure_msg = "impure"
 pure_msg = "pure"
-symbol = "☃️  "
+symbol = "🐚 "
