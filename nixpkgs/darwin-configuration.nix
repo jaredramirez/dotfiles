@@ -15,6 +15,7 @@ in
 
       # Tools
       pkgs.direnv
+      pkgs.nix-direnv
       pkgs.gitAndTools.gh
       pkgs.gitAndTools.delta
       pkgs.heroku
@@ -82,10 +83,20 @@ in
     done
   '');
 
+  # MacOS Stuff
   system.defaults.finder.AppleShowAllExtensions = true;
   system.defaults.dock.autohide = true;
   system.defaults.dock.orientation = "left";
   system.defaults.dock.tilesize = 32;
+
+  # nix-direnv options
+  nix.extraOptions = ''
+    keep-outputs = true
+    keep-derivations = true
+  '';
+  environment.pathsToLink =
+    [ "/share/nix-direnv"
+    ];
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

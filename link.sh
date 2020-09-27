@@ -62,3 +62,11 @@ if [ -e "$HOME_STARSHIP" ]
   then mv "$HOME_STARSHIP" "$HOME_STARSHIP.backup"
 fi
 ln -s "$PWD/starship/$STARSHIP_INIT" $HOME_STARSHIP
+
+# Link nix-direnv
+DIRENV_CONFIG="direnvrc"
+HOME_DIRENV_CONFIG="$HOME/.$DIRENV_CONFIG"
+if [ -e "$HOME_DIRENV_CONFIG" ]
+  then mv "$HOME_DIRENV_CONFIG" "$HOME_DIRENV_CONFIG.backup"
+fi
+ln -s "$PWD/direnv/$DIRENV_CONFIG" "$HOME_DIRENV_CONFIG"

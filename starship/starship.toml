@@ -49,6 +49,7 @@ prompt_order = [
 disabled = true
 
 [custom.haskell]
+disabled = true # Really slow
 command = "echo \"λ \"(stack ghc --no-install-ghc -- --numeric-version)"
 description = "GHC veresion via stack"
 files = ["stack.yaml", "stack.yml"]
@@ -60,4 +61,4 @@ disabled = false
 use_name = true
 impure_msg = "impure"
 pure_msg = "pure"
-symbol = "🐚 "
+symbol = "❄️ "
