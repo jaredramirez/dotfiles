@@ -26,13 +26,13 @@ cd dotfiles
 ```
 
 ### 4
-Link this repo with your system:
+Boostrap this repo with your system:
 ```
-./link.sh
+./boostrap.sh
 ```
 
 ### 5
-Run nix-darwin with the linked files
+Run nix-darwin with the bootstrapped files
 ```
 darwin-rebuild switch
 ```
