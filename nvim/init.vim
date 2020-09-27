@@ -97,6 +97,7 @@ set scrolloff=999
 
 
 " Configure vim-polygot disables
+" Must be done before plugins are loaded!
 let g:polyglot_disabled = ['reason', 'elm']
 
 " ------ PLUGINS ------
@@ -208,10 +209,8 @@ function! FilenameAndParentDir()
   return expand('%:p:h:t') . '/' . expand('%:t')
 endfunction
 
-" let g:lightline = {
-  " \ 'colorscheme': 'sonokai',
 let g:lightline = {
-  \ 'colorscheme': 'solarized',
+  \ 'colorscheme': 'sonokai',
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ],
   \             [ 'gitbranch', 'readonly', 'fileAndParentDir', 'modified' ] ],
@@ -229,7 +228,7 @@ let g:lightline = {
   \ 'subseparator': { 'left': '', 'right': '' },
   \ }
 
-" Configure Neoformat
+" Configure Neoformat to run on save
 augroup fmt
   autocmd!
   autocmd BufWritePre * Neoformat
@@ -274,7 +273,9 @@ highlight GitGutterChange ctermfg=116 ctermbg=NONE guifg=#011627 guibg=NONE
 highlight GitGutterDelete ctermfg=204 ctermbg=NONE guifg=#ff5874 guibg=NONE
 
 " FZF
+" Show nice window
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Todo', 'border': 'rounded' } }
+
 " Coc
 let g:coc_node_path = '/run/current-system/sw/bin/node'
 let g:coc_global_extensions = [
@@ -352,3 +353,8 @@ endfor
 if !empty(s:languageservers)
   call coc#config('languageserver', s:languageservers)
 endif
+
+" Configure vim-visual-multi
+let g:VM_maps = {}
+let g:VM_maps["Select Cursor Down"] = '<C-k>'      " start selecting down
+let g:VM_maps["Select Cursor Up"]   = '<C-j>'
