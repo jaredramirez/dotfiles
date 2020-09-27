@@ -70,3 +70,11 @@ if [ -e "$HOME_DIRENV_CONFIG" ]
   then mv "$HOME_DIRENV_CONFIG" "$HOME_DIRENV_CONFIG.backup"
 fi
 ln -s "$PWD/direnv/$DIRENV_CONFIG" "$HOME_DIRENV_CONFIG"
+
+# Link git
+GIT_CONFIG="gitconfig"
+HOME_GIT_CONFIG="$HOME/.$GIT_CONFIG"
+if [ -e "$HOME_GIT_CONFIG" ]
+  then mv "$HOME_GIT_CONFIG" "$HOME_GIT_CONFIG.backup"
+fi
+ln -s "$PWD/git/$GIT_CONFIG" "$HOME_GIT_CONFIG"

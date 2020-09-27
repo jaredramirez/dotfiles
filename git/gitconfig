@@ -1,0 +1,12 @@
+[user]
+  name = Jared Ramirez
+  email = jaredramirez@hey.com
+[alias]
+  history = log --online --graph --decorate
+  ci = commit
+  st = status
+  unstage = reset HEAD --
+  a = add -u
+  aall = add .
+  pushf = push origin HEAD --force-with-lease
+  pushu = push -u origin HEAD
