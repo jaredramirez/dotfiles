@@ -1,6 +1,6 @@
 function rg_with_ignores
     set -l filter "*.jpg" "*.bmp" "*.png" "*.jar" "*.7z" "*.bz" "*.zip" "*.tar" "*.gz" "*.tgz"
-    set -l filter ".git" ".direnv"
+    set -l filter ".git" ".direnv" "postgres"
     if [ -f "bsconfig.json" ]
         set filter $filter "lib" "*.bs.js"
     end
