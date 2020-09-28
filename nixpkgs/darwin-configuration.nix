@@ -16,12 +16,12 @@ in
       # Tools
       pkgs.direnv
       pkgs.nix-direnv
+      pkgs.fzf
+      pkgs.ripgrep
       pkgs.gitAndTools.gh
       pkgs.gitAndTools.delta
       pkgs.heroku
       pkgs.nix-prefetch-git
-      pkgs.amber
-      pkgs.silver-searcher
       pkgs.starship
       pkgs.bat
 
@@ -47,7 +47,7 @@ in
         set -gx LANG "en_US.UTF-8"
         set -gx SHELL "/run/current-system/sw/bin/fish"
         set -gx PATH "$HOME/.local/bin" $PATH
-        set -gx FZF_DEFAULT_COMMAND "ag_with_ignores"
+        set -gx FZF_DEFAULT_COMMAND "rg_with_ignores"
         set -gx DIRENV_WARN_TIMEOUT "15s"
       '';
       promptInit = ''
@@ -59,6 +59,7 @@ in
         direnv export fish | source
       '';
       shellAliases = {
+        nvimf = "nvim (rg_with_ignores | fzf)";
         ws-work = "source $HOME/.config/kitty/workspaces/work.fish";
         ws-roc = "source $HOME/.config/kitty/workspaces/roc.fish";
         nix-env = "direnv allow .";
