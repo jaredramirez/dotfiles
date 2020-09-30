@@ -18,6 +18,7 @@ in
       pkgs.nix-direnv
       pkgs.fzf
       pkgs.ripgrep
+      pkgs.amber
       pkgs.gitAndTools.gh
       pkgs.gitAndTools.delta
       pkgs.heroku
@@ -59,7 +60,8 @@ in
         direnv export fish | source
       '';
       shellAliases = {
-        nvimf = "nvim (rg_with_ignores | fzf)";
+        nv = "nvim";
+        nvf = "nvim (rg_with_ignores | fzf)";
         ws-work = "source $HOME/.config/kitty/workspaces/work.fish";
         ws-roc = "source $HOME/.config/kitty/workspaces/roc.fish";
         nix-env = "direnv allow .";
