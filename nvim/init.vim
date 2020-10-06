@@ -149,6 +149,9 @@ Plug 'milch/vim-fastlane'
 Plug 'Quramy/vim-js-pretty-template'
 Plug 'ChrisWellsWood/roc.vim'
 
+" PG sql
+Plug 'lifepillar/pgsql.vim'
+
 " Code Commenter
 Plug 'scrooloose/nerdcommenter'
 
@@ -188,6 +191,9 @@ autocmd FileType javascript.jsx syn clear javascriptTemplate
 call jspretmpl#register_tag('gql', 'graphql')
 autocmd FileType javascript JsPreTmpl
 autocmd FileType javascript.jsx JsPreTmpl
+
+" Configure pgsql
+let g:sql_type_default = 'pgsql'
 
 " Configure rainbow parentheses
 let g:rainbow_active = 0
