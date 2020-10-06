@@ -84,6 +84,13 @@ set splitbelow
 " Keep cursor vertically centered
 set scrolloff=999
 
+" Wrap lines in certain file types
+augroup WrapLines
+  autocmd!
+  autocmd FileType markdown setlocal wrap
+augroup END
+
+
 " Enable project level config (.nvimrc)
 " set exrc
 " set secure
