@@ -62,7 +62,7 @@ in
       '';
       shellAliases = {
         nv = "nvim";
-        ws-work = "source $HOME/.config/kitty/workspaces/work.fish";
+        ws-rep = "source $HOME/.config/kitty/workspaces/rep.fish";
         ws-roc = "source $HOME/.config/kitty/workspaces/roc.fish";
         nix-env = "direnv allow .";
         nix-search = "nix-env -qaP | ag";
