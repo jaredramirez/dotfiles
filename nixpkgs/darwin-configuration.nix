@@ -27,10 +27,6 @@ in
       pkgs.starship
       pkgs.bat
 
-      # Fonts
-      pkgs.hasklig
-      pkgs.font-awesome
-
       # Needed for Coc
       pkgs.nodejs-14_x
       pkgs.yarn
@@ -89,6 +85,11 @@ in
       osascript -e "tell app \"Finder\" to make alias file at POSIX file \"/Users/${me}/Applications/Nix/\" to POSIX file \"$src\" with properties {name: \"$appname\"}";
     done
   '');
+
+  # Fonts
+  fonts.fonts = [
+    pkgs.fira-code
+  ];
 
   # MacOS Stuff
   system.defaults.finder.AppleShowAllExtensions = true;
