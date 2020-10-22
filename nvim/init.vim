@@ -117,8 +117,8 @@ endif
 call plug#begin('~/.config/nvim/bundle')
 
 " Navigation
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+Plug 'lotabout/skim', { 'dir': '~/.skim', 'do': './install' }
+Plug 'lotabout/skim.vim'
 
 " Features
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
@@ -264,7 +264,12 @@ let g:indentLine_char = '▏'
 set concealcursor+=v
 set updatetime=300
 set shortmess+=c
-set signcolumn=yes
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
 set completeopt=noinsert,menuone,noselect
 
 " Setup autocomplete/snippets menu
@@ -285,7 +290,7 @@ highlight GitGutterAdd ctermfg=149 ctermbg=NONE guifg=#addb67 guibg=NONE
 highlight GitGutterChange ctermfg=116 ctermbg=NONE guifg=#011627 guibg=NONE
 highlight GitGutterDelete ctermfg=204 ctermbg=NONE guifg=#ff5874 guibg=NONE
 
-" FZF
+" Skim
 " Show nice window
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Todo', 'border': 'rounded' } }
 
@@ -295,10 +300,10 @@ let g:coc_global_extensions = [
   \ 'coc-syntax',
   \ 'coc-css',
   \ 'coc-html',
-  \ 'coc-reason',
-  \ 'coc-rust-analyzer',
   \ 'coc-snippets'
 \ ]
+
+" Use tab for trigger completion with characters ahead and navigate.
 inoremap <silent><expr> <cr>
     \ pumvisible() ? coc#_select_confirm() :
     \ coc#expandableOrJumpable()
@@ -308,6 +313,9 @@ let g:coc_snippet_next = '<Tab>'
 let g:coc_snippet_prev = '<S-Tab>'
 imap <C-j> <Plug>(coc-snippets-expand-jump)
 
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
@@ -315,7 +323,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <silent> gh <Plug>(coc-diagnostic-info)
 nmap <silent> gn <Plug>(coc-rename)
 nmap <silent> gi :call CocAction('format')<CR>
-nmap <silent> gy :call <SID>show_documentation()<CR>
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gd :call <SID>show_documentation()<CR>
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
@@ -331,13 +340,13 @@ nnoremap <C-m> :Buffers<CR>
 
 " Custom fzf find files in directory of active buffer
 function! CurrentBufferFiles()
-  execute 'FZF' expand('%:p:h')
+  execute 'SK' expand('%:p:h')
 endfunction
 
-" Coc LSP, only for COC plugins that don't handle this automatically
+" Coc LSP
 let s:LSP_CONFIG = {
 \  "haskell": {
-\    "command": "haskell-language-server-wrapper",
+\    "command": "haskell-language-server",
 \    "args": ["--lsp"],
 \    "rootPatterns": ["*.cabal", ".stack.yaml", "cabal.project"," package.yaml"],
 \    "filetypes": ["hs", "lhs", "haskell"],
@@ -355,6 +364,15 @@ let s:LSP_CONFIG = {
 \      "elmFormatPath": "elm-format",
 \      "elmTestPath": "elm-test"
 \    }
+\  },
+\  "reason": {
+\    "command": "reason-language-server",
+\    "filetypes": ["reason"],
+\  },
+\  "rust": {
+\    "command": "rust-analyze",
+\    "filetypes": ["rust"],
+\    "rootPatterns": ["Cargo.toml"]
 \  }
 \}
 
@@ -371,3 +389,12 @@ endif
 let g:VM_maps = {}
 let g:VM_maps["Select Cursor Down"] = '<C-k>'      " start selecting down
 let g:VM_maps["Select Cursor Up"]   = '<C-j>'
+
+" Configure easy motion mappings
+" Move to line
+map <Leader>L <Plug>(easymotion-bd-jk)
+nmap <Leader>L <Plug>(easymotion-overwin-line)
+
+" Move to word
+map  <Leader>w <Plug>(easymotion-bd-w)
+nmap <Leader>w <Plug>(easymotion-overwin-w)

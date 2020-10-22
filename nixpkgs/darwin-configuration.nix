@@ -10,6 +10,9 @@ in
     [ # Applications
       pkgs.kitty
       pkgs.neovim
+      pkgs.dash
+      pkgs.kakoune
+      pkgs.kak-lsp
       (pkgs.callPackage ./extras/firefox.nix { })
       (pkgs.callPackage ./extras/alfred.nix { })
 
@@ -18,6 +21,7 @@ in
       pkgs.direnv
       pkgs.nix-direnv
       pkgs.fzf
+      pkgs.skim
       pkgs.ripgrep
       pkgs.amber
       pkgs.gitAndTools.gh
@@ -37,20 +41,25 @@ in
   services.nix-daemon.enable = true;
   nix.package = pkgs.nix;
 
+  environment.variables = {
+      EDITOR = "kak";
+      LANG = "en_US.UTF-8";
+      DIRENV_WARN_TIMEOUT = "15s";
+      KAKOUNE_POSIX_SHELL = "${pkgs.dash}/bin/dash";
+  };
+
+  environment.systemPath = [
+      "$HOME/.local/bin"
+  ];
+
   programs = {
     zsh.enable = true;
-
     fish = {
       enable = true;
       shellInit = ''
         # Set global variables
-        set -gx EDITOR nvim
-        set -gx TERM "xterm"
-        set -gx LANG "en_US.UTF-8"
-        set -gx SHELL "/run/current-system/sw/bin/fish"
-        set -gx PATH "$HOME/.local/bin" $PATH
         set -gx FZF_DEFAULT_COMMAND "rg_with_ignores"
-        set -gx DIRENV_WARN_TIMEOUT "15s"
+        set -gx SKIM_DEFAULT_COMMAND "rg_with_ignores"
       '';
       promptInit = ''
         fish_vi_key_bindings

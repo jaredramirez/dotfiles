@@ -1,0 +1,102 @@
+require-module kitty
+
+# Plugins
+source "%val{config}/plugins/plug.kak/rc/plug.kak"
+
+
+# Buffer management
+plug 'delapouite/kakoune-buffers' %{
+    alias global bd delete-buffer
+    map global normal <c-b> ': enter-buffers-mode<ret>' -docstring 'buffers'
+}
+
+# FZF
+plug 'andreyorst/fzf.kak' defer "fzf" %{
+    set-option global fzf_implementation 'skim'
+    define-command sk-file -docstring 'Invoke sk to open a file' -params 0 %{ evaluate-commands %sh{
+        cmd="fish -c rg_with_ignores 2>/dev/null"
+        printf "%s\n" "fzf -kak-cmd %{edit -existing} -items-cmd %{$cmd} "
+        rg --version
+    }}
+    map global normal <c-p> ': sk-file<ret>'
+}
+
+# Easy Motion
+plug 'danr/kakoune-easymotion' %{
+    map global normal <c-w> :easy-motion-word<ret>
+}
+
+# Handle Tab
+plug "andreyorst/smarttab.kak" defer smarttab %{
+    set-option global softtabstop 4
+} config %{
+    hook global WinSetOption filetype=(rust|markdown|kak|javascript|elm|haskell|re) expandtab
+    hook global WinSetOption filetype=(makefile) noexpandtab
+    hook global WinSetOption filetype=(c|cpp) smarttab
+}
+
+# Status line
+plug "jdugan6240/powerline.kak" config %{
+        powerline-start
+}
+
+# Configure kak-lsp (installed via nix)
+eval %sh{kak-lsp --kakoune -s $kak_session}
+lsp-enable
+set global lsp_diagnostic_line_error_sign '║'
+set global lsp_diagnostic_line_warning_sign '┊'
+define-command lsp-restart -docstring 'restart lsp server' %{ lsp-stop; lsp-start }
+hook global WinSetOption filetype=(rust|haskell|elm|javascript|reason) %{
+    set-option window lsp_auto_highlight_references true
+    set-option window lsp_hover_anchor false
+    lsp-auto-hover-enable
+    echo -debug "Enabling LSP for filtetype %opt{filetype}"
+    lsp-enable-window
+}
+hook global KakEnd .* lsp-exit
+
+# Formatting
+hook global WinSetOption filetype=elm %{
+  set window formatcmd 'elm-format --stdin'
+  hook buffer BufWritePre .* %{format}
+}
+hook global WinSetOption filetype=haskell %{
+  set window formatcmd 'ormolu'
+  hook buffer BufWritePre .* %{format}
+}
+hook global WinSetOption filetype=javascript %{
+  set window formatcmd 'prettier'
+  hook buffer BufWritePre .* %{format}
+}
+
+# Copy to system clipboard
+hook global NormalKey y|d|c %{ nop %sh{
+    printf %s "$kak_reg_dquote" | pbcopy
+}}
+
+# Use tabs in completions
+hook global InsertCompletionShow .* %{
+    try %{
+        execute-keys -draft 'h<a-K>\h<ret>'
+        map window insert <tab> <c-n>
+        map window insert <s-tab> <c-p>
+        map window insert <ret> <space>
+    }
+}
+hook global InsertCompletionHide .* %{
+    unmap window insert <tab> <c-n>
+    unmap window insert <s-tab> <c-p>
+    unmap window insert <ret> <space>
+}
+
+# Add poor mans fzf
+def f -params 1 -shell-script-candidates %{ fish -c "rg_with_ignores" } %{ edit %arg{1} }
+
+# Join/split lines
+map global normal <c-j> '<a-j>' -docstring 'split line at cursor'
+map global normal <c-k> 'i<ret><esc>' -docstring 'split line at cursor'
+
+# Config
+add-highlighter global/ number-lines
+set global scrolloff 999,10
+colorscheme sonokai
