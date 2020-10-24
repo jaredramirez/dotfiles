@@ -365,9 +365,15 @@ let s:LSP_CONFIG = {
 \    "filetypes": ["reason"],
 \  },
 \  "rust": {
-\    "command": "rust-analyze",
+\    "command": "rust-analyzer",
 \    "filetypes": ["rust"],
 \    "rootPatterns": ["Cargo.toml"]
+\  },
+\  "ccls": {
+\    "command": "ccls",
+\    "filetypes": ["c", "cpp", "objc", "objcpp"],
+\    "rootPatterns": [".ccls"],
+\    "initializationOptions": {"cache": {"directory": "/tmp/ccls"}}
 \  }
 \}
 
