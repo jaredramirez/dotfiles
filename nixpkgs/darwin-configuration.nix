@@ -50,14 +50,24 @@ in
   ];
 
   programs = {
-    zsh.enable = true;
+    zsh = {
+      enable = true;
+      interactiveShellInit = ''
+        bindkey -v
+        eval "$(starship init zsh)"
+      '';
+      shellInit = ''
+        eval "$(direnv hook zsh)"
+      '';
+    };
     fish = {
       enable = true;
-      promptInit = ''
+      interactiveShellInit = ''
         fish_vi_key_bindings
         starship init fish | source
-        direnv hook fish | source
-        direnv export fish | source
+      '';
+      shellInit = ''
+        eval (direnv hook fish)
       '';
       shellAliases = {
         nv = "nvim";

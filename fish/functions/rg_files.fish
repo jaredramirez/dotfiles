@@ -1,4 +1,4 @@
-function rg_with_ignores
+function rg_files
     set -l filter "*.jpg" "*.bmp" "*.png" "*.jar" "*.7z" "*.bz" "*.zip" "*.tar" "*.gz" "*.tgz"
     set -l filter ".git" ".direnv" "postgres"
     if [ -f "bsconfig.json" ]
