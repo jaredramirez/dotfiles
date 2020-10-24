@@ -8,18 +8,13 @@ in
   # System-Wide and nearly all stuff for Neovim
   environment.systemPackages =
     [ # Applications
-      pkgs.kitty
-      pkgs.neovim
-      pkgs.dash
-      pkgs.kakoune
-      pkgs.kak-lsp
       (pkgs.callPackage ./extras/firefox.nix { })
       (pkgs.callPackage ./extras/alfred.nix { })
 
       # Tools
+      pkgs.kitty
+      pkgs.neovim
       pkgs.cachix
-      pkgs.direnv
-      pkgs.nix-direnv
       pkgs.fzf
       pkgs.skim
       pkgs.ripgrep
@@ -30,8 +25,10 @@ in
       pkgs.nix-prefetch-git
       pkgs.starship
       pkgs.bat
+      pkgs.direnv
+      pkgs.nix-direnv
 
-      # Needed for Coc
+      # Needed globally for Coc
       pkgs.nodejs-14_x
       pkgs.yarn
     ];
@@ -42,30 +39,23 @@ in
   nix.package = pkgs.nix;
 
   environment.variables = {
-      EDITOR = "kak";
-      LANG = "en_US.UTF-8";
-      DIRENV_WARN_TIMEOUT = "15s";
-      KAKOUNE_POSIX_SHELL = "${pkgs.dash}/bin/dash";
+    EDITOR = "nvim";
+    LANG = "en_US.UTF-8";
+    DIRENV_WARN_TIMEOUT = "15s";
+    SKIM_DEFAULT_OPTIONS = "--height 50% --layout=reverse";
   };
 
   environment.systemPath = [
-      "$HOME/.local/bin"
+    "$HOME/.local/bin"
   ];
 
   programs = {
     zsh.enable = true;
     fish = {
       enable = true;
-      shellInit = ''
-        # Set global variables
-        set -gx FZF_DEFAULT_COMMAND "rg_with_ignores"
-        set -gx SKIM_DEFAULT_COMMAND "rg_with_ignores"
-      '';
       promptInit = ''
         fish_vi_key_bindings
-
         starship init fish | source
-
         direnv hook fish | source
         direnv export fish | source
       '';
@@ -75,7 +65,7 @@ in
         ws-roc = "source $HOME/.config/kitty/workspaces/roc.fish";
         nix-env = "direnv allow .";
         nix-search = "nix-env -qaP | ag";
-        nix-switch = "darwin-rebuild switch";
+        nix-switch = "darwin-rebuild switch && source /etc/fish/config.fish";
         nvim-update = "nvim +PlugInstall +UpdateRemotePlugins +qa";
         git-branch-cleanup = "git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -d";
       };
@@ -111,9 +101,9 @@ in
     keep-outputs = true
     keep-derivations = true
   '';
-  environment.pathsToLink =
-    [ "/share/nix-direnv"
-    ];
+  environment.pathsToLink = [
+    "/share/nix-direnv"
+  ];
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

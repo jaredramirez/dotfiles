@@ -1,6 +1,6 @@
 function nvf
     # Get file to open
-    set -l file (rg_with_ignores | sk)
+    set -l file (rg_with_ignores | sk --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}")
 
     # Make sure we have a file (didn't press ctrl-c)
     if set -q file && test -n "$file"

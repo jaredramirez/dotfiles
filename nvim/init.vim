@@ -140,8 +140,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'itchyny/lightline.vim'
 
 " Syntax highlighting / themes
-Plug 'sainnhe/sonokai' " Dark colorscheme
-Plug 'altercation/vim-colors-solarized' " Light colorscheme
+Plug 'sainnhe/sonokai'
 Plug 'sheerun/vim-polyglot'
 Plug 'luochen1990/rainbow'
 Plug 'Yggdroot/indentLine'
@@ -175,7 +174,6 @@ call plug#end()
 " Configure colorscheme
 
 let g:solarized_termcolors=256
-let g:sonokai_style = 'andromeda'
 let g:sonokai_enable_italic = 1
 let g:sonokai_disable_italic_comment = 1
 
@@ -290,9 +288,6 @@ highlight GitGutterAdd ctermfg=149 ctermbg=NONE guifg=#addb67 guibg=NONE
 highlight GitGutterChange ctermfg=116 ctermbg=NONE guifg=#011627 guibg=NONE
 highlight GitGutterDelete ctermfg=204 ctermbg=NONE guifg=#ff5874 guibg=NONE
 
-" Skim
-" Show nice window
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Todo', 'border': 'rounded' } }
 
 " Coc
 let g:coc_node_path = '/run/current-system/sw/bin/node'
@@ -333,15 +328,15 @@ function! s:show_documentation()
   endif
 endfunction
 
-" Coc Fzf Mappings
-nnoremap <C-p> :Files .<CR>
-nnoremap <C-i> :<C-U>call CurrentBufferFiles()<CR>
-nnoremap <C-m> :Buffers<CR>
+" Skim.vim
+"
+" Show nice window
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Todo', 'border': 'rounded' } }
 
-" Custom fzf find files in directory of active buffer
-function! CurrentBufferFiles()
-  execute 'SK' expand('%:p:h')
-endfunction
+" Mappings
+nnoremap <C-p> :call skim#run(skim#wrap({'source': 'fish -c rg_with_ignores', 'sink': 'e', 'options': '--layout=reverse --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}"'}))<CR><CR>
+nnoremap <C-i> :call fzf#vim#files(expand('%:p:h'), {'source': 'fish -c rg_with_ignores', 'options': '--layout=reverse --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}"'})<CR><CR>
+nnoremap <C-m> :call fzf#vim#buffers({'options': '--layout=reverse --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}"'})<CR>
 
 " Coc LSP
 let s:LSP_CONFIG = {
