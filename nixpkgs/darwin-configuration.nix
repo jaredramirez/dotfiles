@@ -7,14 +7,13 @@ in
   # List packages installed in system profile
   # System-Wide and nearly all stuff for Neovim
   environment.systemPackages =
-    [ # Applications
+    [ # GUI Apps
+      pkgs.kitty
       (pkgs.callPackage ./extras/firefox.nix { })
       (pkgs.callPackage ./extras/alfred.nix { })
 
-      # Tools
-      pkgs.kitty
+      # CLI Apps
       pkgs.neovim
-      pkgs.cachix
       pkgs.fzf
       pkgs.skim
       pkgs.ripgrep
@@ -25,6 +24,9 @@ in
       pkgs.nix-prefetch-git
       pkgs.starship
       pkgs.bat
+
+      # Nix helpers
+      pkgs.cachix
       pkgs.direnv
       pkgs.nix-direnv
 
@@ -32,11 +34,6 @@ in
       pkgs.nodejs-14_x
       pkgs.yarn
     ];
-
-
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-  nix.package = pkgs.nix;
 
   environment.variables = {
     EDITOR = "nvim";
@@ -49,6 +46,11 @@ in
     "$HOME/.local/bin"
   ];
 
+  # No need to menion zsh here, as it's defaultly available on macos
+  environment.shells = [
+    pkgs.fish
+  ];
+
   programs = {
     zsh = {
       enable = true;
@@ -57,6 +59,7 @@ in
         eval "$(starship init zsh)"
       '';
       shellInit = ''
+        export SHELL="${pkgs.zsh}"
         eval "$(direnv hook zsh)"
       '';
     };
@@ -67,6 +70,7 @@ in
         starship init fish | source
       '';
       shellInit = ''
+        set -gx SHELL ${pkgs.fish}
         eval (direnv hook fish)
       '';
       shellAliases = {
@@ -114,6 +118,10 @@ in
   environment.pathsToLink = [
     "/share/nix-direnv"
   ];
+
+  # Auto upgrade nix package and the daemon service.
+  services.nix-daemon.enable = true;
+  nix.package = pkgs.nix;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
