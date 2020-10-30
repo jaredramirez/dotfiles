@@ -10,7 +10,6 @@ in
     [ # GUI Apps
       pkgs.kitty
       (pkgs.callPackage ./extras/firefox.nix { })
-      (pkgs.callPackage ./extras/alfred.nix { })
 
       # CLI Apps
       pkgs.neovim
@@ -59,7 +58,7 @@ in
         eval "$(starship init zsh)"
       '';
       shellInit = ''
-        export SHELL="${pkgs.zsh}"
+        # export SHELL="${pkgs.zsh}"
         eval "$(direnv hook zsh)"
       '';
     };
@@ -67,11 +66,13 @@ in
       enable = true;
       interactiveShellInit = ''
         fish_vi_key_bindings
+        direnv hook fish | source
         starship init fish | source
       '';
       shellInit = ''
-        set -gx SHELL ${pkgs.fish}
-        eval (direnv hook fish)
+        # set -gx SHELL ${pkgs.fish}
+        direnv hook fish | source
+        direnv export fish | source
       '';
       shellAliases = {
         nv = "nvim";

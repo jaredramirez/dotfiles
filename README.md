@@ -55,8 +55,12 @@ Install [karabiner-elements](https://karabiner-elements.pqrs.org/)
 Setup Caps Lock to be Esc if pressed one, or Ctrl if held by following [this guide](https://karabiner-elements.pqrs.org/docs/manual/configuration/configure-complex-modifications/).
 
 ### 9
+Install [raycast] (https://raycast.com/).
+Add `raycast-scripts` to as script commands
+
+### 10 
 Install [Dashlane](https://www.dashlane.com/)
 
 
-### 8
+### 11 
 Open up firefox and login to your profile!
