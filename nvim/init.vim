@@ -333,9 +333,9 @@ endfunction
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Todo', 'border': 'rounded' } }
 
 " Mappings
-nnoremap <C-p> :call skim#run(skim#wrap({'source': 'fish -c rg_files', 'sink': 'e', 'options': '--layout=reverse --preview "~/.config/nvim/bundle/skim.vim/bin/preview.sh {}"'}))<CR>
-nnoremap <C-i> :call fzf#vim#files(expand('%:p:h'), {'source': 'fish -c rg_files', 'options': '--layout=reverse --preview "~/.config/nvim/bundle/skim.vim/bin/preview.sh {}"'})<CR>
-nnoremap <C-m> :call fzf#vim#buffers({'options': '--layout=reverse --preview "~/.config/nvim/bundle/skim.vim/bin/preview.sh {}"'})<CR>
+nnoremap <silent> <C-p> :call skim#run(skim#wrap({'source': 'fish -c rg_files', 'sink': 'e', 'options': '--layout=reverse --preview "~/.config/nvim/bundle/skim.vim/bin/preview.sh {}"'}))<CR>
+nnoremap <silent> <C-i> :call fzf#vim#files(expand('%:p:h'), {'source': 'fish -c rg_files', 'options': '--layout=reverse --preview "~/.config/nvim/bundle/skim.vim/bin/preview.sh {}"'})<CR>
+nnoremap <silent> <C-m> :call fzf#vim#buffers({'options': '--layout=reverse --preview "~/.config/nvim/bundle/skim.vim/bin/preview.sh {}"'})<CR>
 
 " Coc LSP
 let s:LSP_CONFIG = {
