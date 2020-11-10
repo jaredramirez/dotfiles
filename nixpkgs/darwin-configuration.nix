@@ -9,6 +9,7 @@ in
   environment.systemPackages =
     [ # GUI Apps
       pkgs.kitty
+      pkgs.alacritty
       (pkgs.callPackage ./extras/firefox.nix { })
 
       # CLI Apps
