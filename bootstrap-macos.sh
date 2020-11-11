@@ -14,9 +14,8 @@ ln -sf "$PWD/nixpkgs/$NIX_EXTRAS" "$HOME_NIX_EXTRAS"
 
 # Link Fish
 mkdir -p "$HOME/.config/fish"
-FISH_FUNCTIONS_INIT="functions"
-HOME_FISH_FUNCTIONS="$HOME/.config/fish/$FISH_FUNCTIONS_INIT"
-ln -sf "$PWD/fish/$FISH_FUNCTIONS_INIT" $HOME_FISH_FUNCTIONS
+HOME_FISH_FUNCTIONS="$HOME/.config/fish/functions"
+ln -sf "$PWD/fish/functions" $HOME_FISH_FUNCTIONS
 
 # Link Neovim
 mkdir -p "$HOME/.config/fish"
@@ -30,19 +29,8 @@ KITTY_INIT="kitty.conf"
 HOME_KITTY="$HOME/.config/kitty/$KITTY_INIT"
 ln -sf "$PWD/kitty/$KITTY_INIT" $HOME_KITTY
 
-KITTY_WORKSPACES="workspaces"
-HOME_KITTY_WORKSPACES="$HOME/.config/kitty/$KITTY_WORKSPACES"
-if [ -e "$HOME_KITTY_WORKSPACES" ]
-  then mv "$HOME_KITTY_WORKSPACES" "$HOME_KITTY_WORKSPACES.backup"
-fi
-ln -sf "$PWD/kitty/$KITTY_WORKSPACES" $HOME_KITTY_WORKSPACES
-
-KITTY_THEMES="themes"
-HOME_KITTY_THEMES="$HOME/.config/kitty/$KITTY_THEMES"
-if [ -e "$HOME_KITTY_THEMES" ]
-  then mv "$HOME_KITTY_THEMES" "$HOME_KITTY_THEMES.backup"
-fi
-ln -sf "$PWD/kitty/$KITTY_THEMES" $HOME_KITTY_THEMES
+ln -sf "$PWD/kitty/workspaces" "$HOME/.config/kitty/workspaces"
+ln -sf "$PWD/kitty/themes" "$HOME/.config/kitty/themes"
 
 # Link Starship
 STARSHIP_INIT="starship.toml"
