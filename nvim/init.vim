@@ -116,7 +116,7 @@ endif
 call plug#begin('~/.config/nvim/bundle')
 
 " Navigation
-Plug 'lotabout/skim', { 'dir': '~/.skim', 'do': './install' }
+Plug 'lotabout/skim', { 'do': { -> skim#install() } }
 Plug 'lotabout/skim.vim'
 
 " Features
