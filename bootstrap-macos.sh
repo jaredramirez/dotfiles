@@ -46,3 +46,9 @@ ln -sf "$PWD/direnv/$DIRENV_CONFIG" "$HOME_DIRENV_CONFIG"
 GIT_CONFIG="gitconfig"
 HOME_GIT_CONFIG="$HOME/.$GIT_CONFIG"
 ln -sf "$PWD/git/$GIT_CONFIG" "$HOME_GIT_CONFIG"
+
+# Link Alacritty
+mkdir -p "$HOME/.config/alacritty"
+ALACRITTY_INIT="alacritty.yml"
+HOME_ALACRITTY="$HOME/.config/alacritty/$ALACRITTY_INIT"
+ln -sf "$PWD/alacritty/$ALACRITTY_INIT" $HOME_ALACRITTY
