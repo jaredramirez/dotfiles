@@ -1,5 +1,5 @@
-" Set shell
-set shell=/run/current-system/sw/bin/fish
+" Set POSIX compliant shell
+set shell=/run/current-system/sw/bin/zsh
 
 " ------ GENERAL CONFIG ------
 " Disable compatabliltiy with vi
@@ -116,8 +116,8 @@ endif
 call plug#begin('~/.config/nvim/bundle')
 
 " Navigation
-Plug 'lotabout/skim', { 'do': { -> skim#install() } }
-Plug 'lotabout/skim.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " Features
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
@@ -160,6 +160,9 @@ Plug 'lifepillar/pgsql.vim'
 " Code Commenter
 Plug 'scrooloose/nerdcommenter'
 
+" Tmux
+Plug 'christoomey/vim-tmux-navigator'
+
 " Defaults
 Plug 'tpope/vim-sensible'
 Plug 'easymotion/vim-easymotion'
@@ -180,21 +183,9 @@ let g:sonokai_disable_italic_comment = 1
 set background=dark
 colorscheme sonokai
 
-" Light
-" set background=light
-" colorscheme solarized
 
 " Configure vim moothie
 let g:smoothie_base_speed = 25
-
-" Configure syntax both vim-polygot & others
-let g:polyglot_disabled = ['reason', 'elm']
-let g:javascript_plugin_flow = 1
-autocmd FileType javascript syn clear javascriptTemplate
-autocmd FileType javascript.jsx syn clear javascriptTemplate
-call jspretmpl#register_tag('gql', 'graphql')
-autocmd FileType javascript JsPreTmpl
-autocmd FileType javascript.jsx JsPreTmpl
 
 " Configure pgsql
 let g:sql_type_default = 'pgsql'
@@ -327,15 +318,15 @@ function! s:show_documentation()
   endif
 endfunction
 
-" Skim.vim
-"
+" FZF
+
 " Show nice window
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Todo', 'border': 'rounded' } }
 
 " Mappings
-nnoremap <silent> <C-p> :call skim#run(skim#wrap({'source': 'fish -c rg_files', 'sink': 'e', 'options': '--layout=reverse --preview "~/.config/nvim/bundle/skim.vim/bin/preview.sh {}"'}))<CR>
-nnoremap <silent> <C-i> :call fzf#vim#files(expand('%:p:h'), {'source': 'fish -c rg_files', 'options': '--layout=reverse --preview "~/.config/nvim/bundle/skim.vim/bin/preview.sh {}"'})<CR>
-nnoremap <silent> <C-m> :call fzf#vim#buffers({'options': '--layout=reverse --preview "~/.config/nvim/bundle/skim.vim/bin/preview.sh {}"'})<CR>
+nnoremap <silent> <C-p> :call fzf#run(fzf#wrap({'source': 'fish -c rg_files', 'sink': 'e', 'options': '--layout=reverse --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}"'}))<CR>
+nnoremap <silent> <C-i> :call fzf#vim#files(expand('%:p:h'), {'source': 'fish -c rg_files', 'options': '--layout=reverse --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}"'})<CR>
+nnoremap <silent> <C-m> :call fzf#vim#buffers({'options': '--layout=reverse --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}"'})<CR>
 
 " Coc LSP
 let s:LSP_CONFIG = {

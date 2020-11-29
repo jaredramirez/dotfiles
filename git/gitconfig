@@ -10,3 +10,5 @@
   aall = add .
   pushf = push origin HEAD --force-with-lease
   pushu = push -u origin HEAD
+[credential]
+	helper = store

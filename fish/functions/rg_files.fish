@@ -17,7 +17,7 @@ function rg_files
         set filter $filter "node_modules" "*.min.js"
     end
     if [ -f "package.yaml" ] || [ -f "stack.yaml" ]
-        set filter $filter ".stack-work"
+        set filter $filter ".stack-work" "dist-newstyle"
     end
     rg --files --no-ignore-vcs --hidden -g (echo "!{"(string join "," $filter)"}")
 end
