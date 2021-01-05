@@ -149,6 +149,7 @@ Plug 'itchyny/landscape.vim'
 " for the (few) languages not supported by polyglot
 " or for polygot packages that I dislike
 Plug 'reasonml-editor/vim-reason-plus'
+Plug 'rescript-lang/vim-rescript'
 Plug 'andys8/vim-elm-syntax'
 Plug 'milch/vim-fastlane'
 Plug 'Quramy/vim-js-pretty-template'
@@ -242,10 +243,15 @@ let g:neoformat_enabled_haskell = ['ormolu']
 let g:neoformat_enabled_elm = ['elmformat']
 let g:neoformat_enabled_reason = ['refmt']
 let g:neoformat_enabled_rust = ['rustfmt']
+let g:neoformat_enabled_zig = ['zigfmt']
 let g:neoformat_try_formatprg = 1
 let g:neoformat_run_all_formatters = 1
 let g:neoformat_basic_format_retab = 1
 let g:neoformat_basic_format_trim = 1
+
+" As of 2020-12-15, Neoformat does not support Rescript
+" So we format using vim-rescript
+autocmd BufWritePost *.res RescriptFormat
 
 " Configure indentLine
 let g:indentLine_char = '▏'
@@ -350,9 +356,11 @@ let s:LSP_CONFIG = {
 \      "elmTestPath": "elm-test"
 \    }
 \  },
-\  "reason": {
-\    "command": "reason-language-server",
-\    "filetypes": ["reason"],
+\  "rescript": {
+\    "module": "~/.config/nvim/plugged/vim-rescript/rescript-vscode/extension/server/out/server.js",
+\    "args": ["--node-ipc"],
+\    "filetypes": ["rescript"],
+\    "rootPatterns": ["bsconfig.json"]
 \  },
 \  "rust": {
 \    "command": "rust-analyzer",
