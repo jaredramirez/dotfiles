@@ -166,6 +166,7 @@ Plug 'christoomey/vim-tmux-navigator'
 
 " Defaults
 Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-abolish'
 Plug 'easymotion/vim-easymotion'
 Plug 'ap/vim-css-color'
 Plug 'psliwka/vim-smoothie'

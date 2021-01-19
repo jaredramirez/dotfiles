@@ -15,6 +15,7 @@ in
       pkgs.nix-prefetch-git
       pkgs.starship
       pkgs.bat
+      pkgs.docker
 
       # Nix helpers
       pkgs.cachix
