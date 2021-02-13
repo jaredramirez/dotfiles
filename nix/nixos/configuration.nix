@@ -17,12 +17,20 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  boot.kernel.sysctl = {
+    "fs.inotify.max_user_watches" = "1048576";
+  };
+
   # Load network driver
   boot.extraModulePackages = with config.boot.kernelPackages; [ r8125 ];
 
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.hostName = "home";
   networking.networkmanager.enable = true;
+  networking.extraHosts = ''
+    127.0.0.1 example.com
+    127.0.0.1 sub.example.com
+  '';
 
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
@@ -79,6 +87,10 @@ in
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = common.systemPackages;
+
+  # Setup binary cache
+  nix.binaryCachePublicKeys = [ "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" ];
+  nix.binaryCaches = [ "https://hydra.iohk.io" ];
 
   # List programs to use:
 

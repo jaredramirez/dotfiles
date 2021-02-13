@@ -16,6 +16,7 @@ in
       pkgs.starship
       pkgs.bat
       pkgs.docker
+      pkgs.wezterm
 
       # Nix helpers
       pkgs.cachix
@@ -83,6 +84,10 @@ in
         nvim-update = "nvim +PlugInstall +UpdateRemotePlugins +qa";
         git-branch-cleanup = "git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -d";
       };
+    };
+
+    tmux = {
+      enable = true;
     };
   };
 }

@@ -12,6 +12,7 @@ in
       pkgs.kitty
       pkgs.alacritty
       (pkgs.callPackage ./firefox.nix { })
+      pkgs.virtualbox
     ] ++ common.systemPackages;
 
   environment.variables = common.variables;
