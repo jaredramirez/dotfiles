@@ -60,13 +60,12 @@ in
       enable = true;
       interactiveShellInit = ''
         fish_vi_key_bindings
-        direnv hook fish | source
+      '';
+      promptInit = ''
         starship init fish | source
       '';
       shellInit = ''
-        set -gx EDITOR nvim
         direnv hook fish | source
-        direnv export fish | source
       '';
       shellAliases = {
         nv = "nvim";
@@ -84,10 +83,8 @@ in
         nvim-update = "nvim +PlugInstall +UpdateRemotePlugins +qa";
         git-branch-cleanup = "git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -d";
       };
-    };
-
-    tmux = {
-      enable = true;
+      useBabelfish = true;
+      babelfishPackage = pkgs.babelfish;
     };
   };
 }

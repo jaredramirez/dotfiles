@@ -11,8 +11,6 @@ in
     [ # GUI Apps
       pkgs.kitty
       pkgs.alacritty
-      (pkgs.callPackage ./firefox.nix { })
-      pkgs.virtualbox
     ] ++ common.systemPackages;
 
   environment.variables = common.variables;
@@ -43,6 +41,9 @@ in
   fonts.fonts = [
     pkgs.fira-code
   ];
+
+  # Users
+  nix.trustedUsers = [ "root" "jaredramirez" ];
 
   # MacOS Stuff
   system.defaults.finder.AppleShowAllExtensions = true;

@@ -140,6 +140,7 @@ Plug 'itchyny/lightline.vim'
 
 " Syntax highlighting / themes
 Plug 'sainnhe/sonokai'
+Plug 'altercation/vim-colors-solarized'
 Plug 'sheerun/vim-polyglot'
 Plug 'luochen1990/rainbow'
 Plug 'Yggdroot/indentLine'
@@ -182,8 +183,12 @@ let g:sonokai_enable_italic = 1
 let g:sonokai_disable_italic_comment = 1
 
 " Dark
-set background=dark
-colorscheme sonokai
+" set background=dark
+" colorscheme sonokai
+
+" Light
+set background=light
+colorscheme solarized
 
 
 " Configure vim moothie
@@ -212,8 +217,9 @@ function! FilenameAndParentDir()
   return expand('%:p:h:t') . '/' . expand('%:t')
 endfunction
 
+" \ 'colorscheme': 'sonokai',
 let g:lightline = {
-  \ 'colorscheme': 'sonokai',
+  \ 'colorscheme': 'solarized',
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ],
   \             [ 'gitbranch', 'readonly', 'fileAndParentDir', 'modified' ] ],
