@@ -19,7 +19,12 @@ in
     "$HOME/.local/bin"
   ];
 
-  programs = common.programs;
+  programs.zsh = common.programs.zsh;
+  programs.bash = common.programs.bash;
+  programs.fish = common.programs.fish // {
+    useBabelfish = true;
+    babelfishPackage = pkgs.babelfish;
+  };
 
   # No need to menion zsh here, as it's defaultly available on macos
   environment.shells = [ pkgs.fish ];

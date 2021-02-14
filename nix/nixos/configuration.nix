@@ -95,7 +95,9 @@ in
   # List programs to use:
 
   # Programs
-  programs = common.programs;
+  programs.zsh = common.programs.zsh;
+  programs.bash = common.programs.bash;
+  programs.fish = common.programs.fish;
 
   # List services that you want to enable:
 

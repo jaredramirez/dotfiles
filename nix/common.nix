@@ -83,8 +83,6 @@ in
         nvim-update = "nvim +PlugInstall +UpdateRemotePlugins +qa";
         git-branch-cleanup = "git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -d";
       };
-      useBabelfish = true;
-      babelfishPackage = pkgs.babelfish;
     };
   };
 }
