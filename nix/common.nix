@@ -3,7 +3,7 @@
 let
   isMacOS = builtins.currentSystem == "x86_64-darwin";
 in
-{ systemPackages = 
+{ systemPackages =
     [ pkgs.git
       pkgs.neovim
       pkgs.fzf

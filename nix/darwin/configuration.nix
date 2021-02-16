@@ -17,6 +17,7 @@ in
 
   environment.systemPath = [
     "$HOME/.local/bin"
+    "${pkgs.wezterm}/Applications/WezTerm.app"
   ];
 
   programs.zsh = common.programs.zsh;

@@ -198,7 +198,6 @@ colorscheme sonokai
 " set background=light
 " colorscheme solarized
 
-
 " Configure vim moothie
 let g:smoothie_base_speed = 25
 
