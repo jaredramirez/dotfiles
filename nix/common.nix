@@ -17,6 +17,7 @@
       pkgs.bat
       pkgs.docker
       pkgs.wezterm
+      pkgs.kitty
 
       # Nix helpers
       pkgs.cachix
@@ -25,7 +26,7 @@
 
       # Needed globally for Coc
       pkgs.nodejs-14_x
-      pkgs.yarn
+      (pkgs.yarn.override { nodejs = pkgs.nodejs-14_x; })
     ];
 
   variables = {

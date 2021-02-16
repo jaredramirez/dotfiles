@@ -32,3 +32,15 @@ ln -sf "$PWD/direnv/$DIRENV_CONFIG" "$HOME_DIRENV_CONFIG"
 GIT_CONFIG="gitconfig"
 HOME_GIT_CONFIG="$HOME/.$GIT_CONFIG"
 ln -sf "$PWD/git/$GIT_CONFIG" "$HOME_GIT_CONFIG"
+
+# Link Kitty
+mkdir -p "$HOME/.config/kitty"
+KITTY_INIT="kitty.conf"
+HOME_KITTY="$HOME/.config/kitty/$KITTY_INIT"
+ln -sf "$PWD/kitty/$KITTY_INIT" $HOME_KITTY
+
+ln -sFf "$PWD/kitty/workspaces" "$HOME/.config/kitty/workspaces"
+rm -f "$PWD/kitty/workspaces/workspaces"
+
+ln -sFf "$PWD/kitty/themes" "$HOME/.config/kitty/themes"
+rm -f "$PWD/kitty/themes/themes"
