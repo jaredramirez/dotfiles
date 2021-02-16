@@ -1,4 +1,4 @@
-{ pkgs, system }:
+{ pkgs }:
 
 # let
   # isMacOS = builtins.currentSystem == "x86_64-darwin";
