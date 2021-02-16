@@ -43,17 +43,17 @@
       '';
       shellInit = ''
         export EDITOR=nvim
-        eval "$(direnv hook zsh)"
       '';
+      # eval "$(direnv hook zsh)"
     };
 
     bash = {
       # Nix-darwin doesn't support shellInit
       interactiveShellInit = ''
         export EDITOR=nvim
-        eval "$(direnv hook bash)"
         eval "$(starship init bash)"
       '';
+      # eval "$(direnv hook bash)"
     };
 
     fish = {
@@ -64,9 +64,9 @@
       promptInit = ''
         starship init fish | source
       '';
-      shellInit = ''
-        direnv hook fish | source
-      '';
+      # shellInit = ''
+        # direnv hook fish | source
+      # '';
       shellAliases = {
         nv = "nvim";
         ws-rep = "source $HOME/.config/kitty/workspaces/rep.fish";
@@ -74,7 +74,7 @@
         ws-roc = "source $HOME/.config/kitty/workspaces/roc.fish";
         ws-roc-ssh = "source $HOME/.config/kitty/workspaces/ssh-roc.fish";
         ssh-cp-kitty = "infocmp xterm-kitty | ssh jared@home tic -x -o \~/.terminfo /dev/stdin";
-        nix-env = "direnv allow .";
+        # nix-env = "direnv allow .";
         nix-search = "nix-env -qaP | ag";
         # nix-switch =
           # if isMacOS
