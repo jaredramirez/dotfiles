@@ -3,10 +3,10 @@
 PWD=`pwd`
 
 # Link nix-darwin
-mkdir -p "$HOME/.config/nixpkgs"
-DARWIN_CONFIG="configuration.nix"
-HOME_DARWIN_CONFIG="$HOME/.nixpkgs/darwin-configuration.nix"
-ln -sf "$PWD/nix/darwin/$DARWIN_CONFIG" "$HOME_DARWIN_CONFIG"
+mkdir -p "$HOME/.config/darwin"
+FLAKE_CONFIG="flake.nix"
+HOME_FLAKE_CONFIG="$HOME/.config/darwin/flake.nix"
+ln -sf "$PWD/$FLAKE_CONFIG" "$HOME_FLAKE_CONFIG"
 
 # Link Fish
 mkdir -p "$HOME/.config/fish"

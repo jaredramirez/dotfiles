@@ -58,17 +58,18 @@ in
   system.defaults.dock.tilesize = 32;
 
   # nix-direnv options
-  nix.extraOptions = ''
-    keep-outputs = true
-    keep-derivations = true
-  '';
   environment.pathsToLink = [
     "/share/nix-direnv"
   ];
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
-  nix.package = pkgs.nix;
+  nix.package = pkgs.nixUnstable;
+  nix.extraOptions = ''
+    experimental-features = nix-command flakes
+    keep-outputs = true
+    keep-derivations = true
+  '';
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
