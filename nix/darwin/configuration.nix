@@ -58,13 +58,13 @@ in
   system.defaults.dock.tilesize = 32;
 
   # nix-direnv options
-  # environment.pathsToLink = [
-    # "/share/nix-direnv"
-  # ];
+  environment.pathsToLink = [
+    "/share/nix-direnv"
+  ];
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
-  nix.package = pkgs.nixFlakes;
+  nix.package = pkgs.nixUnstable;
   nix.extraOptions = ''
     experimental-features = nix-command flakes
     keep-outputs = true
