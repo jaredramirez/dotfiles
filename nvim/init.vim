@@ -90,6 +90,14 @@ augroup WrapLines
   autocmd FileType markdown setlocal wrap
 augroup END
 
+" Turn off folding
+set nofoldenable
+
+" Ctrl-s to save
+nnoremap <C-s> :w<CR>
+
+" Ctrl-x to save and quite
+nnoremap <C-x> :x<CR>
 
 " Enable project level config (.nvimrc)
 " set exrc
@@ -104,7 +112,7 @@ augroup END
 
 " Configure vim-polygot disables
 " Must be done before plugins are loaded!
-let g:polyglot_disabled = ['reason', 'elm']
+let g:polyglot_disabled = ['reason', 'elm', 'csv']
 
 " ------ PLUGINS ------
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
@@ -183,12 +191,12 @@ let g:sonokai_enable_italic = 1
 let g:sonokai_disable_italic_comment = 1
 
 " Dark
-" set background=dark
-" colorscheme sonokai
+set background=dark
+colorscheme sonokai
 
 " Light
-set background=light
-colorscheme solarized
+" set background=light
+" colorscheme solarized
 
 
 " Configure vim moothie
@@ -211,15 +219,17 @@ let g:rainbow_conf = {
 
 " Configure NERD Commenter
 let g:NERDSpaceDelims = 1
+vmap <C-c> <plug>NERDCommenterToggle
+nmap <C-c> <plug>NERDCommenterToggle
 
 " Configure light line
 function! FilenameAndParentDir()
   return expand('%:p:h:t') . '/' . expand('%:t')
 endfunction
 
-" \ 'colorscheme': 'sonokai',
+  " \ 'colorscheme': 'solarized',
 let g:lightline = {
-  \ 'colorscheme': 'solarized',
+  \ 'colorscheme': 'sonokai',
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ],
   \             [ 'gitbranch', 'readonly', 'fileAndParentDir', 'modified' ] ],

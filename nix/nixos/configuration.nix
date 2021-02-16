@@ -86,7 +86,9 @@ in
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = common.systemPackages;
+  environment.systemPackages = common.systemPackages ++ [
+    pkgs.libssh2
+  ];
 
   # Setup binary cache
   nix.binaryCachePublicKeys = [ "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" ];
