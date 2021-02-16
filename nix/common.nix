@@ -1,8 +1,8 @@
-{ pkgs }:
+{ pkgs, system }:
 
-let
-  isMacOS = builtins.currentSystem == "x86_64-darwin";
-in
+# let
+  # isMacOS = builtins.currentSystem == "x86_64-darwin";
+# in
 { systemPackages =
     [ pkgs.git
       pkgs.neovim
@@ -76,10 +76,10 @@ in
         ssh-cp-kitty = "infocmp xterm-kitty | ssh jared@home tic -x -o \~/.terminfo /dev/stdin";
         nix-env = "direnv allow .";
         nix-search = "nix-env -qaP | ag";
-        nix-switch =
-          if isMacOS
-            then "darwin-rebuild switch"
-            else "sudo nixos-rebuild switch";
+        # nix-switch =
+          # if isMacOS
+            # then "darwin-rebuild switch"
+            # else "sudo nixos-rebuild switch";
         nvim-update = "nvim +PlugInstall +UpdateRemotePlugins +qa";
         git-branch-cleanup = "git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -d";
       };
