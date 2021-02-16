@@ -7,11 +7,7 @@ in
 {
   # List packages installed in system profile
   # System-Wide and nearly all stuff for Neovim
-  environment.systemPackages =
-    [ # GUI Apps
-      pkgs.kitty
-      pkgs.alacritty
-    ] ++ common.systemPackages;
+  environment.systemPackages = common.systemPackages;
 
   environment.variables = common.variables;
 
