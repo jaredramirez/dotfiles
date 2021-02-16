@@ -7,6 +7,10 @@ NIXOS_CONFIG="configuration.nix"
 HOME_NIXOS_CONFIG="/etc/nixos/$NIXOS_CONFIG"
 sudo ln -sf "$PWD/nix/nixos/$NIXOS_CONFIG" "$HOME_NIXOS_CONFIG"
 
+FLAKE_CONFIG="flake.nix"
+HOME_FLAKE_CONFIG="/etc/nixos/$FLAKE_CONFIG"
+sudo ln -sf "$PWD/$FLAKE_CONFIG" "$HOME_FLAKE_CONFIG"
+
 # Link Fish
 mkdir -p "$HOME/.config/fish"
 FISH_FUNCTIONS_INIT="functions"

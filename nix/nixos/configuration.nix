@@ -106,6 +106,12 @@ in
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
+  # Use flakes
+  nix.package = pkgs.nixUnstable;
+  nix.extraOptions = ''
+    experimental-features = nix-command flakes
+  '';
+
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
