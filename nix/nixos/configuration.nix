@@ -78,6 +78,7 @@ in
     hashedPassword = "$6$x5MiN5Yih9x$jFgKT3tvBCKyZx/07WuTJeFlsb0o3woSDTuJ5Zw6EEtJgA5PMdpt5bz2s44OMhkWTffjOIStoGKcPwivzI9ys/";
     extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ for the user.
   };
+  nix.trustedUsers = [ "root" "jared" ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
