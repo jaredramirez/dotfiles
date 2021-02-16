@@ -20,8 +20,8 @@
 
       # Nix helpers
       pkgs.cachix
-      pkgs.direnv
-      pkgs.nix-direnv
+      # pkgs.direnv
+      # pkgs.nix-direnv
 
       # Needed globally for Coc
       pkgs.nodejs-14_x

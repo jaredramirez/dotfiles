@@ -58,9 +58,9 @@ in
   system.defaults.dock.tilesize = 32;
 
   # nix-direnv options
-  environment.pathsToLink = [
-    "/share/nix-direnv"
-  ];
+  # environment.pathsToLink = [
+    # "/share/nix-direnv"
+  # ];
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
