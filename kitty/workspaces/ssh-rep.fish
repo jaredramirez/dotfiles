@@ -24,6 +24,16 @@ kitty @ goto-layout -m title:portal stack
 
 kitty @ launch \
     --type tab \
+    --window-title "tools [port forward]" \
+    ssh jared@home -L 9000:localhost:9000 -t "cd ~/dev/github/replenysh/core/tools; fish -i"
+kitty @ launch \
+    --type window \
+    --window-title tools \
+    ssh jared@home -t "cd ~/dev/github/replenysh/core/tools; fish -i"
+kitty @ goto-layout -m title:tools stack
+
+kitty @ launch \
+    --type tab \
     --window-title "api [port forward]" \
     ssh jared@home -L 4000:localhost:4000 -t "cd ~/dev/github/replenysh/core/api; fish -i"
 kitty @ launch \

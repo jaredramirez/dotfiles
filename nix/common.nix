@@ -16,8 +16,8 @@
       pkgs.starship
       pkgs.bat
       pkgs.docker
-      pkgs.wezterm
       pkgs.kitty
+      pkgs.tab-rs
 
       # Nix helpers
       pkgs.cachix
