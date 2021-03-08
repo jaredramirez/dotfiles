@@ -52,3 +52,15 @@ mkdir -p "$HOME/.config/alacritty"
 ALACRITTY_INIT="alacritty.yml"
 HOME_ALACRITTY="$HOME/.config/alacritty/$ALACRITTY_INIT"
 ln -sf "$PWD/alacritty/$ALACRITTY_INIT" $HOME_ALACRITTY
+
+# Link Kakoune
+mkdir -p "$HOME/.config/kak"
+KAK_INIT="kak.yml"
+HOME_KAK="$HOME/.config/kak/$KAK_INIT"
+ln -sf "$PWD/kak/$KAK_INIT" $HOME_KAK
+
+# Link Kakoune-lsp
+mkdir -p "$HOME/.config/kak-lsp"
+KAK_LSP="kak-lsp.toml"
+HOME_KAK_LSP="$HOME/.config/kak-lsp/$KAK_LSP"
+ln -sf "$PWD/kak-lsp/$KAK_LSP" $HOME_KAK_LSP

@@ -1,0 +1,108 @@
+# Auto-install plug.kak
+evaluate-commands %sh{
+    plugins="$HOME/.config/kak/plugins"
+    mkdir -p $plugins
+    [ ! -e "$plugins/plug.kak" ] && \
+        git clone -q https://github.com/andreyorst/plug.kak "$plugins/plug.kak"
+    printf "%s\n" "source '$plugins/plug.kak/rc/plug.kak'"
+}
+plug "andreyorst/plug.kak" noload
+
+# Manage buffers
+plug 'delapouite/kakoune-buffers' %{
+    alias global bd delete-buffer
+    map global normal <c-b> ': enter-buffers-mode<ret>' -docstring 'buffers'
+    map global normal <ret> ': enter-buffers-mode<ret>f' -docstring 'search open buffers'
+    map global normal <c-p> ':f ' -docstring 'search files'
+}
+
+# Crosshairs
+plug 'insipx/kak-crosshairs' %{
+    set-face global crosshairs_line default,rgb:363745
+    set-face global crosshairs_column default,rgb:363745
+    cursorline
+}
+
+# Tabs
+plug "andreyorst/smarttab.kak" defer smarttab %{
+    set-option global softtabstop 4
+} config %{
+    hook global WinSetOption filetype=(rust|markdown|kak|javascript|elm|haskell|rescript) expandtab
+    hook global WinSetOption filetype=(makefile) noexpandtab
+    hook global WinSetOption filetype=(c|cpp) smarttab
+}
+
+# Auto-format
+hook global WinSetOption filetype=elm %{
+    set window formatcmd 'elm-format --stdin'
+    hook buffer BufWritePre .* %{format}
+}
+hook global WinSetOption filetype=haskell %{
+    set window formatcmd 'ormolu'
+    hook buffer BufWritePre .* %{format}
+}
+hook global WinSetOption filetype=javascript %{
+    set window formatcmd 'prettier'
+    hook buffer BufWritePre .* %{format}
+}
+
+# Use tab to autocomplete
+hook global InsertCompletionShow .* %{
+    try %{
+        execute-keys -draft 'h<a-K>\h<ret>'
+        map window insert <tab> <c-n>
+        map window insert <s-tab> <c-p>
+        map window insert <ret> <space>
+    }
+}
+hook global InsertCompletionHide .* %{
+    unmap window insert <tab> <c-n>
+    unmap window insert <s-tab> <c-p>
+    unmap window insert <ret> <space>
+}
+
+# kak-lsp
+eval %sh{kak-lsp --kakoune -s $kak_session}
+lsp-enable
+# set global lsp_diagnostic_line_error_sign '║'
+# set global lsp_diagnostic_line_warning_sign '┊'
+# define-command lsp-restart -docstring 'restart lsp server' %{ lsp-stop; lsp-start }
+# hook global WinSetOption filetype=(rust|haskell|elm|javascript|reason) %{
+#     set-option window lsp_auto_highlight_references true
+#     set-option window lsp_hover_anchor false
+#     lsp-auto-hover-enable
+#     echo -debug "Enabling LSP for filtetype %opt{filetype}"
+#     lsp-enable-window
+# }
+# hook global KakEnd .* lsp-exit
+
+# Copy/paste with system clipboard
+hook global NormalKey y|d|c %{ nop %sh{
+    printf %s "$kak_reg_dquote" | pbcopy
+}}
+
+# FZF
+def find -params 1 -shell-script-candidates %{ find . -type f } %{ edit %arg{1} }
+def f -params 1 -shell-script-candidates %{ fish -c "rg_files" } %{ edit %arg{1} }
+
+# Join/split lines like VIM
+map global normal <c-j> '<a-j>' -docstring 'split line at cursor'
+map global normal <c-k> 'i<ret><esc>' -docstring 'split line at cursor'
+
+# Save & quit
+define-command -docstring "save and quit" x "write-all; quit"
+
+# Highlight trailing whitespace
+add-highlighter global/ regex \h+$ 0:Error
+
+# Show line numbers
+add-highlighter global/ number-lines -hlcursor
+
+# Keep cursor in center of screen
+set-option global scrolloff 999,10
+
+# Colorscheme
+colorscheme sonokai
+
+# Display the status bar on top
+set-option global ui_options ncurses_status_on_top=true

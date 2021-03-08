@@ -170,15 +170,11 @@ Plug 'lifepillar/pgsql.vim'
 " Code Commenter
 Plug 'scrooloose/nerdcommenter'
 
-" Tmux
-Plug 'christoomey/vim-tmux-navigator'
-
 " Defaults
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-abolish'
 Plug 'easymotion/vim-easymotion'
 Plug 'ap/vim-css-color'
-Plug 'psliwka/vim-smoothie'
 
 call plug#end()
 
@@ -197,9 +193,6 @@ colorscheme sonokai
 " Light
 " set background=light
 " colorscheme solarized
-
-" Configure vim moothie
-let g:smoothie_base_speed = 25
 
 " Configure pgsql
 let g:sql_type_default = 'pgsql'

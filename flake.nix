@@ -14,7 +14,7 @@
       ];
     };
 
-    darwinConfigurations."Jareds-MBP-2" = darwin.lib.darwinSystem {
+    darwinConfigurations."Jareds-MacBook-Pro" = darwin.lib.darwinSystem {
       inputs = { inherit nixpkgs; };
       modules = [ ./nix/darwin/configuration.nix ];
     };

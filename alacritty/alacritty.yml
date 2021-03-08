@@ -3,6 +3,11 @@ font:
       family: MonoLisa
     size: 17
 
+window:
+  padding:
+    x: 0
+    y: 10 
+
 colors:
   primary:
     background: "0x2c2e34"
@@ -15,7 +20,7 @@ colors:
     yellow: "0xe7c664"
     blue: "0x76cce0"
     magenta: "0xb39df3"
-    cyan: "0x85d3f2"
+    cyan: "0xf39660"
     white: "0xe2e2e3"
 
   bright:
@@ -25,5 +30,5 @@ colors:
     yellow: "0xe7c664"
     blue: "0x76cce0"
     magenta: "0xb39df3"
-    cyan: "0x85d3f2"
+    cyan: "0xf39660"
     white: "0xe2e2e3"

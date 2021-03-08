@@ -58,3 +58,5 @@ kitty @ launch \
     ssh jared@home -L 19000:localhost:19000 -L 19001:localhost:19001 -L 19002:localhost:19002 -t "cd ~/dev/github/replenysh/core/mobile; fish -i"
 
 kitty @ close-tab -m title:last
+
+ssh jared@home -L 9000:localhost:9000 -L 5000:localhost:5000 -L 4000:localhost:4000 -L 19000:localhost:19000 -L 19001:localhost:19001 -L 19002:localhost:19002 -t "cd ~/dev/github/replenysh/core/mobile; tab"
