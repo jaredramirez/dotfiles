@@ -33,7 +33,6 @@
     ];
 
   variables = {
-    EDITOR = "nvim";
     LANG = "en_US.UTF-8";
     DIRENV_WARN_TIMEOUT = "15s";
   };
@@ -69,6 +68,7 @@
         starship init fish | source
       '';
       shellInit = ''
+        set -gx EDITOR nvim
         direnv hook fish | source
       '';
       shellAliases = {

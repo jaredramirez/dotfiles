@@ -127,6 +127,9 @@ call plug#begin('~/.config/nvim/bundle')
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
+" Monorepos
+Plug 'airblade/vim-rooter'
+
 " Features
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
@@ -339,7 +342,7 @@ endfunction
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Todo', 'border': 'rounded' } }
 
 " Mappings
-nnoremap <silent> <C-p> :call fzf#run(fzf#wrap({'source': 'fish -c rg_files', 'sink': 'e', 'options': '--layout=reverse --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}"'}))<CR>
+nnoremap <silent> <C-p> :call fzf#run(fzf#wrap({'dir': getcwd(), 'source': 'fish -c rg_files', 'sink': 'e', 'options': '--layout=reverse --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}"'}))<CR>
 nnoremap <silent> <C-i> :call fzf#vim#files(expand('%:p:h'), {'source': 'fish -c rg_files', 'options': '--layout=reverse --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}"'})<CR>
 nnoremap <silent> <C-m> :call fzf#vim#buffers({'options': '--layout=reverse --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}"'})<CR>
 
