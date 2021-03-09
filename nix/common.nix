@@ -5,7 +5,6 @@
 # in
 { systemPackages =
     [ pkgs.git
-      pkgs.neovim
       pkgs.kakoune
       pkgs.kak-lsp
       pkgs.fzf
@@ -21,6 +20,11 @@
       pkgs.alacritty
       pkgs.kitty
       pkgs.tab-rs
+
+      # Neovim deps
+      pkgs.neovim-nightly
+      pkgs.python
+      pkgs.python3
 
       # Nix helpers
       pkgs.cachix
@@ -72,13 +76,16 @@
         direnv hook fish | source
       '';
       shellAliases = {
-        nv = "nvim";
+        k = "kak";
         ssh-rep = "ssh jared@home -L 8081:localhost:8081 -L 9000:localhost:9000 -L 5000:localhost:5000 -L 4000:localhost:4000 -L 19000:localhost:19000 -L 19001:localhost:19001 -L 19002:localhost:19002 -t \"cd ~/dev/github/replenysh/core; tab\"";
         rep = "cd ~/dev/github/replenysh/core; tab";
         nix-env = "direnv allow .";
         nix-search = "nix-env -qaP | ag";
         nvim-update = "nvim +PlugInstall +UpdateRemotePlugins +qa";
         git-branch-cleanup = "git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -d";
+
+	# Legacy nvim alias
+        nv = "nvim";
 
         # Legacy kitty stuff (before I started using tab-rs)
         ssh-cp-kitty = "infocmp xterm-kitty | ssh jared@home tic -x -o \~/.terminfo /dev/stdin";

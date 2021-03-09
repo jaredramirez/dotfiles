@@ -23,6 +23,23 @@ plug 'insipx/kak-crosshairs' %{
     cursorline
 }
 
+# Connect
+plug 'kakounedotcom/prelude.kak' %{
+    require-module prelude
+}
+
+plug 'kakounedotcom/connect.kak' %{
+    require-module connect
+    require-module connect-fzf
+}
+
+plug 'alexherbo2/alacritty.kak' %{
+    require-module connect
+
+    alias global terminal alacritty-terminal
+    alias global popup alacritty-terminal-popup
+}
+
 # Tabs
 plug "andreyorst/smarttab.kak" defer smarttab %{
     set-option global softtabstop 4
@@ -64,17 +81,17 @@ hook global InsertCompletionHide .* %{
 # kak-lsp
 eval %sh{kak-lsp --kakoune -s $kak_session}
 lsp-enable
-# set global lsp_diagnostic_line_error_sign '║'
-# set global lsp_diagnostic_line_warning_sign '┊'
-# define-command lsp-restart -docstring 'restart lsp server' %{ lsp-stop; lsp-start }
-# hook global WinSetOption filetype=(rust|haskell|elm|javascript|reason) %{
-#     set-option window lsp_auto_highlight_references true
-#     set-option window lsp_hover_anchor false
-#     lsp-auto-hover-enable
-#     echo -debug "Enabling LSP for filtetype %opt{filetype}"
-#     lsp-enable-window
-# }
-# hook global KakEnd .* lsp-exit
+set global lsp_diagnostic_line_error_sign '║'
+set global lsp_diagnostic_line_warning_sign '┊'
+define-command lsp-restart -docstring 'restart lsp server' %{ lsp-stop; lsp-start }
+hook global WinSetOption filetype=(rust|haskell|elm|javascript|reason) %{
+    set-option window lsp_auto_highlight_references true
+    set-option window lsp_hover_anchor false
+    lsp-auto-hover-enable
+    echo -debug "Enabling LSP for filtetype %opt{filetype}"
+    lsp-enable-window
+}
+hook global KakEnd .* lsp-exit
 
 # Copy/paste with system clipboard
 hook global NormalKey y|d|c %{ nop %sh{
@@ -91,9 +108,6 @@ map global normal <c-k> 'i<ret><esc>' -docstring 'split line at cursor'
 
 # Save & quit
 define-command -docstring "save and quit" x "write-all; quit"
-
-# Highlight trailing whitespace
-add-highlighter global/ regex \h+$ 0:Error
 
 # Show line numbers
 add-highlighter global/ number-lines -hlcursor

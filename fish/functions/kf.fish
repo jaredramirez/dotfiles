@@ -1,4 +1,4 @@
-function kakf
+function kf
     # Get file to open
     set -l file (rg_files | fzf --height 50% --layout=reverse --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}")
 

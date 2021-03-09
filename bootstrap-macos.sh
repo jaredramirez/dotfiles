@@ -15,7 +15,7 @@ ln -sFf "$PWD/fish/functions" $HOME_FISH_FUNCTIONS
 rm -f "$PWD/fish/functions/functions"
 
 # Link Neovim
-mkdir -p "$HOME/.config/fish"
+mkdir -p "$HOME/.config/nvim"
 NVIM_INIT="init.vim"
 HOME_NVIM="$HOME/.config/nvim/$NVIM_INIT"
 ln -sf "$PWD/nvim/$NVIM_INIT" $HOME_NVIM

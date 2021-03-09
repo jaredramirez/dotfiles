@@ -123,9 +123,13 @@ endif
 
 call plug#begin('~/.config/nvim/bundle')
 
-" Navigation
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+" Telescope
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+
+" Tree-sitter
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Monorepos
 Plug 'airblade/vim-rooter'
@@ -336,15 +340,34 @@ function! s:show_documentation()
   endif
 endfunction
 
-" FZF
+" Telescope
+lua <<EOF
 
-" Show nice window
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Todo', 'border': 'rounded' } }
+local actions = require('telescope.actions')
+require('telescope').setup{
+  defaults = {
+    mappings = {
+      i = {
+        ["<esc>"] = actions.close
+      },
+    },
+  }
+}
 
-" Mappings
-nnoremap <silent> <C-p> :call fzf#run(fzf#wrap({'dir': getcwd(), 'source': 'fish -c rg_files', 'sink': 'e', 'options': '--layout=reverse --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}"'}))<CR>
-nnoremap <silent> <C-i> :call fzf#vim#files(expand('%:p:h'), {'source': 'fish -c rg_files', 'options': '--layout=reverse --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}"'})<CR>
-nnoremap <silent> <C-m> :call fzf#vim#buffers({'options': '--layout=reverse --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}"'})<CR>
+EOF
+
+" Tree Sitter
+lua <<EOF
+
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+  },
+}
+EOF
+
+nnoremap <C-p> <cmd>lua require'telescope.builtin'.find_files(require('telescope.themes').get_dropdown({ find_command = { 'fish', '-c', 'rg_files' } }))<CR>
 
 " Coc LSP
 let s:LSP_CONFIG = {
