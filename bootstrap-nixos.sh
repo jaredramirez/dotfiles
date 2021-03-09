@@ -47,7 +47,7 @@ rm -f "$PWD/kitty/themes/themes"
 
 # Link Kakoune
 mkdir -p "$HOME/.config/kak"
-KAK_INIT="kak.yml"
+KAK_INIT="kakrc"
 HOME_KAK="$HOME/.config/kak/$KAK_INIT"
 ln -sf "$PWD/kak/$KAK_INIT" $HOME_KAK
 
