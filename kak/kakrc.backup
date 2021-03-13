@@ -10,48 +10,24 @@ plug "andreyorst/plug.kak" noload
 
 # Manage buffers
 plug 'delapouite/kakoune-buffers' %{
-    map global normal <c-b>  ': enter-buffers-mode<ret>' -docstring 'buffers'
-    map global normal <c-l>  ': enter-buffers-mode<ret>l' -docstring 'go to last buffer'
-    map global normal <c-o>  ': enter-buffers-mode<ret>f' -docstring 'search open buffers'
-}
+    alias global bd delete-buffer
+    map global normal <c-b> ': enter-buffers-mode<ret>' -docstring 'buffers'
+    map global normal <ret> ': enter-buffers-mode<ret>f' -docstring 'search open buffers'
+    map global normal <c-p> ':f ' -docstring 'search files'
 
-# Highlight searches
-plug 'alexherbo2/search-highlighter.kak'
 
 # Crosshairs
 plug 'insipx/kak-crosshairs' %{
-    set-face global crosshairs_line default,rgb:232834
+    set-face global crosshairs_line default,rgb:363745
+    set-face global crosshairs_column default,rgb:363745
     cursorline
-}
-
-
-# Powerline status bar
-plug "andreyorst/powerline.kak" defer powerline %{
-    powerline-separator arrow
-} config %{
-    powerline-start
-}
-
-# Theme
-plug "jaredramirez/ayu-kak" theme config %{
-    colorscheme ayu-mirage
-}
-plug "jaredramirez/ayu-kak-powerline" defer powerline %{
-    powerline-theme ayu-mirage
 }
 
 # Tabs
 plug "andreyorst/smarttab.kak" defer smarttab %{
     set-option global softtabstop 4
-
-    hook global WinSetOption filetype=(elm|sql|pgsql) %{
-        set-option buffer softtabstop 4
-        expandtab
-    }
-    hook global WinSetOption filetype=(rust|markdown|kak|javascript|haskell|rescript) %{
-        set-option buffer softtabstop 2
-        expandtab
-    }
+} config %{
+    hook global WinSetOption filetype=(rust|markdown|kak|javascript|elm|haskell|rescript) expandtab
     hook global WinSetOption filetype=(makefile) noexpandtab
     hook global WinSetOption filetype=(c|cpp) smarttab
 }
@@ -106,8 +82,8 @@ hook global NormalKey y|d|c %{ nop %sh{
 }}
 
 # FZF
-def fzf -params 1 -shell-script-candidates %{ find . -type f } %{ edit %arg{1} }
-map global normal <c-p> ':fzf ' -docstring 'search files'
+def find -params 1 -shell-script-candidates %{ find . -type f } %{ edit %arg{1} }
+def f -params 1 -shell-script-candidates %{ fish -c "rg_files" } %{ edit %arg{1} }
 
 # Join/split lines like VIM
 map global normal <c-j> '<a-j>' -docstring 'split line at cursor'
@@ -121,6 +97,9 @@ add-highlighter global/ number-lines -hlcursor
 
 # Keep cursor in center of screen
 set-option global scrolloff 999,10
+
+# Colorscheme
+colorscheme sonokai
 
 # Display the status bar on top
 set-option global ui_options ncurses_status_on_top=true
@@ -158,9 +137,3 @@ def snakecase %{
 def kebabcase %{
     exec '<a-:><a-;>s_|[a-z][A-Z]<ret>;a<space><esc>s[_\s]+<ret>c-<esc><a-i>w`'
 }
-
-# Case-insensitive by defult
-map global normal / /(?i)
-
-# Highlight TODO & FIXME
-add-highlighter global/ regex \b(TODO|FIXME)\b 0:default+rb
