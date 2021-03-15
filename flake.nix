@@ -13,8 +13,10 @@
     {
       nixosConfigurations.home = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        inputs = { inherit overlays; };
         modules = [
+          ({ config, pkgs, ... }: {
+            nixpkgs.overlays = overlays;
+          })
           ./nix/nixos/configuration.nix
           ./nix/nixos/hardware-configuration.nix
         ];

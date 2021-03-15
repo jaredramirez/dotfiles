@@ -23,8 +23,9 @@
 
       # Neovim deps
       pkgs.neovim-nightly
-      pkgs.python
+      pkgs.tree-sitter
       pkgs.python3
+      pkgs.python3Packages.pynvim
 
       # Nix helpers
       pkgs.cachix

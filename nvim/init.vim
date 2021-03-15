@@ -65,6 +65,13 @@ inoremap <C-c> <Nop>
 " Clear currently search highlighting
 nnoremap <silent> <esc> :noh<cr><esc>
 
+" Clear currently search highlighting
+nnoremap <c-l> :call MoveBack()<cr>
+
+function! MoveBack()
+  edit #
+endfunction
+
 " Set persistant undo
 set undofile
 set undodir=~/.config/nvim/undodir

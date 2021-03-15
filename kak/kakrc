@@ -44,7 +44,7 @@ plug "jaredramirez/ayu-kak-powerline" defer powerline %{
 plug "andreyorst/smarttab.kak" defer smarttab %{
     set-option global softtabstop 4
 
-    hook global WinSetOption filetype=(elm|sql|pgsql) %{
+    hook global WinSetOption filetype=(elm|sql|pgsql|csv) %{
         set-option buffer softtabstop 4
         expandtab
     }
@@ -85,19 +85,15 @@ hook global InsertCompletionHide .* %{
     unmap window insert <ret> <space>
 }
 
-# kak-lsp
+# kak-lsp (installed globally via nix)
 eval %sh{kak-lsp --kakoune -s $kak_session}
 lsp-enable
 set global lsp_diagnostic_line_error_sign '║'
 set global lsp_diagnostic_line_warning_sign '┊'
+set-option global lsp_auto_highlight_references true
+set-option global lsp_hover_anchor false
+lsp-auto-hover-enable
 define-command lsp-restart -docstring 'restart lsp server' %{ lsp-stop; lsp-start }
-hook global WinSetOption filetype=(rust|haskell|elm|javascript|reason) %{
-    set-option window lsp_auto_highlight_references true
-    set-option window lsp_hover_anchor false
-    lsp-auto-hover-enable
-    echo -debug "Enabling LSP for filtetype %opt{filetype}"
-    lsp-enable-window
-}
 hook global KakEnd .* lsp-exit
 
 # Copy/paste with system clipboard
@@ -108,13 +104,14 @@ hook global NormalKey y|d|c %{ nop %sh{
 # FZF
 def fzf -params 1 -shell-script-candidates %{ find . -type f } %{ edit %arg{1} }
 map global normal <c-p> ':fzf ' -docstring 'search files'
-
-# Join/split lines like VIM
-map global normal <c-j> '<a-j>' -docstring 'split line at cursor'
-map global normal <c-k> 'i<ret><esc>' -docstring 'split line at cursor'
+# Alt-K inverse of alt-j
+map global normal <a-k> 'i<ret><esc>' -docstring 'split line at cursor'
 
 # Save & quit
 define-command -docstring "save and quit" x "write-all; quit"
+
+# Comment with c-c
+map global normal <c-c> ':comment-line' -docstring 'comment all selected lines'
 
 # Show line numbers
 add-highlighter global/ number-lines -hlcursor
