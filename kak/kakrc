@@ -163,4 +163,7 @@ def kebabcase %{
 map global normal / /(?i)
 
 # Highlight TODO & FIXME
-add-highlighter global/ regex \b(TODO|FIXME)\b 0:default+rb
+add-highlighter global/ regex \b(TODO|FIXME)\b 0:default+ib
+
+# <a-K> inverse of <a-J>
+map global normal <c-K> i<ret><esc> -docstring 'split line at cursor'
