@@ -78,12 +78,17 @@
       '';
       shellAliases = {
         k = "kak";
-        ssh-rep = "ssh jared@home -L 2000:localhost:2000 -L 4000:localhost:4000 -L 5000:localhost:5000 -L 9000:localhost:9000 -L 8081:localhost:8081 -L 19000:localhost:19000 -L 19001:localhost:19001 -L 19002:localhost:19002 -t \"tab replenysh-core\"";
-        rep = "cd ~/dev/github/replenysh/core; tab";
         nix-env = "direnv allow .";
         nix-search = "nix-env -qaP | ag";
         nvim-update = "nvim +PlugInstall +UpdateRemotePlugins +qa";
         git-branch-cleanup = "git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -d";
+
+	# tab
+        ssh-rep = "ssh jared@home -L 2000:localhost:2000 -L 4000:localhost:4000 -L 5000:localhost:5000 -L 9000:localhost:9000 -L 8081:localhost:8081 -L 19000:localhost:19000 -L 19001:localhost:19001 -L 19002:localhost:19002 -t \"tab replenysh-core\"";
+        rep = "tab replenysh-core";
+
+        ssh-dotfiles = "ssh jared@home -t \"tab dotfiles\"";
+        dotfiles = "tab dotfiles";
 
 	# Legacy nvim alias
         nv = "nvim";
