@@ -11,7 +11,6 @@ plug "andreyorst/plug.kak" noload
 # Manage buffers
 plug 'delapouite/kakoune-buffers' %{
     map global normal <c-b>  ': enter-buffers-mode<ret>' -docstring 'buffers'
-    map global normal <c-l>  ': enter-buffers-mode<ret>l' -docstring 'go to last buffer'
     map global normal <c-o>  ': enter-buffers-mode<ret>f' -docstring 'search open buffers'
 }
 
@@ -23,7 +22,6 @@ plug 'insipx/kak-crosshairs' %{
     set-face global crosshairs_line default,rgb:232834
     cursorline
 }
-
 
 # Powerline status bar
 plug "andreyorst/powerline.kak" defer powerline %{
@@ -42,16 +40,18 @@ plug "jaredramirez/ayu-kak-powerline" defer powerline %{
 
 # Tabs
 plug "andreyorst/smarttab.kak" defer smarttab %{
-    set-option global softtabstop 4
-
-    hook global WinSetOption filetype=(elm|sql|pgsql|csv) %{
+    set-option global indentwidth 2
+    set-option global softtabstop 2
+    hook global WinSetOption filetype=(elm|psql|pgsql|sql) %{
+        set-option buffer indentwidth 4
         set-option buffer softtabstop 4
-        expandtab
     }
-    hook global WinSetOption filetype=(rust|markdown|kak|javascript|haskell|rescript) %{
+    hook global WinSetOption filetype=(rust|markdown|kak|lisp|scheme|sh|perl|haskell|javascript|rescript|yaml) %{
+        set-option buffer indentwidth 2
         set-option buffer softtabstop 2
-        expandtab
     }
+} config %{
+    hook global WinSetOption filetype=(rust|markdown|kak|lisp|scheme|sh|perl|elm|haskell|javascript|rescript|psql|pgsql|sql|csv|yaml) expandtab
     hook global WinSetOption filetype=(makefile) noexpandtab
     hook global WinSetOption filetype=(c|cpp) smarttab
 }
@@ -102,16 +102,18 @@ hook global NormalKey y|d|c %{ nop %sh{
 }}
 
 # FZF
-def fzf -params 1 -shell-script-candidates %{ find . -type f } %{ edit %arg{1} }
+def fzf -params 1 -shell-script-candidates %{ fish -c "rg_files" } %{ edit %arg{1} }
 map global normal <c-p> ':fzf ' -docstring 'search files'
+
 # Alt-K inverse of alt-j
 map global normal <a-k> 'i<ret><esc>' -docstring 'split line at cursor'
 
 # Save & quit
-define-command -docstring "save and quit" x "write-all; quit"
+define-command x "write-all; quit" -docstring "save and quit" 
 
-# Comment with c-c
-map global normal <c-c> ':comment-line' -docstring 'comment all selected lines'
+# Easier commenting
+define-command cl "comment-line" -docstring "comment a line" 
+define-command cb "comment-block" -docstring "comment a line" 
 
 # Show line numbers
 add-highlighter global/ number-lines -hlcursor
@@ -120,15 +122,10 @@ add-highlighter global/ number-lines -hlcursor
 set-option global scrolloff 999,10
 
 # Display the status bar on top
-set-option global ui_options ncurses_status_on_top=true
+set-option -add global ui_options ncurses_status_on_top=true
 
-# Select all occurance of main selection
-map global user a '*%s<ret>' -docstring 'select all'
-
-# Space is my leader
-map global normal <space> , -docstring 'leader'
-map global normal <backspace> <space> -docstring 'remove all sels except main'
-map global normal <a-backspace> <a-space> -docstring 'remove main sel'
+# Disable all mouse interaction
+set-option -add global ui_options ncurses_enable_mouse=false
 
 # x to select down, X to select up
 def -params 1 extend-line-down %{
@@ -164,3 +161,85 @@ add-highlighter global/ regex \b(TODO|FIXME)\b 0:default+ib
 
 # <a-K> inverse of <a-J>
 map global normal <c-K> i<ret><esc> -docstring 'split line at cursor'
+
+# Support for Rescript
+# Forked from https://github.com/mawww/kakoune/blob/master/rc/filetype/elm.kak
+
+# Detection
+# ‾‾‾‾‾‾‾‾‾
+
+hook global BufCreate .*[.](res) %{
+  set-option buffer filetype rescript
+}
+
+# Initialization
+# ‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+
+hook global WinSetOption filetype=rescript %{
+  require-module rescript
+
+  hook window ModeChange pop:insert:.* -group rescript-trim-indent  rescript-trim-indent
+  hook window InsertChar \n -group rescript-indent rescript-indent-on-new-line
+
+  hook -once -always window WinSetOption filetype=.* %{ remove-hooks window rescript-.+ }
+}
+
+hook -group rescript-highlight global WinSetOption filetype=rescript %{
+  add-highlighter window/rescript ref rescript
+  hook -once -always window WinSetOption filetype=.* %{ remove-highlighter window/rescript }
+}
+
+provide-module rescript %[
+
+# Highlighters
+# ‾‾‾‾‾‾‾‾‾‾‾‾
+
+add-highlighter shared/rescript               regions
+add-highlighter shared/rescript/code          default-region group
+add-highlighter shared/rescript/string        region         '"'     (?<!\\)(\\\\)*"       fill string
+add-highlighter shared/rescript/template      region         "`"     (?<!\\)(\\\\)*`       fill string
+add-highlighter shared/rescript/comment_line  region         '//'    '$'                   fill comment
+add-highlighter shared/rescript/comment       region         /\*     \*/                   fill comment
+
+add-highlighter shared/rescript/code/ regex \b[a-z]\w*\b                                                        0:variable
+add-highlighter shared/rescript/code/ regex \K#[A-Za-z]*                                                        0:function
+add-highlighter shared/rescript/code/ regex \K~\w*                                                              0:attribute
+add-highlighter shared/rescript/code/ regex \b[a-z]\w*\b\s*(?==)                                                0:attribute
+add-highlighter shared/rescript/code/ regex \K'[a-z]\w*\b                                                       0:type
+add-highlighter shared/rescript/code/ regex "-?\b[0-9]*\.?[0-9]+"                                               0:value
+add-highlighter shared/rescript/code/ regex \K'.'                                                               0:value
+add-highlighter shared/rescript/code/ regex @(as|get|inline|int|meth|new|return|scope|send|set|string|this)     0:meta
+add-highlighter shared/rescript/code/ regex @(uncurry|unwrap|val|variadic|bs\.\w*|react\.\w*)                   0:meta
+add-highlighter shared/rescript/code/ regex \b[A-Z]\w*\b                                                        0:meta
+add-highlighter shared/rescript/code/ regex \b(module|include|open|private)\b                                   0:module
+add-highlighter shared/rescript/code/ regex \b(let|rec|type|external|mutable|lazy|of|with|if|else)\b            0:keyword
+add-highlighter shared/rescript/code/ regex \b(then|and|as|for|to|downto|while|try|catch)\b                     0:keyword
+add-highlighter shared/rescript/code/ regex \b(exception|assert|_)\b)                                           0:keyword
+add-highlighter shared/rescript/code/ regex \b(=>|+|+.|-|-.|*|*.|/|/.)\b                                        0:operator
+
+
+define-command -hidden rescript-trim-indent %{
+  # remove trailing white spaces
+  try %{ execute-keys -draft -itersel <a-x> s \h+$ <ret> d }
+}
+
+define-command -hidden rescript-indent-after "
+  execute-keys -draft <semicolon> k x <a-k> ^\\h*if|[=(]$|\\b(case\\h+[\\w']+\\h+of|let|in)$|(\\{\\h+\\w+|\\w+\\h+->)$ <ret> j <a-gt>
+"
+
+define-command -hidden rescript-indent-on-new-line %{
+  evaluate-commands -draft -itersel %{
+    # copy -- comments prefix and following white spaces
+    try %{ execute-keys -draft k <a-x> s ^\h*\K--\h* <ret> y gh j P }
+    # preserve previous line indent
+    try %{ execute-keys -draft <semicolon> K <a-&> }
+    # align to first clause
+    try %{ execute-keys -draft <semicolon> k x X s ^\h*(if|then|else)?\h*(([\w']+\h+)+=)?\h*(case\h+[\w']+\h+of|let)\h+\K.* <ret> s \A|.\z <ret> & }
+    # filter previous line
+    try %{ execute-keys -draft k : rescript-trim-indent <ret> }
+    # indent after lines beginning with condition or ending with expression or =(
+    try %{ rescript-indent-after }
+  }
+}
+
+]
