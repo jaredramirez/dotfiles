@@ -83,7 +83,7 @@ evaluate-commands %sh{
         face global StatusLineInfo ${vcs_modified},${common_dark_bg}
         face global StatusLineValue ${vcs_modified},${common_dark_bg}
         face global StatusCursor ${common_fg},${common_dark_bg}
-        face global Prompt ${ui_panel_border},${ui_panel_bg}
+        face global Prompt ${ui_panel_border},${vcs_added}
         face global MatchingChar default,${ui_panel_shadow}
         face global BufferPadding ${common_fg},${common_bg}
         face global Whitespace ${ui_line}+f

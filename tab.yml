@@ -1,3 +1,5 @@
-repo: dotfiles
+doc: "dotfiles"
 
-doc: "my dotfiles"
+workspace:
+  - tab: edit
+  - tab: runu

@@ -1,0 +1,5 @@
+doc: "home workspace"
+
+workspace:
+  - workspace: dev/github/jaredramirez/dotfiles/
+  - workspace: dev/github/replenysh/core/

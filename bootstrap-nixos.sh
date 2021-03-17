@@ -56,3 +56,7 @@ mkdir -p "$HOME/.config/kak-lsp"
 KAK_LSP="kak-lsp.toml"
 HOME_KAK_LSP="$HOME/.config/kak-lsp/$KAK_LSP"
 ln -sf "$PWD/kak-lsp/$KAK_LSP" $HOME_KAK_LSP
+
+# Link home tab.yml
+HOME_TAB="$HOME/.config/tab.yml"
+ln -sf "$PWD/home-tab.yml" $HOME_TAB
