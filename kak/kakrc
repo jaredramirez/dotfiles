@@ -40,18 +40,18 @@ plug "jaredramirez/ayu-kak-powerline" defer powerline %{
 
 # Tabs
 plug "andreyorst/smarttab.kak" defer smarttab %{
-    set-option global indentwidth 2
-    set-option global softtabstop 2
+    # set-option global indentwidth 2
+    # set-option global softtabstop 2
     hook global WinSetOption filetype=(elm|psql|pgsql|sql) %{
         set-option buffer indentwidth 4
         set-option buffer softtabstop 4
     }
-    hook global WinSetOption filetype=(rust|markdown|kak|lisp|scheme|sh|perl|haskell|javascript|rescript|yaml) %{
+    hook global WinSetOption filetype=(rust|markdown|kak|lisp|scheme|sh|perl|haskell|javascript|rescript|yaml|nix) %{
         set-option buffer indentwidth 2
         set-option buffer softtabstop 2
     }
 } config %{
-    hook global WinSetOption filetype=(rust|markdown|kak|lisp|scheme|sh|perl|elm|haskell|javascript|rescript|psql|pgsql|sql|csv|yaml) expandtab
+    hook global WinSetOption filetype=(rust|markdown|kak|lisp|scheme|sh|perl|elm|haskell|javascript|rescript|psql|pgsql|sql|csv|yaml|nix) expandtab
     hook global WinSetOption filetype=(makefile) noexpandtab
     hook global WinSetOption filetype=(c|cpp) smarttab
 }
@@ -83,6 +83,11 @@ hook global InsertCompletionHide .* %{
     unmap window insert <tab> <c-n>
     unmap window insert <s-tab> <c-p>
     unmap window insert <ret> <space>
+}
+
+# kcr (installed globally via nix)
+evaluate-commands %sh{
+    kcr init kakoune
 }
 
 # kak-lsp (installed globally via nix)
@@ -161,6 +166,20 @@ add-highlighter global/ regex \b(TODO|FIXME)\b 0:default+ib
 
 # <a-K> inverse of <a-J>
 map global normal <c-K> i<ret><esc> -docstring 'split line at cursor'
+
+# Make selection a bit easier - https://discuss.kakoune.com/t/sublime-text-style-multiple-cursor-select-add-mapping/150
+define-command -override -docstring "select a word under cursor, or add cursor on next occurrence of current selection" \
+select-or-add-cursor %{ execute-keys -save-regs '' %sh{
+    if [ $(expr $(echo $kak_selection | wc -m) - 1) -eq 1 ]; then
+        echo "<a-i>w*"
+    else
+        echo "*<s-n>"
+    fi
+}}
+
+map global normal '<s-a-n>' ': select-or-add-cursor<ret>' -docstring "add cursor on current word, and jump to the next match"
+
+
 
 # Support for Rescript
 # Forked from https://github.com/mawww/kakoune/blob/master/rc/filetype/elm.kak

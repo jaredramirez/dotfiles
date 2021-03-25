@@ -6,6 +6,7 @@
 { systemPackages =
     [ pkgs.git
       pkgs.kakoune
+      pkgs.kakoune-cr
       pkgs.kak-lsp
       pkgs.fzf
       pkgs.ripgrep

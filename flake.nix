@@ -4,11 +4,15 @@
     darwin.url = "github:lnl7/nix-darwin/master";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    kakoune-cr-overlay.url = "github:jaredramirez/kakoune.cr";
   };
 
-  outputs = { self, nixpkgs, darwin, neovim-nightly-overlay }:
+  outputs = { self, nixpkgs, darwin, neovim-nightly-overlay, kakoune-cr-overlay }:
     let
-      overlays = [ neovim-nightly-overlay.overlay ];
+      overlays = [
+        neovim-nightly-overlay.overlay
+        kakoune-cr-overlay.overlay
+      ];
     in
     {
       nixosConfigurations.home = nixpkgs.lib.nixosSystem {
