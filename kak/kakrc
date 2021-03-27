@@ -107,9 +107,9 @@ hook global NormalKey y|d|c %{ nop %sh{
     printf %s "$kak_reg_dquote" | pbcopy
 }}
 
-# FZF
-def fzf -params 1 -shell-script-candidates %{ rg --files --hidden } %{ edit %arg{1} }
-map global normal <c-p> ':fzf ' -docstring 'search files'
+# Fuzzy find files
+def fuzzy -params 1 -shell-script-candidates %{ rg --files --hidden } %{ edit %arg{1} }
+map global normal <c-p> ':fuzzy ' -docstring 'search files'
 
 # Alt-K inverse of alt-j
 map global normal <a-k> 'i<ret><esc>' -docstring 'split line at cursor'

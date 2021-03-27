@@ -8,7 +8,6 @@
       pkgs.kakoune
       # pkgs.kakoune-cr
       pkgs.kak-lsp
-      pkgs.fzf
       pkgs.skim
       pkgs.ripgrep
       pkgs.amber
