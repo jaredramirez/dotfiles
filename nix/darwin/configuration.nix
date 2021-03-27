@@ -7,13 +7,12 @@ in
 {
   # List packages installed in system profile
   # System-Wide and nearly all stuff for Neovim
-  environment.systemPackages = common.systemPackages;
-
+  environment.systemPackages = common.systemPackages ++ [
+  ];
   environment.variables = common.variables;
 
   environment.systemPath = [
     "$HOME/.local/bin"
-    "${pkgs.wezterm}/Applications/WezTerm.app"
   ];
 
   programs.zsh = common.programs.zsh;
@@ -53,14 +52,9 @@ in
   system.defaults.dock.orientation = "left";
   system.defaults.dock.tilesize = 32;
 
-  # nix-direnv options
-  environment.pathsToLink = [
-    "/share/nix-direnv"
-  ];
-
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
-  nix.package = pkgs.nixFlakes;
+  nix.package = pkgs.nixUnstable;
   nix.extraOptions = ''
     experimental-features = nix-command flakes
     keep-outputs = true

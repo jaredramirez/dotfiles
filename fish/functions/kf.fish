@@ -1,6 +1,6 @@
 function kf
     # Get file to open
-    set -l file (rg_files | fzf --height 50% --layout=reverse --preview "~/.config/nvim/bundle/fzf.vim/bin/preview.sh {}")
+    set -l file (rg --files --hidden  | fzf --height 50% --layout=reverse)
 
     # Make sure we have a file (didn't press ctrl-c)
     if set -q file && test -n "$file"

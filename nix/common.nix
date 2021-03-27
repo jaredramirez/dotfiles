@@ -6,9 +6,10 @@
 { systemPackages =
     [ pkgs.git
       pkgs.kakoune
-      pkgs.kakoune-cr
+      # pkgs.kakoune-cr
       pkgs.kak-lsp
       pkgs.fzf
+      pkgs.skim
       pkgs.ripgrep
       pkgs.amber
       pkgs.gitAndTools.gh
@@ -19,19 +20,10 @@
       pkgs.bat
       pkgs.docker
       pkgs.alacritty
-      pkgs.kitty
       pkgs.tab-rs
-
-      # Neovim deps
-      pkgs.neovim-nightly
-      pkgs.tree-sitter
-      pkgs.python3
-      pkgs.python3Packages.pynvim
 
       # Nix helpers
       pkgs.cachix
-      pkgs.direnv
-      pkgs.nix-direnv
 
       # Needed globally for Coc
       pkgs.nodejs-14_x
@@ -40,7 +32,6 @@
 
   variables = {
     LANG = "en_US.UTF-8";
-    DIRENV_WARN_TIMEOUT = "15s";
   };
 
   programs =  {
@@ -52,7 +43,6 @@
       '';
       shellInit = ''
         export EDITOR=kak
-        eval "$(direnv hook zsh)"
       '';
     };
 
@@ -60,7 +50,6 @@
       # Nix-darwin doesn't support shellInit
       interactiveShellInit = ''
         export EDITOR=kak
-        eval "$(direnv hook bash)"
         eval "$(starship init bash)"
       '';
     };
@@ -75,11 +64,9 @@
       '';
       shellInit = ''
         set -gx EDITOR kak
-        direnv hook fish | source
       '';
       shellAliases = {
         k = "kak";
-        nix-env = "direnv allow .";
         nix-search = "nix-env -qaP | ag";
         nvim-update = "nvim +PlugInstall +UpdateRemotePlugins +qa";
         git-branch-cleanup = "git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -d";
@@ -90,16 +77,6 @@
 
         ssh-dotfiles = "ssh jared@home -t \"tab dotfiles\"";
         dotfiles = "tab dotfiles";
-
-	# Legacy nvim alias
-        nv = "nvim";
-
-        # Legacy kitty stuff (before I started using tab-rs)
-        ssh-cp-kitty = "infocmp xterm-kitty | ssh jared@home tic -x -o \~/.terminfo /dev/stdin";
-        ws-rep = "source $HOME/.config/kitty/workspaces/rep.fish";
-        ws-rep-ssh = "source $HOME/.config/kitty/workspaces/ssh-rep.fish";
-        ws-roc = "source $HOME/.config/kitty/workspaces/roc.fish";
-        ws-roc-ssh = "source $HOME/.config/kitty/workspaces/ssh-roc.fish";
       };
     };
   };

@@ -40,8 +40,9 @@ plug "jaredramirez/ayu-kak-powerline" defer powerline %{
 
 # Tabs
 plug "andreyorst/smarttab.kak" defer smarttab %{
-    # set-option global indentwidth 2
-    # set-option global softtabstop 2
+    set-option buffer indentwidth 2
+    set-option buffer softtabstop 2
+
     hook global WinSetOption filetype=(elm|psql|pgsql|sql) %{
         set-option buffer indentwidth 4
         set-option buffer softtabstop 4
@@ -107,7 +108,7 @@ hook global NormalKey y|d|c %{ nop %sh{
 }}
 
 # FZF
-def fzf -params 1 -shell-script-candidates %{ fish -c "rg_files" } %{ edit %arg{1} }
+def fzf -params 1 -shell-script-candidates %{ rg --files --hidden } %{ edit %arg{1} }
 map global normal <c-p> ':fzf ' -docstring 'search files'
 
 # Alt-K inverse of alt-j

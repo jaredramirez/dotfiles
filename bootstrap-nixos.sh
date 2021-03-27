@@ -12,12 +12,6 @@ FISH_FUNCTIONS_INIT="functions"
 HOME_FISH_FUNCTIONS="$HOME/.config/fish/$FISH_FUNCTIONS_INIT"
 ln -sf "$PWD/fish/$FISH_FUNCTIONS_INIT" $HOME_FISH_FUNCTIONS
 
-# Link Neovim
-mkdir -p "$HOME/.config/nvim"
-NVIM_INIT="init.vim"
-HOME_NVIM="$HOME/.config/nvim/$NVIM_INIT"
-ln -sf "$PWD/nvim/$NVIM_INIT" $HOME_NVIM
-
 # Link Starship
 STARSHIP_INIT="starship.toml"
 HOME_STARSHIP="$HOME/.config/$STARSHIP_INIT"
@@ -32,18 +26,6 @@ ln -sf "$PWD/direnv/$DIRENV_CONFIG" "$HOME_DIRENV_CONFIG"
 GIT_CONFIG="gitconfig"
 HOME_GIT_CONFIG="$HOME/.$GIT_CONFIG"
 ln -sf "$PWD/git/$GIT_CONFIG" "$HOME_GIT_CONFIG"
-
-# Link Kitty
-mkdir -p "$HOME/.config/kitty"
-KITTY_INIT="kitty.conf"
-HOME_KITTY="$HOME/.config/kitty/$KITTY_INIT"
-ln -sf "$PWD/kitty/$KITTY_INIT" $HOME_KITTY
-
-ln -sFf "$PWD/kitty/workspaces" "$HOME/.config/kitty/workspaces"
-rm -f "$PWD/kitty/workspaces/workspaces"
-
-ln -sFf "$PWD/kitty/themes" "$HOME/.config/kitty/themes"
-rm -f "$PWD/kitty/themes/themes"
 
 # Link Kakoune
 mkdir -p "$HOME/.config/kak"

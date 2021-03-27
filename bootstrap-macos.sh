@@ -14,24 +14,6 @@ HOME_FISH_FUNCTIONS="$HOME/.config/fish/functions"
 ln -sFf "$PWD/fish/functions" $HOME_FISH_FUNCTIONS
 rm -f "$PWD/fish/functions/functions"
 
-# Link Neovim
-mkdir -p "$HOME/.config/nvim"
-NVIM_INIT="init.vim"
-HOME_NVIM="$HOME/.config/nvim/$NVIM_INIT"
-ln -sf "$PWD/nvim/$NVIM_INIT" $HOME_NVIM
-
-# Link Kitty
-mkdir -p "$HOME/.config/kitty"
-KITTY_INIT="kitty.conf"
-HOME_KITTY="$HOME/.config/kitty/$KITTY_INIT"
-ln -sf "$PWD/kitty/$KITTY_INIT" $HOME_KITTY
-
-ln -sFf "$PWD/kitty/workspaces" "$HOME/.config/kitty/workspaces"
-rm -f "$PWD/kitty/workspaces/workspaces"
-
-ln -sFf "$PWD/kitty/themes" "$HOME/.config/kitty/themes"
-rm -f "$PWD/kitty/themes/themes"
-
 # Link Starship
 STARSHIP_INIT="starship.toml"
 HOME_STARSHIP="$HOME/.config/$STARSHIP_INIT"
@@ -55,7 +37,7 @@ ln -sf "$PWD/alacritty/$ALACRITTY_INIT" $HOME_ALACRITTY
 
 # Link Kakoune
 mkdir -p "$HOME/.config/kak"
-KAK_INIT="kak.yml"
+KAK_INIT="kakrc"
 HOME_KAK="$HOME/.config/kak/$KAK_INIT"
 ln -sf "$PWD/kak/$KAK_INIT" $HOME_KAK
 
