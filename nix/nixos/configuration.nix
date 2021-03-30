@@ -102,6 +102,9 @@ in
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
+  # Enable Lorri
+  services.lorri.enable = true;
+
   # Use flakes
   nix.package = pkgs.nixUnstable;
   nix.extraOptions = ''

@@ -52,6 +52,9 @@ in
   system.defaults.dock.orientation = "left";
   system.defaults.dock.tilesize = 32;
 
+  # Lorri
+  services.lorri.enable = true;
+
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
   nix.package = pkgs.nixUnstable;

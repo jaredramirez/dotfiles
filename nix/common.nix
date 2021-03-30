@@ -23,6 +23,7 @@
 
       # Nix helpers
       pkgs.cachix
+      pkgs.direnv
 
       # Needed globally for Coc
       pkgs.nodejs-14_x
@@ -42,6 +43,7 @@
       '';
       shellInit = ''
         export EDITOR=kak
+        direnv hook fish | source
       '';
     };
 
@@ -49,6 +51,7 @@
       # Nix-darwin doesn't support shellInit
       interactiveShellInit = ''
         export EDITOR=kak
+        direnv hook fish | source
         eval "$(starship init bash)"
       '';
     };
@@ -63,6 +66,7 @@
       '';
       shellInit = ''
         set -gx EDITOR kak
+        direnv hook fish | source
       '';
       shellAliases = {
         k = "kak";
