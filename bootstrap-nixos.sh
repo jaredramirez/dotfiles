@@ -17,10 +17,8 @@ STARSHIP_INIT="starship.toml"
 HOME_STARSHIP="$HOME/.config/$STARSHIP_INIT"
 ln -sf "$PWD/starship/$STARSHIP_INIT" $HOME_STARSHIP
 
-# Link nix-direnv
-DIRENV_CONFIG="direnvrc"
-HOME_DIRENV_CONFIG="$HOME/.$DIRENV_CONFIG"
-ln -sf "$PWD/direnv/$DIRENV_CONFIG" "$HOME_DIRENV_CONFIG"
+# Link scripts
+ln -sf "$PWD/scripts/bsc-fmt" "$HOME/.local/bin/bsc-fmt"
 
 # Link git
 GIT_CONFIG="gitconfig"

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+trap 'rm -f "$TMPFILE"' EXIT
+
+TMPFILE=$(mktemp "refmt.XXXXXXXXXX.res" --tmpdir=/tmp)
+echo "$(</dev/stdin)" > "$TMPFILE"
+
+if command -v bsc &> /dev/null
+then
+  bsc -format "$TMPFILE"
+  exit
+fi
+
+BSC=./node_modules/.bin/bsc
+if test -f "$BSC"; then
+  FORMAT_CMD="$BSC -format $TMPFILE"
+  eval $FORMAT_CMD
+  exit
+fi

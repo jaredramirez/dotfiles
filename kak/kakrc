@@ -14,9 +14,6 @@ plug 'delapouite/kakoune-buffers' %{
     map global normal <c-o>  ': enter-buffers-mode<ret>f' -docstring 'search open buffers'
 }
 
-# Highlight searches
-plug 'alexherbo2/search-highlighter.kak'
-
 # Crosshairs
 plug 'insipx/kak-crosshairs' %{
     set-face global crosshairs_line default,rgb:232834
@@ -70,6 +67,10 @@ hook global WinSetOption filetype=javascript %{
     set window formatcmd 'prettier'
     hook buffer BufWritePre .* %{format}
 }
+hook global WinSetOption filetype=rescript %{
+    set window formatcmd 'bsc-fmt'
+    hook buffer BufWritePre .* %{format}
+}
 
 # Use tab to autocomplete
 hook global InsertCompletionShow .* %{
@@ -84,11 +85,6 @@ hook global InsertCompletionHide .* %{
     unmap window insert <tab> <c-n>
     unmap window insert <s-tab> <c-p>
     unmap window insert <ret> <space>
-}
-
-# kcr (installed globally via nix)
-evaluate-commands %sh{
-    kcr init kakoune
 }
 
 # kak-lsp (installed globally via nix)
@@ -146,7 +142,7 @@ def -params 1 extend-line-up %{
     exec '<a-;><a-X>'
 }
 map global normal x ':extend-line-down %val{count}<ret>'
-map global normal X ':extend-line-up %val{count}<ret>'
+map global normal <a-x> ':extend-line-up %val{count}<ret>'
 
 # Easily convert between cases
 def camelcase %{
@@ -168,6 +164,12 @@ add-highlighter global/ regex \b(TODO|FIXME)\b 0:default+ib
 # <a-K> inverse of <a-J>
 map global normal <c-K> i<ret><esc> -docstring 'split line at cursor'
 
+define-command -override -docstring "select a word under cursor" \
+select-word-under-cursor %{ execute-keys -save-regs '' %sh{
+  echo "<a-i>w"
+}}
+map global normal '<a-w>' ': select-word-under-cursor<ret>' -docstring "select word under cursor"
+
 # Make selection a bit easier - https://discuss.kakoune.com/t/sublime-text-style-multiple-cursor-select-add-mapping/150
 define-command -override -docstring "select a word under cursor, or add cursor on next occurrence of current selection" \
 select-or-add-cursor %{ execute-keys -save-regs '' %sh{
@@ -179,8 +181,6 @@ select-or-add-cursor %{ execute-keys -save-regs '' %sh{
 }}
 
 map global normal '<s-a-n>' ': select-or-add-cursor<ret>' -docstring "add cursor on current word, and jump to the next match"
-
-
 
 # Support for Rescript
 # Forked from https://github.com/mawww/kakoune/blob/master/rc/filetype/elm.kak
@@ -233,7 +233,7 @@ add-highlighter shared/rescript/code/ regex @(uncurry|unwrap|val|variadic|bs\.\w
 add-highlighter shared/rescript/code/ regex \b[A-Z]\w*\b                                                        0:meta
 add-highlighter shared/rescript/code/ regex \b(module|include|open|private)\b                                   0:module
 add-highlighter shared/rescript/code/ regex \b(let|rec|type|external|mutable|lazy|of|with|if|else)\b            0:keyword
-add-highlighter shared/rescript/code/ regex \b(then|and|as|for|to|downto|while|try|catch)\b                     0:keyword
+add-highlighter shared/rescript/code/ regex \b(then|switch|and|as|for|to|downto|while|try|catch)\b                     0:keyword
 add-highlighter shared/rescript/code/ regex \b(exception|assert|_)\b)                                           0:keyword
 add-highlighter shared/rescript/code/ regex \b(=>|+|+.|-|-.|*|*.|/|/.)\b                                        0:operator
 
@@ -244,7 +244,7 @@ define-command -hidden rescript-trim-indent %{
 }
 
 define-command -hidden rescript-indent-after "
-  execute-keys -draft <semicolon> k x <a-k> ^\\h*if|[=(]$|\\b(case\\h+[\\w']+\\h+of|let|in)$|(\\{\\h+\\w+|\\w+\\h+->)$ <ret> j <a-gt>
+  execute-keys -draft <semicolon> k x <a-k> ^\\h*if|[=(]$|\\b(switch\\h+[\\w']+\\h+\{|\{)$|(\\{\\h+\\w+|\\w+\\h+->)$ <ret> j <a-gt>
 "
 
 define-command -hidden rescript-indent-on-new-line %{
@@ -254,7 +254,7 @@ define-command -hidden rescript-indent-on-new-line %{
     # preserve previous line indent
     try %{ execute-keys -draft <semicolon> K <a-&> }
     # align to first clause
-    try %{ execute-keys -draft <semicolon> k x X s ^\h*(if|then|else)?\h*(([\w']+\h+)+=)?\h*(case\h+[\w']+\h+of|let)\h+\K.* <ret> s \A|.\z <ret> & }
+    try %{ execute-keys -draft <semicolon> k x X s ^\h*(if|then|else)?\h*(([\w']+\h+)+=)?\h*(switch\h+[\w']+\h+\{|\{)\h+\K.* <ret> s \A|.\z <ret> & }
     # filter previous line
     try %{ execute-keys -draft k : rescript-trim-indent <ret> }
     # indent after lines beginning with condition or ending with expression or =(

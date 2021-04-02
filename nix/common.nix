@@ -43,6 +43,8 @@
       '';
       shellInit = ''
         export EDITOR=kak
+        export PATH=$PATH:"$HOME/.local/bin"
+
         direnv hook fish | source
       '';
     };
@@ -51,6 +53,8 @@
       # Nix-darwin doesn't support shellInit
       interactiveShellInit = ''
         export EDITOR=kak
+        export PATH=$PATH:"$HOME/.local/bin"
+
         direnv hook fish | source
         eval "$(starship init bash)"
       '';
@@ -65,6 +69,8 @@
         starship init fish | source
       '';
       shellInit = ''
+        contains "$HOME/.local/bin" $fish_user_paths; or set -Ua fish_user_paths "$HOME/.local/bin"
+
         set -gx EDITOR kak
         direnv hook fish | source
       '';

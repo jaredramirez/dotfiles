@@ -15,7 +15,7 @@
       ];
     in
     {
-      nixosConfigurations.home = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.home = nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";
         modules = [
           ({ config, pkgs, ... }: {
