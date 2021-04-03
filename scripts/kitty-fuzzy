@@ -4,9 +4,9 @@ trap 'rm -f "$TMPFILE"' EXIT
 
 TMPFILE=$(coreutils --coreutils-prog=mktemp "kitty-fuzzy.XXXXXXXXXX.json" --tmpdir=/tmp)
 
-kitty @ ls | jq '.[] | .tabs | .[] | .title | select(contains("fuzzy") | not)' | tr -d "\"" > "$TMPFILE"
+kitty @ ls | jq ".[] | select( .platform_window_id | contains($WINDOWID) ) | .tabs | .[] | .title | select(contains(\"fuzzy\") | not)" | tr -d "\"" > "$TMPFILE"
 
-SELECTED=$(cat "$TMPFILE" | sk --layout=reverse)
+SELECTED=$(cat "$TMPFILE" | fzf --layout=reverse)
 
 if [ -n "$SELECTED" ]; then
   kitty @ focus-window --match title:"$SELECTED"

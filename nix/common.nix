@@ -8,7 +8,6 @@
       pkgs.kakoune
       # pkgs.kakoune-cr
       pkgs.kak-lsp
-      pkgs.skim
       pkgs.coreutils
       pkgs.fzf
       pkgs.jq
