@@ -11,6 +11,7 @@ mkdir -p "$HOME/.config/fish"
 FISH_FUNCTIONS_INIT="functions"
 HOME_FISH_FUNCTIONS="$HOME/.config/fish/$FISH_FUNCTIONS_INIT"
 ln -sf "$PWD/fish/$FISH_FUNCTIONS_INIT" $HOME_FISH_FUNCTIONS
+rm -f "$PWD/fish/functions/functions"
 
 # Link Starship
 STARSHIP_INIT="starship.toml"

@@ -11,6 +11,14 @@ files = ["stack.yaml"]
 format = "via [$symbol($output )]($style) "
 style = "bold red"
 
+[custom.kitty]
+description = "The current tab in the tab terminal multiplexer"
+command = "kitty-window-name"
+when = """ test "$TERM" = "xterm-kitty" && test "$KITTY_TAB" = "1" """
+shell = ["fish"]
+format = "[tab $output]($style) "
+style = "bold blue"
+
 [custom.tab]
 description = "The current tab in the tab terminal multiplexer"
 command = "tab --starship"

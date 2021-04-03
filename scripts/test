@@ -1,0 +1,12 @@
+#!/bin/sh
+
+trap 'rm -f "$TMPFILE"' EXIT
+
+KITTY_INFO=$(kitty @ ls)
+TMPFILE=$(coreutils --coreutils-prog=mktemp "kitty-fuzzy.XXXXXXXXXX.json" --tmpdir=/tmp)
+
+kitty @ ls | jq '.[] | .tabs | .[] | .title' > "$TMPFILE"
+
+ambr "\"" "" "$TMPFILE" --no-interactive
+
+SELECTED_FILE=$(cat "$TMPFILE" | sk)

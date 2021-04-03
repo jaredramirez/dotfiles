@@ -1,0 +1,2 @@
+#!/bin/sh
+kitty @ ls | jq ".[] | .tabs | .[] | .windows | .[] | select( .id == $KITTY_WINDOW_ID ) | .title" | tr -d '\n' | tr -d "\""

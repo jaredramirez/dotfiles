@@ -1,0 +1,13 @@
+#!/bin/sh
+
+trap 'rm -f "$TMPFILE"' EXIT
+
+TMPFILE=$(coreutils --coreutils-prog=mktemp "kitty-fuzzy.XXXXXXXXXX.json" --tmpdir=/tmp)
+
+kitty @ ls | jq '.[] | .tabs | .[] | .title | select(contains("fuzzy") | not)' | tr -d "\"" > "$TMPFILE"
+
+SELECTED=$(cat "$TMPFILE" | sk --layout=reverse)
+
+if [ -n "$SELECTED" ]; then
+  kitty @ focus-window --match title:"$SELECTED"
+fi

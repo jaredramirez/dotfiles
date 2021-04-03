@@ -2,10 +2,10 @@
 
 # Required parameters:
 # @raycast.schemaVersion 1
-# @raycast.title Alacritty
+# @raycast.title Kitty
 # @raycast.mode silent
 
 # Optional parameters:
-# @raycast.icon ⌨️
+# @raycast.icon 😼
 
-open $HOME/Applications/Nix/Alacritty.app
+/run/current-system/sw/bin/kitty -d "$HOME"
