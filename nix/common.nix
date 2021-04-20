@@ -23,11 +23,6 @@
       nix-prefetch-git
       starship
       bat
-      docker
-      tab-rs
-
-      # Necessary to be installed gobally
-      nodePackages.expo-cli
 
       # Nix helpers
       cachix

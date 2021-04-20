@@ -6,6 +6,6 @@ return {
     keys = {
         { key="p", mods="CMD", action="ShowTabNavigator" },
         { key="q", mods="CMD", action="QuitApplication" },
-        -- { key="l", mods="CMD", action="ActivateLastTab" },
+        { key="l", mods="CMD", action="ActivateLastTab" },
     }
 }
