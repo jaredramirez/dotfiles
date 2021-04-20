@@ -64,7 +64,11 @@ hook global WinSetOption filetype=haskell %{
     hook buffer BufWritePre .* %{format}
 }
 hook global WinSetOption filetype=javascript %{
-    set window formatcmd 'prettier'
+    set window formatcmd 'prettier --stdin-filepath foo.js'
+    hook buffer BufWritePre .* %{format}
+}
+hook global WinSetOption filetype=json %{
+    set window formatcmd 'prettier --stdin-filepath foo.json'
     hook buffer BufWritePre .* %{format}
 }
 hook global WinSetOption filetype=rescript %{
@@ -221,7 +225,7 @@ add-highlighter shared/rescript/template      region         "`"     (?<!\\)(\\\
 add-highlighter shared/rescript/comment_line  region         '//'    '$'                   fill comment
 add-highlighter shared/rescript/comment       region         /\*     \*/                   fill comment
 
-add-highlighter shared/rescript/code/ regex \b[a-z]\w*\b                                                        0:variable
+add-highlighter shared/rescript/code/ regex \b\w*\b                                                             0:variable
 add-highlighter shared/rescript/code/ regex \K#[A-Za-z]*                                                        0:function
 add-highlighter shared/rescript/code/ regex \K~\w*                                                              0:attribute
 add-highlighter shared/rescript/code/ regex \b[a-z]\w*\b\s*(?==)                                                0:attribute

@@ -13,6 +13,18 @@
         neovim-nightly-overlay.overlay
         kakoune-cr-overlay.overlay
       ];
+
+      macbookConfig =
+        darwin.lib.darwinSystem {
+          inputs = { inherit darwin nixpkgs; };
+          modules = [
+            ({ config, pkgs, ... }: {
+              nixpkgs.overlays = overlays;
+            })
+            ./nix/darwin/configuration.nix
+          ];
+        };
+
     in
     {
       nixosConfigurations.home = nixpkgs.lib.nixosSystem rec {
@@ -27,24 +39,8 @@
 
       };
 
-      darwinConfigurations."Jareds-MacBook-Pro" = darwin.lib.darwinSystem {
-        inputs = { inherit darwin nixpkgs; };
-        modules = [
-          ({ config, pkgs, ... }: {
-            nixpkgs.overlays = overlays;
-          })
-          ./nix/darwin/configuration.nix
-        ];
-      };
-
-      darwinConfigurations."Jareds-Work-MacBook-Pro" = darwin.lib.darwinSystem {
-        inputs = { inherit darwin nixpkgs; };
-        modules = [
-          ({ config, pkgs, ... }: {
-            nixpkgs.overlays = overlays;
-          })
-          ./nix/darwin/configuration.nix
-        ];
-      };
+      darwinConfigurations."Jareds-MacBook-Pro" = macbookConfig;
+      darwinConfigurations."Jareds-Work-MacBook-Pro" = macbookConfig;
+      darwinConfigurations.MorganisBeyotch.localdomain = macbookConfig;
     };
 }

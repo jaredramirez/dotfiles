@@ -4,32 +4,38 @@
   # isMacOS = builtins.currentSystem == "x86_64-darwin";
 # in
 { systemPackages =
-    [ pkgs.git
-      pkgs.kakoune
-      # pkgs.kakoune-cr
-      pkgs.kak-lsp
-      pkgs.coreutils
-      pkgs.fzf
-      pkgs.jq
-      pkgs.mktemp
-      pkgs.ripgrep
-      pkgs.amber
-      pkgs.gitAndTools.gh
-      pkgs.gitAndTools.delta
-      pkgs.heroku
-      pkgs.nix-prefetch-git
-      pkgs.starship
-      pkgs.bat
-      pkgs.docker
-      pkgs.tab-rs
+    with pkgs; [
+      # Editor
+      kakoune
+      kak-lsp
+      nodePackages.prettier
+
+      # Common tools
+      git
+      coreutils
+      fzf
+      jq
+      ripgrep
+      # amber
+      gitAndTools.gh
+      gitAndTools.delta
+      heroku
+      nix-prefetch-git
+      starship
+      bat
+      docker
+      tab-rs
+
+      # Necessary to be installed gobally
+      nodePackages.expo-cli
 
       # Nix helpers
-      pkgs.cachix
-      pkgs.direnv
+      cachix
+      direnv
 
       # Needed globally for Coc
-      pkgs.nodejs-14_x
-      (pkgs.yarn.override { nodejs = pkgs.nodejs-14_x; })
+      nodejs-14_x
+      (yarn.override { nodejs = nodejs-14_x; })
     ];
 
   variables = {

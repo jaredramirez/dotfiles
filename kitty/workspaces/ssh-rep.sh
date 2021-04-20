@@ -78,4 +78,4 @@ kitty @ launch \
 
 kitty @ focus-tab -m title:root
 
-kitty @ close-window -m title:redirect    
+kitty @ close-window -m title:redirect

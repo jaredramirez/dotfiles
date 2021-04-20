@@ -8,8 +8,19 @@ let
         kitty-ssh-cp = "infocmp xterm-kitty | ssh jared@home tic -x -o \~/.terminfo /dev/stdin";
 
         rep = "source $HOME/.config/kitty/workspaces/rep.sh";
+        rep-api = "source $HOME/.config/kitty/workspaces/rep-api.sh";
+        rep-dash = "source $HOME/.config/kitty/workspaces/rep-dash.sh";
+        rep-portal = "source $HOME/.config/kitty/workspaces/rep-portal.sh";
+        rep-join = "source $HOME/.config/kitty/workspaces/rep-join.sh";
+        rep-collector = "source $HOME/.config/kitty/workspaces/rep-collector.sh";
+        rep-community-dropoff = "source $HOME/.config/kitty/workspaces/rep-community-dropoff.sh";
+
         ssh-rep = "source $HOME/.config/kitty/workspaces/ssh-rep.sh";
+        ssh-rep-community-dropoff = "source $HOME/.config/kitty/workspaces/ssh-rep-community-dropoff.sh";
+
         dotfiles = "source $HOME/.config/kitty/workspaces/dotfiles.sh";
+
+        ssh-dotfiles = "source $HOME/.config/kitty/workspaces/ssh-dotfiles.sh";
     };
   };
 in
@@ -18,11 +29,13 @@ in
   # System-Wide and nearly all stuff for Neovim
   environment.systemPackages = common.systemPackages ++ [
     pkgs.kitty
+    pkgs.wezterm
   ];
   environment.variables = common.variables;
 
   environment.systemPath = [
     "$HOME/.local/bin"
+    "${pkgs.wezterm}/Applications/WezTerm.app"
   ];
 
   programs.zsh = common.programs.zsh;

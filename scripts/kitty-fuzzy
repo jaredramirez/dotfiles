@@ -6,7 +6,7 @@ TMPFILE=$(coreutils --coreutils-prog=mktemp "kitty-fuzzy.XXXXXXXXXX.json" --tmpd
 
 kitty @ ls | jq ".[] | select( .platform_window_id | contains($WINDOWID) ) | .tabs | .[] | .title | select(contains(\"fuzzy\") | not)" | tr -d "\"" > "$TMPFILE"
 
-SELECTED=$(cat "$TMPFILE" | fzf --layout=reverse)
+SELECTED=$(cat "$TMPFILE" | fzf --layout=reverse -q "$1")
 
 if [ -n "$SELECTED" ]; then
   kitty @ focus-window --match title:"$SELECTED"
