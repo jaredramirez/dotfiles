@@ -9,20 +9,34 @@ evaluate-commands %sh{
 plug "andreyorst/plug.kak" noload
 
 # Manage buffers
-plug 'delapouite/kakoune-buffers' %{
+plug 'delapouite/kakoune-buffers' config %{
     map global normal <c-b>  ': enter-buffers-mode<ret>' -docstring 'buffers'
-    map global normal <c-o>  ': enter-buffers-mode<ret>f' -docstring 'search open buffers'
+    map global normal <c-l>  ': enter-buffers-mode<ret>a' -docstring 'search open buffers'
+}  
+
+# Vertical Selection
+plug 'occivink/kakoune-vertical-selection' config %{
+  map global user v     ': vertical-selection-down<ret>'
+  map global user <a-v> ': vertical-selection-up<ret>'
+  map global user V     ': vertical-selection-up-and-down<ret>'
 }
 
+# Enhanced objects
+plug 'Delapouite/kakoune-text-objects'
+
+# Enhanced objects
+plug 'occivink/kakoune-buffer-switcher'
+
 # Crosshairs
-plug 'insipx/kak-crosshairs' %{
+plug 'insipx/kak-crosshairs' config %{
     set-face global crosshairs_line default,rgb:232834
     cursorline
 }
 
 # Powerline status bar
 plug "andreyorst/powerline.kak" defer powerline %{
-    powerline-separator arrow
+    powerline-format global 'bufname git mode_info filetype line_column'
+    set-option global powerline_shorten_bufname "short"
 } config %{
     powerline-start
 }
@@ -102,13 +116,8 @@ lsp-auto-hover-enable
 define-command lsp-restart -docstring 'restart lsp server' %{ lsp-stop; lsp-start }
 hook global KakEnd .* lsp-exit
 
-# Copy/paste with system clipboard
-hook global NormalKey y|d|c %{ nop %sh{
-    printf %s "$kak_reg_dquote" | pbcopy
-}}
-
 # Fuzzy find files
-def fuzzy -params 1 -shell-script-candidates %{ rg --files --hidden } %{ edit %arg{1} }
+def fuzzy -params 1 -shell-script-candidates %{ rg --files --hidden } %{ edit -existing %arg{1} }
 map global normal <c-p> ':fuzzy ' -docstring 'search files'
 
 # Alt-K inverse of alt-j
@@ -184,10 +193,9 @@ select-or-add-cursor %{ execute-keys -save-regs '' %sh{
     fi
 }}
 
-map global normal '<s-a-n>' ': select-or-add-cursor<ret>' -docstring "add cursor on current word, and jump to the next match"
+map global normal '<c-w>' ': select-or-add-cursor<ret>' -docstring "add cursor on current word, and jump to the next match"
 
-# Support for Rescript
-# Forked from https://github.com/mawww/kakoune/blob/master/rc/filetype/elm.kak
+# Support for Rescript Syntax
 
 # Detection
 # ‾‾‾‾‾‾‾‾‾
@@ -200,70 +208,83 @@ hook global BufCreate .*[.](res) %{
 # ‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
 hook global WinSetOption filetype=rescript %{
-  require-module rescript
+    require-module rescript
 
-  hook window ModeChange pop:insert:.* -group rescript-trim-indent  rescript-trim-indent
-  hook window InsertChar \n -group rescript-indent rescript-indent-on-new-line
+    hook window ModeChange pop:insert:.* -group "rescript-trim-indent" rescript-trim-indent
+    hook window InsertChar .* -group "rescript-indent" rescript-indent-on-char
+    hook window InsertChar \n -group "rescript-indent" rescript-indent-on-new-line
 
-  hook -once -always window WinSetOption filetype=.* %{ remove-hooks window rescript-.+ }
+    hook -once -always window WinSetOption filetype=.* "
+        remove-hooks window rescript-.+
+    "
 }
 
 hook -group rescript-highlight global WinSetOption filetype=rescript %{
-  add-highlighter window/rescript ref rescript
-  hook -once -always window WinSetOption filetype=.* %{ remove-highlighter window/rescript }
+    add-highlighter window/rescript ref rescript
+    hook -once -always window WinSetOption filetype=.* %{ remove-highlighter window/rescript }
 }
 
-provide-module rescript %[
-
-# Highlighters
-# ‾‾‾‾‾‾‾‾‾‾‾‾
-
-add-highlighter shared/rescript               regions
-add-highlighter shared/rescript/code          default-region group
-add-highlighter shared/rescript/string        region         '"'     (?<!\\)(\\\\)*"       fill string
-add-highlighter shared/rescript/template      region         "`"     (?<!\\)(\\\\)*`       fill string
-add-highlighter shared/rescript/comment_line  region         '//'    '$'                   fill comment
-add-highlighter shared/rescript/comment       region         /\*     \*/                   fill comment
-
-add-highlighter shared/rescript/code/ regex \b\w*\b                                                             0:variable
-add-highlighter shared/rescript/code/ regex \K#[A-Za-z]*                                                        0:function
-add-highlighter shared/rescript/code/ regex \K~\w*                                                              0:attribute
-add-highlighter shared/rescript/code/ regex \b[a-z]\w*\b\s*(?==)                                                0:attribute
-add-highlighter shared/rescript/code/ regex \K'[a-z]\w*\b                                                       0:type
-add-highlighter shared/rescript/code/ regex "-?\b[0-9]*\.?[0-9]+"                                               0:value
-add-highlighter shared/rescript/code/ regex \K'.'                                                               0:value
-add-highlighter shared/rescript/code/ regex @(as|get|inline|int|meth|new|return|scope|send|set|string|this)     0:meta
-add-highlighter shared/rescript/code/ regex @(uncurry|unwrap|val|variadic|bs\.\w*|react\.\w*)                   0:meta
-add-highlighter shared/rescript/code/ regex \b[A-Z]\w*\b                                                        0:meta
-add-highlighter shared/rescript/code/ regex \b(module|include|open|private)\b                                   0:module
-add-highlighter shared/rescript/code/ regex \b(let|rec|type|external|mutable|lazy|of|with|if|else)\b            0:keyword
-add-highlighter shared/rescript/code/ regex \b(then|switch|and|as|for|to|downto|while|try|catch)\b                     0:keyword
-add-highlighter shared/rescript/code/ regex \b(exception|assert|_)\b)                                           0:keyword
-add-highlighter shared/rescript/code/ regex \b(=>|+|+.|-|-.|*|*.|/|/.)\b                                        0:operator
-
-
-define-command -hidden rescript-trim-indent %{
-  # remove trailing white spaces
-  try %{ execute-keys -draft -itersel <a-x> s \h+$ <ret> d }
+hook global BufSetOption filetype=rescript %{
+    set-option buffer comment_line '//'
+    set-option buffer comment_block_begin '/*'
+    set-option buffer comment_block_end '*/'
 }
 
-define-command -hidden rescript-indent-after "
-  execute-keys -draft <semicolon> k x <a-k> ^\\h*if|[=(]$|\\b(switch\\h+[\\w']+\\h+\{|\{)$|(\\{\\h+\\w+|\\w+\\h+->)$ <ret> j <a-gt>
-"
+provide-module rescript %§
 
-define-command -hidden rescript-indent-on-new-line %{
-  evaluate-commands -draft -itersel %{
-    # copy -- comments prefix and following white spaces
-    try %{ execute-keys -draft k <a-x> s ^\h*\K--\h* <ret> y gh j P }
-    # preserve previous line indent
-    try %{ execute-keys -draft <semicolon> K <a-&> }
-    # align to first clause
-    try %{ execute-keys -draft <semicolon> k x X s ^\h*(if|then|else)?\h*(([\w']+\h+)+=)?\h*(switch\h+[\w']+\h+\{|\{)\h+\K.* <ret> s \A|.\z <ret> & }
-    # filter previous line
-    try %{ execute-keys -draft k : rescript-trim-indent <ret> }
-    # indent after lines beginning with condition or ending with expression or =(
-    try %{ rescript-indent-after }
+  # Highlighters
+  # ‾‾‾‾‾‾‾‾‾‾‾‾
+
+  add-highlighter shared/rescript               regions
+  add-highlighter shared/rescript/code          default-region group
+  add-highlighter shared/rescript/string        region         '"'     (?<!\\)(\\\\)*"       fill string
+  add-highlighter shared/rescript/template      region         "`"     (?<!\\)(\\\\)*`       fill string
+  add-highlighter shared/rescript/comment_line  region         '//'    '$'                   fill comment
+  add-highlighter shared/rescript/comment       region         /\*     \*/                   fill comment
+
+  add-highlighter shared/rescript/code/ regex \b[a-z]\w*\b                                                        0:variable
+  add-highlighter shared/rescript/code/ regex \K#[A-Za-z]*                                                        0:function
+  add-highlighter shared/rescript/code/ regex \K~\w*                                                              0:attribute
+  add-highlighter shared/rescript/code/ regex \K'[a-z]\w*\b                                                       0:type
+  add-highlighter shared/rescript/code/ regex "-?\b[0-9]*\.?[0-9]+"                                               0:value
+  add-highlighter shared/rescript/code/ regex \K'.'                                                               0:value
+  add-highlighter shared/rescript/code/ regex @(as|get|inline|int|meth|new|return|scope|send|set|string|this)     0:module
+  add-highlighter shared/rescript/code/ regex @(uncurry|unwrap|val|variadic|bs\.\w*|react\.\w*)                   0:module
+  add-highlighter shared/rescript/code/ regex \b(module|include|open|private)\b                                   0:module
+  add-highlighter shared/rescript/code/ regex \b[A-Z]\w*\b                                                        0:meta
+  add-highlighter shared/rescript/code/ regex \b(let|rec|type|external|mutable|lazy|of|with|if|else)\b            0:keyword
+  add-highlighter shared/rescript/code/ regex \b(then|switch|and|as|for|to|downto|while|try|catch)\b              0:keyword
+  add-highlighter shared/rescript/code/ regex \b(exception|assert|_)\b)                                           0:keyword
+  add-highlighter shared/rescript/code/ regex \b(=>|\+|\+.|-|-/.|\*|\*.|/|/.)\b                                   0:operator
+
+  # Commands
+  # ‾‾‾‾‾‾‾‾
+
+  define-command -hidden rescript-trim-indent %{
+      # remove trailing white spaces
+      try %{ execute-keys -draft -itersel <a-x> s \h+$ <ret> d }
   }
-}
 
-]
+  define-command -hidden rescript-indent-on-char %<
+      evaluate-commands -draft -itersel %<
+          # align closer token to its opener when alone on a line
+          try %/ execute-keys -draft <a-h> <a-k> ^\h+[\]}]$ <ret> m s \A|.\z <ret> 1<a-&> /
+      >
+  >
+
+  define-command -hidden rescript-indent-on-new-line %<
+      evaluate-commands -draft -itersel %<
+          # copy // comments prefix and following white spaces
+          try %{ execute-keys -draft k <a-x> s ^\h*\K#\h* <ret> y gh j P }
+          # preserve previous line indent
+          try %{ execute-keys -draft <semicolon> K <a-&> }
+          # filter previous line
+          try %{ execute-keys -draft k : rescript-trim-indent <ret> }
+          # indent after lines beginning / ending with opener token
+          try %_ execute-keys -draft k <a-x> s [[({] <ret> <space> <a-l> <a-K> [\])}] <ret> j <a-gt> _
+          # deindent closing token(s) when after cursor
+          try %_ execute-keys -draft <a-x> <a-k> ^\h*[})\]] <ret> gh / [})\]] <ret> m <a-S> 1<a-&> _
+      >
+  >
+
+§

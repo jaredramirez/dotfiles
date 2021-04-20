@@ -5,7 +5,7 @@
 { config, pkgs, ... }:
 
 let
-  common = import ./../common.nix { inherit pkgs; };
+  common = import ./../common.nix { inherit pkgs; extraFishAliases = {}; };
 in
 {
   # Use the systemd-boot EFI boot loader.
