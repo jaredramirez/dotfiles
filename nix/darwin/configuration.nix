@@ -34,7 +34,7 @@ in
 
   environment.systemPath = [
     "$HOME/.local/bin"
-    "${pkgs.wezterm}/Applications/WezTerm.app"
+    # "${pkgs.wezterm}/bin"
   ];
 
   programs.zsh = common.programs.zsh;
@@ -60,6 +60,9 @@ in
   system.defaults.dock.autohide = true;
   system.defaults.dock.orientation = "left";
   system.defaults.dock.tilesize = 32;
+
+  # Link wezterm
+  environment.pathsToLink = [ "/share" "/bin" "/Applications" ];
 
   # Lorri
   services.lorri.enable = true;
