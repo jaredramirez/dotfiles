@@ -105,6 +105,9 @@ in
   # Enable Lorri
   services.lorri.enable = true;
 
+  # Temporary
+  nixpkgs.config.allowBroken = true;
+
   # Use flakes
   nix.package = pkgs.nixUnstable;
   nix.extraOptions = ''

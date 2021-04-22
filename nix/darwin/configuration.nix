@@ -29,7 +29,6 @@ in
   # System-Wide and nearly all stuff for Neovim
   environment.systemPackages = common.systemPackages ++ [
     pkgs.kitty
-    pkgs.wezterm
   ];
   environment.variables = common.variables;
 

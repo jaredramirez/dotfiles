@@ -5,6 +5,9 @@
 # in
 { systemPackages =
     with pkgs; [
+      # Terminal
+      wezterm
+
       # Editor
       kakoune
       kak-lsp
