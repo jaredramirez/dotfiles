@@ -120,6 +120,10 @@ hook global KakEnd .* lsp-exit
 def fuzzy -params 1 -shell-script-candidates %{ rg --files --hidden } %{ edit -existing %arg{1} }
 map global normal <c-p> ':fuzzy ' -docstring 'search files'
 
+# Use ripgrep instead of grep
+set-option global grepcmd 'rg --follow --vimgrep'
+alias global rg grep
+
 # Alt-K inverse of alt-j
 map global normal <a-k> 'i<ret><esc>' -docstring 'split line at cursor'
 
@@ -242,8 +246,7 @@ provide-module rescript %§
   add-highlighter shared/rescript/comment_line  region         '//'    '$'                   fill comment
   add-highlighter shared/rescript/comment       region         /\*     \*/                   fill comment
 
-  add-highlighter shared/rescript/code/ regex \b[a-z]\w*\b                                                        0:variable
-  add-highlighter shared/rescript/code/ regex \K#[A-Za-z]*                                                        0:function
+  add-highlighter shared/rescript/code/ regex \b[_a-z]\w*\b                                                       0:variable
   add-highlighter shared/rescript/code/ regex \K~\w*                                                              0:attribute
   add-highlighter shared/rescript/code/ regex \K'[a-z]\w*\b                                                       0:type
   add-highlighter shared/rescript/code/ regex "-?\b[0-9]*\.?[0-9]+"                                               0:value
@@ -256,6 +259,22 @@ provide-module rescript %§
   add-highlighter shared/rescript/code/ regex \b(then|switch|and|as|for|to|downto|while|try|catch)\b              0:keyword
   add-highlighter shared/rescript/code/ regex \b(exception|assert|_)\b)                                           0:keyword
   add-highlighter shared/rescript/code/ regex \b(=>|\+|\+.|-|-/.|\*|\*.|/|/.)\b                                   0:operator
+  add-highlighter shared/rescript/code/ regex \K#[_A-Za-z]*                                                       0:function
+
+  # add-highlighter "shared/%arg{1}/jsx/tag"  region -recurse <  <(?=[/a-zA-Z>]) (?<!=)> regions
+  # add-highlighter "shared/%arg{1}/jsx/expr" region -recurse \{ \{             \}      ref %arg{1}
+
+  # add-highlighter "shared/%arg{1}/jsx/tag/base" default-region group
+  # add-highlighter "shared/%arg{1}/jsx/tag/double_string" region =\K" (?<!\\)(\\\\)*" fill string
+  # add-highlighter "shared/%arg{1}/jsx/tag/single_string" region =\K' (?<!\\)(\\\\)*' fill string
+  # add-highlighter "shared/%arg{1}/jsx/tag/expr" region -recurse \{ \{   \}           group
+
+  # add-highlighter "shared/%arg{1}/jsx/tag/base/" regex (\w+) 1:attribute
+  # add-highlighter "shared/%arg{1}/jsx/tag/base/" regex </?([\w-$]+) 1:keyword
+  # add-highlighter "shared/%arg{1}/jsx/tag/base/" regex (</?|/?>) 0:meta
+
+  # add-highlighter "shared/%arg{1}/jsx/tag/expr/"   ref %arg{1}
+
 
   # Commands
   # ‾‾‾‾‾‾‾‾
@@ -275,7 +294,7 @@ provide-module rescript %§
   define-command -hidden rescript-indent-on-new-line %<
       evaluate-commands -draft -itersel %<
           # copy // comments prefix and following white spaces
-          try %{ execute-keys -draft k <a-x> s ^\h*\K#\h* <ret> y gh j P }
+          try %{ execute-keys -draft k <a-x> s ^\h*\K//\h* <ret> y gh j P }
           # preserve previous line indent
           try %{ execute-keys -draft <semicolon> K <a-&> }
           # filter previous line

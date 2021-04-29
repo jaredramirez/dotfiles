@@ -8,4 +8,4 @@
 # Optional parameters:
 # @raycast.icon 🕹️
 
-/run/current-system/sw/bin/wezterm
+open /run/current-system/sw/Applications/WezTerm.app

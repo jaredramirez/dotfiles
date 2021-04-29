@@ -6,19 +6,29 @@ return {
         "Fira Code",
     }),
     font_size = 16.0,
+    hide_tab_bar_if_only_one_tab = true,
     keys = {
         { key="p", mods="CMD",  action="ShowTabNavigator" },
         { key="q", mods="CMD",  action="QuitApplication" },
         { key="l", mods="CMD",  action="ActivateLastTab" },
         { key="m", mods="CMD",  action="ShowLauncher" },
+        { key="w", mods="CMD", action=wezterm.action{ CloseCurrentPane={ confirm=true } } },
 
-        -- { key="h", mods="CMD", action=wezterm.action{ ActivatePaneDirection="Left" } },
-        -- { key="j", mods="CMD", action=wezterm.action{ ActivatePaneDirection="Down" } },
-        -- { key="k", mods="CMD", action=wezterm.action{ ActivatePaneDirection="Up" } },
-        -- { key="l", mods="CMD", action=wezterm.action{ ActivatePaneDirection="Right" } },
+        { key="h", mods="CTRL", action=wezterm.action{ ActivatePaneDirection="Left" } },
+        { key="j", mods="CTRL", action=wezterm.action{ ActivatePaneDirection="Down" } },
+        { key="k", mods="CTRL", action=wezterm.action{ ActivatePaneDirection="Up" } },
+        { key="l", mods="CTRL", action=wezterm.action{ ActivatePaneDirection="Right" } },
 
-        { key="h", mods="CTRL", action=wezterm.action{ SplitVertical={ domain="CurrentPaneDomain" } } },
-        { key="v", mods="CTRL", action=wezterm.action{ SplitHorizontal={ domain="CurrentPaneDomain" } } },
+        { key="[", mods="CTRL", action=wezterm.action{ SplitVertical={ domain="CurrentPaneDomain" } } },
+        { key="]", mods="CTRL", action=wezterm.action{ SplitHorizontal={ domain="CurrentPaneDomain" } } },
+    },
+    launch_menu = {
+    	{ label = "Dotfiles", cwd = "$HOME/dev/github/jaredramirez/dotfiles" },
+    	{ label = "Replenysh - API", cwd = "$HOME/dev/github/replenysh/core/api" },
+    	{ label = "Replenysh - Dashboard", cwd = "$HOME/dev/github/replenysh/core/dashboard" },
+    	{ label = "Replenysh - Portal", cwd = "$HOME/dev/github/replenysh/core/portal" },
+    	{ label = "Replenysh - Collector", cwd = "$HOME/dev/github/replenysh/core/collector" },
+    	{ label = "Replenysh - Community Dropoff", cwd = "$HOME/dev/github/replenysh/core/community-dropoff/" },
     },
     ssh_domains = {
         {
@@ -52,7 +62,11 @@ return {
             inactive_tab = {
                 bg_color = "#1f2430",
                 fg_color = "#707a8c",
-          },
-      },
-    }
+            },
+            inactive_tab_hover = {
+                bg_color = "#1f2430",
+                fg_color = "#707a8c",
+            },
+    	},
+    },
 }
