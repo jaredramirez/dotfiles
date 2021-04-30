@@ -9,6 +9,7 @@
       wezterm
 
       # Editor
+      neovim
       kakoune
       kak-lsp
       nodePackages.prettier
