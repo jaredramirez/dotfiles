@@ -86,6 +86,6 @@ evaluate-commands %sh{
         face global Prompt ${ui_panel_border},${vcs_added}
         face global MatchingChar default,${ui_panel_shadow}
         face global BufferPadding ${common_fg},${common_bg}
-        face global Whitespace ${ui_line}+f
+        face global Whitespace ${ui_guide_normal}+f
     "
 }

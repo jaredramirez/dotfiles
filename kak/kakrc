@@ -12,13 +12,24 @@ plug "andreyorst/plug.kak" noload
 plug 'delapouite/kakoune-buffers' config %{
     map global normal <c-b>  ': enter-buffers-mode<ret>' -docstring 'buffers'
     map global normal <c-l>  ': enter-buffers-mode<ret>a' -docstring 'search open buffers'
-}  
+}
+
+# Manage buffers
+plug 'delapouite/kakoune-buffers' config %{
+    map global normal <c-b>  ': enter-buffers-mode<ret>' -docstring 'buffers'
+    map global normal <c-l>  ': enter-buffers-mode<ret>a' -docstring 'search open buffers'
+}
 
 # Vertical Selection
 plug 'occivink/kakoune-vertical-selection' config %{
   map global user v     ': vertical-selection-down<ret>'
   map global user <a-v> ': vertical-selection-up<ret>'
   map global user V     ': vertical-selection-up-and-down<ret>'
+}
+
+# Clipboard integration
+plug 'lePerdu/kakboard' config %{
+  hook global WinCreate .* %{ kakboard-enable }
 }
 
 # Enhanced objects
@@ -128,7 +139,10 @@ alias global rg grep
 map global normal <a-k> 'i<ret><esc>' -docstring 'split line at cursor'
 
 # Save & quit
-define-command x "write-all; quit" -docstring "save and quit" 
+define-command x "write-all; quit" -docstring "save and quit"
+
+# show whitespaces
+# add-highlighter global/ show-whitespaces
 
 # Easier commenting
 define-command cl "comment-line" -docstring "comment a line" 

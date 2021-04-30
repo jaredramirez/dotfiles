@@ -83,6 +83,7 @@ in
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = common.systemPackages ++ [
+    pkgs.xsel
     pkgs.libssh2
   ];
 

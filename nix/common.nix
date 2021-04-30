@@ -12,14 +12,14 @@
       kakoune
       kak-lsp
       nodePackages.prettier
+      xsel
 
       # Common tools
       git
-      coreutils
+      skim
       fzf
-      jq
       ripgrep
-      # amber
+      # amber # as of 04/29/2021 amber errors when building
       gitAndTools.gh
       gitAndTools.delta
       heroku
@@ -30,10 +30,6 @@
       # Nix helpers
       cachix
       direnv
-
-      # Needed globally for Coc
-      nodejs-14_x
-      (yarn.override { nodejs = nodejs-14_x; })
     ];
 
   variables = {
