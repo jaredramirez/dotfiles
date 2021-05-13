@@ -1,9 +1,7 @@
 { pkgs, extraFishAliases }:
 
-# let
-  # isMacOS = builtins.currentSystem == "x86_64-darwin";
-# in
-{ systemPackages =
+{
+  systemPackages =
     with pkgs; [
       # Terminal
       wezterm
@@ -11,9 +9,18 @@
       # Editor
       neovim
       kakoune
-      kak-lsp
       nodePackages.prettier
       xsel
+      rustc # Needed to build kak-lsp
+      cargo # Needed to build kak-lsp
+
+      # Global language servers
+      nodePackages.yaml-language-server
+      rnix-lsp
+      (import ./extra/rescript-language-server.nix { pkgs = pkgs; })
+
+      # Global formatters
+      nixpkgs-fmt
 
       # Common tools
       git
@@ -37,7 +44,7 @@
     LANG = "en_US.UTF-8";
   };
 
-  programs =  {
+  programs = {
     zsh = {
       enable = true;
       interactiveShellInit = ''

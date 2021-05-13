@@ -3,11 +3,19 @@ filetypes = ["elm"]
 roots = ["elm.json"]
 command = "elm-language-server"
 
-[language.elm.initialization_options]
-elmPath = "./node_modules/.bin/elm"
-
 [language.haskell]
 filetypes = ["haskell"]
 roots = ["Setup.hs", "stack.yaml", "*.cabal"]
 command = "haskell-language-server-wrapper"
 args = ["--lsp"]
+
+[language.nix]
+filetypes = ["nix"]
+roots = ["flake.nix", "shell.nix", "default.nix"]
+command = "rnix-lsp"
+
+[language.rescript]
+filetypes = ["rescript"]
+roots = ["bsconfig.json"]
+command = "rescript-language-server"
+args = ["--stdio"]

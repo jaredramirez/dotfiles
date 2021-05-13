@@ -45,19 +45,27 @@ plug 'insipx/kak-crosshairs' config %{
 }
 
 # Powerline status bar
-plug "andreyorst/powerline.kak" defer powerline %{
-    powerline-format global 'bufname git mode_info filetype line_column'
-    set-option global powerline_shorten_bufname "short"
-} config %{
+plug "andreyorst/powerline.kak" config %{
     powerline-start
+} defer powerline %{
+
+  require-module powerline_bufname
+  require-module powerline_git
+  require-module powerline_mode_info
+  require-module powerline_filetype
+  require-module powerline_line_column
+
+  powerline-format global 'bufname git mode_info filetype line_column'
+  set-option global powerline_shorten_bufname "short"
 }
 
 # Theme
 plug "jaredramirez/ayu-kak" theme config %{
     colorscheme ayu-mirage
 }
-plug "jaredramirez/ayu-kak-powerline" defer powerline %{
-    powerline-theme ayu-mirage
+plug "jaredramirez/ayu-kak-powerline" defer powerline_ayu-mirage  %{
+  require-module powerline
+  powerline-theme ayu-mirage
 }
 
 # Tabs
@@ -79,7 +87,54 @@ plug "andreyorst/smarttab.kak" defer smarttab %{
     hook global WinSetOption filetype=(c|cpp) smarttab
 }
 
-# Auto-format
+# Use tab to autocomplete
+hook global InsertCompletionShow .* %{
+    try %{
+        execute-keys -draft 'h<a-K>\h<ret>'
+        map window insert <tab> <c-n>
+        map window insert <s-tab> <c-p>
+        map window insert <ret> <space>
+    }
+}
+hook global InsertCompletionHide .* %{
+    unmap window insert <tab> <c-n>
+    unmap window insert <s-tab> <c-p>
+    unmap window insert <ret> <space>
+}
+
+# Langauge Server - kak-lsp 
+plug "kak-lsp/kak-lsp" do %{
+  cargo build --release --locked
+} config %{
+  # To debug kak-lsp, add " -vvv --log /tmp/kak-lsp.log" to the command
+  set global lsp_cmd "%val{config}/plugins/kak-lsp/target/release/kak-lsp -s %val{session} --config ~/.config/kak-lsp/kak-lsp.toml -vvv --log /tmp/kak-lsp.log"
+   
+  set global lsp_diagnostic_line_error_sign '║'
+  set global lsp_diagnostic_line_warning_sign '┊'
+
+  set-option global lsp_auto_highlight_references true
+  set-option global lsp_hover_anchor false
+  set-option global lsp_hover_max_lines 8
+
+  lsp-auto-hover-enable
+  lsp-auto-signature-help-enable
+  lsp-auto-hover-insert-mode-disable
+
+  set-option window lsp_auto_highlight_references true
+
+  hook window -group semantic-tokens BufReload .* lsp-semantic-tokens
+  hook window -group semantic-tokens NormalIdle .* lsp-semantic-tokens
+  hook window -group semantic-tokens InsertIdle .* lsp-semantic-tokens
+  hook -once -always window WinSetOption filetype=.* %{
+    remove-hooks window semantic-tokens
+  }
+
+  define-command lsp -docstring "LSP mode" %{: enter-user-mode lsp<ret>}
+  define-command lsp-restart -docstring 'restart lsp server' %{ lsp-stop; lsp-start }
+
+  hook global KakEnd .* lsp-exit
+}
+# Auto-format - TODO: Can I do this with kak-lsp?
 hook global WinSetOption filetype=elm %{
     set window formatcmd 'elm-format --stdin'
     hook buffer BufWritePre .* %{format}
@@ -100,32 +155,11 @@ hook global WinSetOption filetype=rescript %{
     set window formatcmd 'bsc-fmt'
     hook buffer BufWritePre .* %{format}
 }
-
-# Use tab to autocomplete
-hook global InsertCompletionShow .* %{
-    try %{
-        execute-keys -draft 'h<a-K>\h<ret>'
-        map window insert <tab> <c-n>
-        map window insert <s-tab> <c-p>
-        map window insert <ret> <space>
-    }
-}
-hook global InsertCompletionHide .* %{
-    unmap window insert <tab> <c-n>
-    unmap window insert <s-tab> <c-p>
-    unmap window insert <ret> <space>
+hook global WinSetOption filetype=nix %{
+    set window formatcmd 'nixpkgs-fmt'
+    hook buffer BufWritePre .* %{format}
 }
 
-# kak-lsp (installed globally via nix)
-eval %sh{kak-lsp --kakoune -s $kak_session}
-lsp-enable
-set global lsp_diagnostic_line_error_sign '║'
-set global lsp_diagnostic_line_warning_sign '┊'
-set-option global lsp_auto_highlight_references true
-set-option global lsp_hover_anchor false
-lsp-auto-hover-enable
-define-command lsp-restart -docstring 'restart lsp server' %{ lsp-stop; lsp-start }
-hook global KakEnd .* lsp-exit
 
 # Fuzzy find files
 def fuzzy -params 1 -shell-script-candidates %{ rg --files --hidden } %{ edit -existing %arg{1} }
