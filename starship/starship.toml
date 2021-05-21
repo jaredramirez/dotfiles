@@ -29,7 +29,6 @@ style = "bold blue"
 
 [nix_shell]
 disabled = false
-use_name = true
 impure_msg = "impure"
 pure_msg = "pure"
 symbol = "❄️ "

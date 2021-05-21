@@ -45,6 +45,11 @@ KAK_INIT="kakrc"
 HOME_KAK="$HOME/.config/kak/$KAK_INIT"
 ln -sf "$PWD/kak/$KAK_INIT" $HOME_KAK
 
+# Link kakship
+KAK_STARSHIP_INIT="starship.toml"
+KAK_HOME_STARSHIP="$HOME/.config/kak/$KAK_STARSHIP_INIT"
+ln -sf "$PWD/kak/$KAK_STARSHIP_INIT" $KAK_HOME_STARSHIP
+
 # Link Kakoune-lsp
 mkdir -p "$HOME/.config/kak-lsp"
 KAK_LSP="kak-lsp.toml"

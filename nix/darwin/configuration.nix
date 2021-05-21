@@ -5,22 +5,22 @@ let
   common = import ../common.nix {
     inherit pkgs;
     extraFishAliases = {
-        kitty-ssh-cp = "infocmp xterm-kitty | ssh jared@home tic -x -o \~/.terminfo /dev/stdin";
+      kitty-ssh-cp = "infocmp xterm-kitty | ssh jared@home tic -x -o \~/.terminfo /dev/stdin";
 
-        rep = "source $HOME/.config/kitty/workspaces/rep.sh";
-        rep-api = "source $HOME/.config/kitty/workspaces/rep-api.sh";
-        rep-dash = "source $HOME/.config/kitty/workspaces/rep-dash.sh";
-        rep-portal = "source $HOME/.config/kitty/workspaces/rep-portal.sh";
-        rep-join = "source $HOME/.config/kitty/workspaces/rep-join.sh";
-        rep-collector = "source $HOME/.config/kitty/workspaces/rep-collector.sh";
-        rep-community-dropoff = "source $HOME/.config/kitty/workspaces/rep-community-dropoff.sh";
+      rep = "source $HOME/.config/kitty/workspaces/rep.sh";
+      rep-api = "source $HOME/.config/kitty/workspaces/rep-api.sh";
+      rep-dash = "source $HOME/.config/kitty/workspaces/rep-dash.sh";
+      rep-portal = "source $HOME/.config/kitty/workspaces/rep-portal.sh";
+      rep-join = "source $HOME/.config/kitty/workspaces/rep-join.sh";
+      rep-collector = "source $HOME/.config/kitty/workspaces/rep-collector.sh";
+      rep-community-dropoff = "source $HOME/.config/kitty/workspaces/rep-community-dropoff.sh";
 
-        ssh-rep = "source $HOME/.config/kitty/workspaces/ssh-rep.sh";
-        ssh-rep-community-dropoff = "source $HOME/.config/kitty/workspaces/ssh-rep-community-dropoff.sh";
+      ssh-rep = "source $HOME/.config/kitty/workspaces/ssh-rep.sh";
+      ssh-rep-community-dropoff = "source $HOME/.config/kitty/workspaces/ssh-rep-community-dropoff.sh";
 
-        dotfiles = "source $HOME/.config/kitty/workspaces/dotfiles.sh";
+      dotfiles = "source $HOME/.config/kitty/workspaces/dotfiles.sh";
 
-        ssh-dotfiles = "source $HOME/.config/kitty/workspaces/ssh-dotfiles.sh";
+      ssh-dotfiles = "source $HOME/.config/kitty/workspaces/ssh-dotfiles.sh";
     };
   };
 in
@@ -28,13 +28,12 @@ in
   # List packages installed in system profile
   # System-Wide and nearly all stuff for Neovim
   environment.systemPackages = common.systemPackages ++ [
-    pkgs.kitty
+    # (import ../extra/kakoune-cr.nix { pkgs = pkgs; isMacos = true; })
   ];
   environment.variables = common.variables;
 
   environment.systemPath = [
     "$HOME/.local/bin"
-    # "${pkgs.wezterm}/bin"
   ];
 
   programs.zsh = common.programs.zsh;
@@ -48,6 +47,7 @@ in
   environment.shells = [ pkgs.fish ];
 
   # Fonts
+  fonts.enableFontDir = true;
   fonts.fonts = [
     pkgs.fira-code
   ];

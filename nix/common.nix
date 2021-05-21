@@ -7,12 +7,10 @@
       wezterm
 
       # Editor
-      neovim
       kakoune
-      nodePackages.prettier
       xsel
-      rustc # Needed to build kak-lsp
-      cargo # Needed to build kak-lsp
+      rustc # Needed to build some kak plugins
+      cargo # Needed to build some kak plugins
 
       # Global language servers
       nodePackages.yaml-language-server
@@ -21,13 +19,13 @@
 
       # Global formatters
       nixpkgs-fmt
+      nodePackages.prettier
 
       # Common tools
       git
       skim
-      fzf
       ripgrep
-      # amber # as of 04/29/2021 amber errors when building
+      amber
       gitAndTools.gh
       gitAndTools.delta
       heroku

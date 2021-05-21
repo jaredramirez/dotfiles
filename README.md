@@ -77,6 +77,10 @@ Add `raycast-scripts` to as script commands
 ### 9 
 Install [Dashlane](https://www.dashlane.com/)
 
-
 ### 10
 Open up firefox and login to your profile!
+
+## Fonts
+
+1. Download & install MonoLisa font
+2. Download & install [Nerd Icons](https://github.com/ryanoasis/nerd-fonts/blob/master/src/glyphs/Symbols-2048-em%20Nerd%20Font%20Complete.ttf)

@@ -18,3 +18,6 @@ work-macos:
 	
 workwell-macos:
 	make build-workwell-macos && make switch-macos
+
+update-nixpkgs:
+	nix flake lock --update-input nixpkgs

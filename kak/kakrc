@@ -14,12 +14,6 @@ plug 'delapouite/kakoune-buffers' config %{
     map global normal <c-l>  ': enter-buffers-mode<ret>a' -docstring 'search open buffers'
 }
 
-# Manage buffers
-plug 'delapouite/kakoune-buffers' config %{
-    map global normal <c-b>  ': enter-buffers-mode<ret>' -docstring 'buffers'
-    map global normal <c-l>  ': enter-buffers-mode<ret>a' -docstring 'search open buffers'
-}
-
 # Vertical Selection
 plug 'occivink/kakoune-vertical-selection' config %{
   map global user v     ': vertical-selection-down<ret>'
@@ -44,28 +38,18 @@ plug 'insipx/kak-crosshairs' config %{
     cursorline
 }
 
-# Powerline status bar
-plug "andreyorst/powerline.kak" config %{
-    powerline-start
-} defer powerline %{
-
-  require-module powerline_bufname
-  require-module powerline_git
-  require-module powerline_mode_info
-  require-module powerline_filetype
-  require-module powerline_line_column
-
-  powerline-format global 'bufname git mode_info filetype line_column'
-  set-option global powerline_shorten_bufname "short"
+# Status line
+plug "eburghar/kakship" do %{
+  cargo install --force --path . --root ~/.local
+  [ ! -e $kak_config/starship.toml ] && cp starship.toml $kak_config/
+} config %{
+  kakship-enable
 }
+
 
 # Theme
 plug "jaredramirez/ayu-kak" theme config %{
     colorscheme ayu-mirage
-}
-plug "jaredramirez/ayu-kak-powerline" defer powerline_ayu-mirage  %{
-  require-module powerline
-  powerline-theme ayu-mirage
 }
 
 # Tabs
@@ -73,7 +57,7 @@ plug "andreyorst/smarttab.kak" defer smarttab %{
     set-option buffer indentwidth 2
     set-option buffer softtabstop 2
 
-    hook global WinSetOption filetype=(elm|psql|pgsql|sql) %{
+    hook global WinSetOption filetype=(elm|plpgsql|sql) %{
         set-option buffer indentwidth 4
         set-option buffer softtabstop 4
     }
@@ -82,7 +66,7 @@ plug "andreyorst/smarttab.kak" defer smarttab %{
         set-option buffer softtabstop 2
     }
 } config %{
-    hook global WinSetOption filetype=(rust|markdown|kak|lisp|scheme|sh|perl|elm|haskell|javascript|rescript|psql|pgsql|sql|csv|yaml|nix) expandtab
+    hook global WinSetOption filetype=(rust|markdown|kak|lisp|scheme|sh|perl|elm|haskell|javascript|rescript|plpgsql|sql|csv|yaml|nix) expandtab
     hook global WinSetOption filetype=(makefile) noexpandtab
     hook global WinSetOption filetype=(c|cpp) smarttab
 }
@@ -120,29 +104,18 @@ plug "kak-lsp/kak-lsp" do %{
   lsp-auto-signature-help-enable
   lsp-auto-hover-insert-mode-disable
 
-  set-option window lsp_auto_highlight_references true
+  map global normal <a-d> ': enter-user-mode lsp<ret>' -docstring 'search files'
 
-  hook window -group semantic-tokens BufReload .* lsp-semantic-tokens
-  hook window -group semantic-tokens NormalIdle .* lsp-semantic-tokens
-  hook window -group semantic-tokens InsertIdle .* lsp-semantic-tokens
-  hook -once -always window WinSetOption filetype=.* %{
-    remove-hooks window semantic-tokens
-  }
-
-  define-command lsp -docstring "LSP mode" %{: enter-user-mode lsp<ret>}
   define-command lsp-restart -docstring 'restart lsp server' %{ lsp-stop; lsp-start }
+
+  hook global WinSetOption filetype=(haskell|elm|nix|rescript) %{
+    hook window BufWritePre .* lsp-formatting-sync
+  }
 
   hook global KakEnd .* lsp-exit
 }
-# Auto-format - TODO: Can I do this with kak-lsp?
-hook global WinSetOption filetype=elm %{
-    set window formatcmd 'elm-format --stdin'
-    hook buffer BufWritePre .* %{format}
-}
-hook global WinSetOption filetype=haskell %{
-    set window formatcmd 'ormolu'
-    hook buffer BufWritePre .* %{format}
-}
+
+# Formatting for languages that don't have a langauge server installed
 hook global WinSetOption filetype=javascript %{
     set window formatcmd 'prettier --stdin-filepath foo.js'
     hook buffer BufWritePre .* %{format}
@@ -151,19 +124,22 @@ hook global WinSetOption filetype=json %{
     set window formatcmd 'prettier --stdin-filepath foo.json'
     hook buffer BufWritePre .* %{format}
 }
-hook global WinSetOption filetype=rescript %{
-    set window formatcmd 'bsc-fmt'
-    hook buffer BufWritePre .* %{format}
-}
-hook global WinSetOption filetype=nix %{
-    set window formatcmd 'nixpkgs-fmt'
-    hook buffer BufWritePre .* %{format}
-}
+
+# Formatting with langauge servers work, but is a bit slow on startup
+# 
+# hook global WinSetOption filetype=haskell %{
+#     set window formatcmd 'ormolu'
+#     hook buffer BufWritePre .* %{format}
+# }
+# hook global WinSetOption filetype=elm %{
+#     set window formatcmd 'elm-format --stdin'
+#     hook buffer BufWritePre .* %{format}
+# }
 
 
 # Fuzzy find files
 def fuzzy -params 1 -shell-script-candidates %{ rg --files --hidden } %{ edit -existing %arg{1} }
-map global normal <c-p> ':fuzzy ' -docstring 'search files'
+  map global normal <c-p> ':fuzzy ' -docstring 'search files'
 
 # Use ripgrep instead of grep
 set-option global grepcmd 'rg --follow --vimgrep'
